@@ -1,0 +1,9 @@
+.address-container {
+  position: relative;
+  padding: 1rem;
+}
+
+.address-autocomplete-input-container {
+  position: relative;
+  margin-bottom: 0.5rem;
+}

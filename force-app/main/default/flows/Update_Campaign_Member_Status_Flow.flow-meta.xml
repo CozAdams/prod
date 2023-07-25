@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>49.0</apiVersion>
+    <decisions>
+        <name>Opportunity_Stage</name>
+        <label>Opportunity Stage</label>
+        <locationX>316</locationX>
+        <locationY>52</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Is_Processing</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>OpportunityStage</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Processing</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Update_Campaign_Member_Status</targetReference>
+            </connector>
+            <label>Is Processing</label>
+        </rules>
+        <rules>
+            <name>Is_Enrollment_Complete</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>OpportunityStage</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Enrollment Complete</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Update_Campaign_Member_Status_Enrolled</targetReference>
+            </connector>
+            <label>Is Enrollment Complete</label>
+        </rules>
+    </decisions>
+    <interviewLabel>Update Campaign Member Status Flow {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Update Campaign Member Status Flow</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordUpdates>
+        <name>Update_Campaign_Member_Status</name>
+        <label>Update Campaign Member Status</label>
+        <locationX>528</locationX>
+        <locationY>48</locationY>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>CampaignId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>CampaignId</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>CampaignMember</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>Status</field>
+            <value>
+                <stringValue>Enrolling</stringValue>
+            </value>
+        </inputAssignments>
+        <object>CampaignMember</object>
+    </recordUpdates>
+    <recordUpdates>
+        <name>Update_Campaign_Member_Status_Enrolled</name>
+        <label>Update Campaign Member Status</label>
+        <locationX>445</locationX>
+        <locationY>262</locationY>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>CampaignId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>CampaignId</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>CampaignMember</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>Status</field>
+            <value>
+                <stringValue>Enrolled / Converted</stringValue>
+            </value>
+        </inputAssignments>
+        <object>CampaignMember</object>
+    </recordUpdates>
+    <startElementReference>Opportunity_Stage</startElementReference>
+    <status>Active</status>
+    <variables>
+        <name>CampaignId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+    <variables>
+        <name>CampaignMember</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+    <variables>
+        <name>OpportunityStage</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+</Flow>

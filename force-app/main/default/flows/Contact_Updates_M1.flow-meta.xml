@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>55.0</apiVersion>
+    <assignments>
+        <description>Assign Contact to Gabe - 0050V000005kYT7</description>
+        <name>Assign_Contact_to_Gabe</name>
+        <label>Assign Contact to Gabe</label>
+        <locationX>242</locationX>
+        <locationY>551</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.OwnerId</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>0050V000005jvgu</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <description>All other states go to Raquel Collazo - 0050V000005jvgu</description>
+        <name>Raquel_Assignment</name>
+        <label>Raquel Assignment</label>
+        <locationX>506</locationX>
+        <locationY>551</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.OwnerId</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>0050V000005jvgu</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <decisions>
+        <description>Exclude SBC API user updates  005d0000000xsQi</description>
+        <name>Exclude_SBC_API_user_updates</name>
+        <label>Exclude SBC API user updates</label>
+        <locationX>176</locationX>
+        <locationY>311</locationY>
+        <defaultConnector>
+            <targetReference>Gabe_ownership</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Was not updated by SBC-API last</defaultConnectorLabel>
+        <rules>
+            <name>Was_updated_by_SBC_API</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.LastModifiedBy.Id</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <stringValue>005d0000000xsQi</stringValue>
+                </rightValue>
+            </conditions>
+            <label>Was updated by SBC API</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>( UPPER([Contact].MailingState) = &quot;CA&quot; ) ||
+( UPPER([Contact].MailingState) = &quot;NV&quot; ) ||
+( UPPER([Contact].MailingState) = &quot;UT&quot; ) ||
+( UPPER([Contact].MailingState) = &quot;MT&quot; ) ||
+( UPPER([Contact].MailingState) = &quot;ID&quot; ) ||
+( UPPER([Contact].MailingState) = &quot;WA&quot; ) ||
+( UPPER([Contact].MailingState) = &quot;OR&quot; ) ||
+( UPPER([Contact].MailingState) = &quot;CO&quot; ) ||
+( UPPER([Contact].MailingState) = &quot;WY&quot; )</description>
+        <name>Gabe_ownership</name>
+        <label>Gabe ownership</label>
+        <locationX>374</locationX>
+        <locationY>431</locationY>
+        <defaultConnector>
+            <targetReference>Raquel_Assignment</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Raquel Collazo Assigned States</defaultConnectorLabel>
+        <rules>
+            <name>Gabes_assigned_States</name>
+            <conditionLogic>(1 OR 2 OR 3 OR 4 OR 5 OR 6 OR 7 OR 8 OR 9) and 10</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.MailingState</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>CA</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.MailingState</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>NV</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.MailingState</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>UT</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.MailingState</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>MT</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.MailingState</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>ID</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.MailingState</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>WA</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.MailingState</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>OR</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.MailingState</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>CO</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.MailingState</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>WY</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.LastModifiedById</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <stringValue>005d0000000xsQi</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Assign_Contact_to_Gabe</targetReference>
+            </connector>
+            <doesRequireRecordChangedToMeetCriteria>true</doesRequireRecordChangedToMeetCriteria>
+            <label>Gabes assigned States -- currently assigned to Raquel</label>
+        </rules>
+    </decisions>
+    <description>Contact updates to migrate from process builder -currently all states go to Raquel</description>
+    <environments>Default</environments>
+    <interviewLabel>Contact Updates M1 {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Contact Updates M1</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Exclude_SBC_API_user_updates</targetReference>
+        </connector>
+        <filterFormula>And(
+ISPICKVAL({!$Record.Preferred_Language__c}, &apos;Spanish&apos;),
+OR(ISCHANGED({!$Record.Preferred_Language__c}),
+ISCHANGED({!$Record.MailingState})))</filterFormula>
+        <object>Contact</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordBeforeSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

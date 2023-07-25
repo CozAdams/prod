@@ -1,0 +1,6 @@
+<design:component>
+	<design:attribute name="phoneNumber" label="Phone Number"/>
+    <design:attribute name="countryCode" label="Country Code"/>
+    <design:attribute name="twilioId" label="Twilio Id"/>
+    <design:attribute name="email" label="User email"/>
+</design:component>

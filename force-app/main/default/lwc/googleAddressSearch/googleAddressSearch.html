@@ -1,0 +1,40 @@
+<template>
+    <div class="address-autocomplete-input-container">
+      <lightning-input type="search" label="Search for Address" placeholder="Enter address" value={searchTerm} onchange={handleKeyChange} aria-expanded={listExpanded} aria-autocomplete="list" is-loading={searchInProgress}></lightning-input>
+      <div class={autocompleteContainerClass} role="listbox">
+        <ul class="address-autocomplete-list" role="presentation">
+          <template for:each={textSegments} for:item="segment">
+            <li key={segment.placeId} class="address-item" role="presentation">
+              <a role="option" href="javascript:void(0);" data-place-id={segment.placeId} onclick={handleClick}>
+                <div class="address-option">
+                  <lightning-icon class="address-option-icon" icon-name="utility:checkin" alternative-text="Address"></lightning-icon>
+                  <div class="address-option-text">
+                    <div class="firstline">
+                      <template for:each={segment.mainTextSegments} for:item='mainTextSegment'>
+                        <template if:true={mainTextSegment.match}>
+                          <span key={mainTextSegment.key} class="match">{mainTextSegment.segment}</span>
+                        </template>
+                        <template if:false={mainTextSegment.match}>
+                          <span key={mainTextSegment.key}>{mainTextSegment.segment}</span>
+                        </template>
+                      </template>
+                    </div>
+                    <div class="secondline">
+                      <template for:each={segment.secondaryTextSegments} for:item='secondaryTextSegment'>
+                        <template if:true={secondaryTextSegment.match}>
+                          <span key={secondaryTextSegment.key} class="match">{secondaryTextSegment.segment}</span>
+                        </template>
+                        <template if:false={secondaryTextSegment.match}>
+                          <span key={secondaryTextSegment.key}>{secondaryTextSegment.segment}</span>
+                        </template>
+                      </template>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </li>
+          </template>
+        </ul>
+      </div>
+    </div>
+</template>

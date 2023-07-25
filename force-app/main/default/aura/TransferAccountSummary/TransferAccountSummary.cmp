@@ -1,0 +1,127 @@
+<aura:component implements="force:lightningQuickActionWithoutHeader,force:hasRecordId" controller="AccountSummaryService">
+	<!-- Init values -->
+	<aura:attribute name="accountSummary" type="Account_Summary__c" />
+	<aura:attribute name="case" type="Case" default="{'sObjectType':'Case'}" />
+	<aura:attribute name="currentUser" type="User" />
+	<aura:attribute name="caseQueueId" type="String" />
+	<aura:attribute name="caseRecordTypeId" type="String" />
+	<aura:attribute name="hasMatchingAccount" type="Boolean" default="true" />
+	<aura:attribute name="isSaving" type="Boolean" />
+	<aura:attribute name="show403bForm" type="Boolean" default ="fasle"/>
+
+
+	<!-- compliance language -->
+    <aura:attribute name="eSignature" type="String"/>
+    <aura:attribute name="descriptionHeader" type="String"/>
+	<aura:attribute name="new403bDescriptionHeader" type="String"/>
+	
+	<!-- Constants -->
+	<aura:attribute name="PENSION_ACC_TYPE" type="String" access="Private" />
+	<aura:attribute name="TDRA_ACC_TYPE" type="String" access="Private" />
+	<aura:attribute name="TDRA_PR_ACC_TYPE" type="String" access="Private"/>
+	<aura:attribute name="BAA_ACC_TYPE" type="String" access="Private"/>
+	<aura:attribute name="IRA_ACC_TYPE" type="String" access="Private" />
+	<aura:attribute name="ROTH_ACC_TYPE" type="String" access="Private" />
+	<aura:attribute name="LEGACY_ACC_TYPE" type="String" access="Private" />
+	<aura:attribute name="ROTH403B_ACC_TYPE" type="String" access="Private" />
+
+	<!-- Form variables-->
+    <aura:attribute name="baaTransferOptions" type="List"/>
+    <aura:attribute name="tdraTransferOptions" type="List"/>
+    <aura:attribute name="rothTransferOptions" type="List"/>
+    <aura:attribute name="iraTransferOptions" type="List"/>
+
+	<lightning:notificationsLibrary aura:id="transferNotificationLibrary"/>
+    <c:PicklistService aura:id="picklistService"/>
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+	<!-- Account Size Error Message -->
+	<div class="{!v.hasMatchingAccount ? 'slds-hide' : ''}">
+		<div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error account-error-container" role="alert">
+			<lightning:icon iconName="utility:error" alternativeText="Error!" title="Error" variant="inverse" class="error-icon" />
+			The internal transfer option is unavailable. You must have another like Pension Fund account in order to perform this transaction.
+		</div>
+	</div>
+
+	<!-- Saving spinner -->
+	<aura:if isTrue="{!v.isSaving}">
+		<lightning:spinner alternativeText="Loading" size="medium" />
+	</aura:if>
+	<aura:if isTrue="{!v.show403bForm}" >
+
+		<lightning:formattedRichText class="slds-text-body_small slds-text-color_weak" value="{!v.new403bDescriptionHeader}"/>
+
+		<aura:set attribute="else" 	>
+
+			<lightning:formattedRichText class="slds-text-body_small slds-text-color_weak" value="{!v.descriptionHeader}"/>
+
+		</aura:set>
+	</aura:if>
+	<c:AccountSummaryAccountSelect aura:id="accountSelect" show403bForm="{!v.show403bForm}" case="{!v.case}" currentUser="{!v.currentUser}" currentAccountSummary="{!v.accountSummary}" hasMatchingAccount="{!v.hasMatchingAccount}" />
+	
+	<aura:if isTrue="{!v.show403bForm}" >
+		<c:roth403bInternalTransfer caseRecordTypeId="{!v.caseRecordTypeId}" accountSummaryInfo="{!v.accountSummary}" onclose="{!c.closeModal}" 
+		/>
+		<aura:set attribute="else">
+			<aura:if isTrue="{!or(v.accountSummary.Plan_ID__c == v.BAA_ACC_TYPE)}">
+				<div class="slds-var-p-top_x-small">
+					<lightning:radioGroup aura:id="transferFormField" name="transferBaaOptions" label="* Transfer Options" options="{!v.baaTransferOptions}" value="{!v.case.Transfer_BAA_Options__c}" type="radio" disabled="{!v.hasMatchingAccount ? false : true}" />
+				</div>
+			</aura:if>
+
+			<aura:if isTrue="{!or(v.accountSummary.Plan_ID__c == v.TDRA_ACC_TYPE, v.accountSummary.Plan_ID__c == v.TDRA_PR_ACC_TYPE)}">
+				<div class="slds-var-p-top_x-small">
+					<lightning:radioGroup aura:id="transferFormField" name="transferTdraOptions" label="* Transfer Options" options="{!v.tdraTransferOptions}" value="{!v.case.Transfer_TDRA_Options__c}" type="radio" disabled="{!v.hasMatchingAccount ? false : true}" />
+				</div>
+			</aura:if>
+
+			<aura:if isTrue="{!or(v.accountSummary.Plan_ID__c == v.ROTH_ACC_TYPE)}">
+				<div class="slds-var-p-top_x-small">
+					<lightning:radioGroup aura:id="transferFormField" name="transferRothOptions" label="* Transfer Options" options="{!v.rothTransferOptions}" value="{!v.case.Transfer_Roth_Options__c}" type="radio" disabled="{!v.hasMatchingAccount ? false : true}" />
+				</div>
+			</aura:if>
+
+			<aura:if isTrue="{!or(v.accountSummary.Plan_ID__c == v.IRA_ACC_TYPE, v.accountSummary.Plan_ID__c == v.LEGACY_ACC_TYPE)}">
+				<div class="slds-var-p-top_x-small">
+					<lightning:radioGroup aura:id="transferFormField" name="transferIraOptions" label="* Transfer Options" options="{!v.iraTransferOptions}" value="{!v.case.Transfer_IRA_Options__c}" type="radio" disabled="{!v.hasMatchingAccount ? false : true}" />
+				</div>
+			</aura:if>
+
+			<aura:if isTrue="{!not(or(and(v.accountSummary.Plan_ID__c == v.BAA_ACC_TYPE, v.case.Transfer_BAA_Options__c == 'Close'), or(and(v.accountSummary.Plan_ID__c == v.ROTH_ACC_TYPE, v.case.Transfer_Roth_Options__c == 'Close'), or(and(v.accountSummary.Plan_ID__c == v.TDRA_ACC_TYPE, v.case.Transfer_TDRA_Options__c == 'Close'), and(v.accountSummary.Plan_ID__c == v.TDRA_PR_ACC_TYPE, v.case.Transfer_TDRA_Options__c == 'Close')))))}">		
+				<div class="slds-var-p-top_x-small">
+					<lightning:input aura:id="transferFormField" type="number" label="* Amount" value="{!v.case.Transfer_Amount__c}" formatter="currency" step=".01" disabled="{!v.hasMatchingAccount ? false : true}" />
+				</div>
+			</aura:if>
+
+			<aura:if isTrue="{!and(v.accountSummary.Plan_ID__c == v.BAA_ACC_TYPE, v.case.Transfer_BAA_Options__c == 'Close')}">
+				<p class="slds-var-p-top_x-small"><lightning:formattedRichText class="slds-text-body_small slds-text-color_weak" value="Please note - you will not be able to complete this transaction if your account is currently being contributed into."/></p>
+			</aura:if>
+
+			<!-- Account Summary Select embedded component -->
+
+			<aura:if isTrue="{!or(v.accountSummary.Plan_ID__c == v.TDRA_ACC_TYPE, v.accountSummary.Plan_ID__c == v.TDRA_PR_ACC_TYPE)}">
+				<div class="slds-var-p-top_x-small">
+					<lightning:input type="checkbox" label="I want a 30 Day Hold on this transaction" value="{!v.case.Transfer_30_Day_Hold__c}" disabled="{!v.hasMatchingAccount ? false : true}" />
+				</div>
+
+				<div class="slds-var-p-top_x-small">
+					<lightning:input type="date" label="Termination of Employment" value="{!v.case.Transfer_Employment_Termination_Date__c}" disabled="{!v.hasMatchingAccount ? false : true}" />
+					<p class="slds-text-body_small slds-text-color_weak">
+						Accounts currently receiving contributions may not be combined with other accounts
+					</p>
+				</div>
+			</aura:if>
+		
+
+			<div class="{!v.hasMatchingAccount ? '' : 'slds-hide'}">
+				<c:AccountSummaryESignature aura:id="eSignatureComp" case="{!v.case}" eSignature="{!v.eSignature}"/>
+			</div>
+
+			<div class="slds-var-p-top_small">
+				<lightning:button label="Submit" onclick="{!c.save}" disabled="{!v.hasMatchingAccount ? false : true}" />
+			</div>
+		</aura:set>
+	</aura:if>
+	<!-- Start Form -->
+
+</aura:component>

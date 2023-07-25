@@ -1,0 +1,10 @@
+<apex:component >
+    <apex:attribute required="true"  type="string" name="type" description="specify header and footer type" />
+    
+    <apex:stylesheet value="{!$Resource.dynamicPdf}"/>
+    <div class="{!type}" style="margin-bottom:500px;">
+        <apex:componentBody />
+    </div>
+                   
+                
+</apex:component>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workflow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <outboundMessages>
+        <fullName>Jitterbit_Send_Org</fullName>
+        <apiVersion>48.0</apiVersion>
+        <description>Workflow  Web Service Update Org
+Action - Jitterbit Send Org -</description>
+        <endpointUrl>https://pfcc-serenity.azurewebsites.net/api/serenity/sendOrg</endpointUrl>
+        <fields>Bad_Address_Indicator__c</fields>
+        <fields>BillingCity</fields>
+        <fields>BillingCountry</fields>
+        <fields>BillingPostalCode</fields>
+        <fields>BillingState</fields>
+        <fields>BillingStreet</fields>
+        <fields>Email__c</fields>
+        <fields>Id</fields>
+        <fields>LastModifiedById</fields>
+        <fields>LastModifiedDate</fields>
+        <fields>Name</fields>
+        <fields>PIN__c</fields>
+        <fields>Send_Invoices_To__c</fields>
+        <fields>Statement_Delivery_Method__c</fields>
+        <fields>Stone_Campbell_Affiliations__c</fields>
+        <fields>Sub_Affiliation__c</fields>
+        <includeSessionId>false</includeSessionId>
+        <integrationUser>sbc_api@pensionfund.org</integrationUser>
+        <name>Jitterbit Send Org</name>
+        <protected>false</protected>
+        <useDeadLetterQueue>false</useDeadLetterQueue>
+    </outboundMessages>
+    <rules>
+        <fullName>Web Service Update Org</fullName>
+        <actions>
+            <name>Jitterbit_Send_Org</name>
+            <type>OutboundMessage</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>Account.Participation_Plan_Agreement_Active__c</field>
+            <operation>equals</operation>
+            <value>Yes,Not Required</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Account.npe01__SYSTEMIsIndividual__c</field>
+            <operation>equals</operation>
+            <value>False</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Account.LastModifiedById</field>
+            <operation>notEqual</operation>
+            <value>SBC-SF APIUser,PFCC_JobRun</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Account.LastModifiedById</field>
+            <operation>notContain</operation>
+            <value>mclarty!</value>
+        </criteriaItems>
+        <triggerType>onAllChanges</triggerType>
+    </rules>
+    <tasks>
+        <fullName>Update_Organization_Record_with_PIN_Number</fullName>
+        <assignedToType>owner</assignedToType>
+        <description>This task will be assigned to the owner of the organization record to remind them to come back to update the PIN Number field once the new organization is manually created in DDI.</description>
+        <dueDateOffset>2</dueDateOffset>
+        <notifyAssignee>true</notifyAssignee>
+        <offsetFromField>Account.CreatedDate</offsetFromField>
+        <priority>Normal</priority>
+        <protected>false</protected>
+        <status>Not Started</status>
+        <subject>Update Organization Record with PIN Number</subject>
+    </tasks>
+</Workflow>

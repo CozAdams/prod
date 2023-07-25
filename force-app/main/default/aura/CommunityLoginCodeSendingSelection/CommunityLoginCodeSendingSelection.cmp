@@ -1,0 +1,29 @@
+<aura:component  implements="lightning:availableForFlowScreens" controller="TwilioAPILightningController" access="public">
+    <aura:attribute name="phoneNumber" type="String" description="The phone number that will be used to call the user"/>
+    <aura:attribute name="hiddenPhoneDisplay" type="String" description="Display the last 3 digit of the phone number only"/>
+    <aura:attribute name="countryCode" type="String" description="The phone numbers country code which will be used in the API call"/>
+    <aura:attribute name="twilioId" type="String" default="" description="The Twilio user Id, empty if the user is not created "/>
+    <aura:attribute name="errorMessage" type="String" default="" description="Display error message if API fail"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <p><lightning:formattedText value="{# 'Phone Number:' + v.hiddenPhoneDisplay}"/></p>
+    <p>
+        <aura:if isTrue="{#not(empty(v.twilioId))}">
+                <lightning:formattedText value="Choose an option to receive your security code" />
+            <aura:set attribute="else">
+               <lightning:formattedText value="Choose an option to receive your verification code" />
+            </aura:set>
+        </aura:if>
+        <p><lightning:formattedText value="*Message and data rates may apply"/></p>
+    </p>
+    <p><lightning:formattedText class="slds-text-color_error slds-text-title_bold" value="{!v.errorMessage}"/></p>
+	<lightning:button aura:id="sms" class="slds-size_full slds-m-top_medium" variant="brand" label="Text Me" onclick="{!c.handleMessageSend}"/>
+    <lightning:button aura:id="call" class="slds-size_full slds-m-top_small slds-m-left_none" variant="brand" label="Call Me" onclick="{!c.handleMessageSend}"/>
+    <aura:if isTrue="{#not(empty(v.twilioId))}">
+        <p>
+            <lightning:formattedText class="slds-m-top_x-medium" linkify="true" value="{!$Label.c.Community_Login_Contact_Me}"/>
+        </p>
+        <aura:set attribute="else">
+            <lightning:button aura:id="call" class="slds-size_full slds-m-top_small slds-m-left_none" label="Change Phone Number" onclick="{!c.goBack}"/>
+        </aura:set>
+    </aura:if>
+</aura:component>

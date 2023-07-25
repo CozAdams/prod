@@ -1,0 +1,34 @@
+.THIS {
+    font-family: "Lato";
+    font-size: .8125rem;
+    color: black;
+}
+.THIS.section-div {
+    padding: 25px 0px 0px;
+}
+.THIS .section-div {
+    padding: 15px 0px 0px;
+}
+.THIS .main-header {
+    font-weight: bold;
+}
+.THIS .slds-text-heading_small {
+    margin-bottom: 15px;
+}
+.THIS .button-div {
+    text-align: right;
+}
+.THIS .error-msg {
+    color: rgb(194, 57, 52);
+}
+.THIS label {
+    font-size: .75rem;
+    margin-top: 15px;
+}
+.THIS input {
+    margin-top: 15px;
+}
+.THIS .slds-checkbox {
+    margin-top: 15px;
+    margin-bottom: 10px;
+}

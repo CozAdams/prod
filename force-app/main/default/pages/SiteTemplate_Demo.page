@@ -1,0 +1,435 @@
+<apex:page docType="html-5.0" showHeader="false" id="SiteTemplate" standardStylesheets="false" language="{!$CurrentPage.Parameters.lang}">
+<!-- Linvio PaymentConnect CSS includes -->
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"/>
+<link rel="stylesheet" type="text/css" href="{!URLFOR($Resource.pymt__PaymentConnect,'styles/sites_basic.css')}" /> 
+<link rel="stylesheet" type="text/css" href="{!URLFOR($Resource.pymt__PaymentConnect,'styles/sites_basic_responsive.css')}" />
+<link rel="stylesheet" type="text/css" href="{!URLFOR($Resource.pymt__PaymentConnect,'styles/trust_logos.css')}" /> 
+<!-- Optional button and field styling -->
+<link rel="stylesheet" type="text/css" href="{!URLFOR($Resource.pymt__PaymentConnect,'styles/sites_buttons_fields.css')}" />
+<link rel="stylesheet" type="text/css" href="{!URLFOR($Resource.pymt__PaymentConnect,'styles/css_buttons/blue.css')}" />
+<!-- link rel="stylesheet" type="text/css" href="{!URLFOR($Resource.pymt__PaymentConnect,'styles/css_buttons/gray.css')}" /-->
+
+
+<!-- Linvio Donations add-on styling -->
+<link rel="stylesheet" type="text/css" href="{!URLFOR($Resource.dn8n__LinvioDonations,'styles/sites_basic.css')}" />
+
+<!-- Quotes & Invoices add-on styling -->
+<link rel="stylesheet" type="text/css" href="{!URLFOR($Resource.quot__QuotesAndInvoices,'styles/sites_basic.css')}" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<style>
+body {
+    font-family: trebuchet MS, Verdana, Geneva;
+    font-family: "Myriad Set Pro","Lucida Grande","Helvetica Neue","Helvetica","Arial","Verdana","sans-serif";
+    padding:0px;
+    margin:0px;
+    background:white;
+}
+
+h1, h2, h3 {
+    color:#2b506e;
+}
+
+h1 {
+    font-size:20px;
+    }
+h2 {
+    font-size:18px;
+    width:100%;
+    /* border-top:1px dashed black; */
+    padding-top:10px;
+}
+h3 {
+    font-size:16px;
+}
+
+a {
+text-decoration: none;
+   color: #E6B360;
+   color: #E69613;
+   color: #067CD6;
+}
+
+a:hover 
+{
+text-decoration: none;
+}
+.pc_logo {
+   background: url('{!URLFOR($Resource.pymt__PaymentConnect,'images/LoremIpsum/LoremIpsumLogos.png')}');
+   background-repeat: no-repeat;
+   background-size:310%;
+   background-position: -280px -520px;
+   height: 80px;
+   width:260px;
+   /* border: 1px solid red; */
+}
+
+.pc_frame_top {
+    background-color:transparent;
+    width:100%;
+    height:90px;
+    background: steelblue;
+    padding:0px;
+
+/* Gradient fill option for top frame */    
+
+background: #23538a; /* Old browsers */
+/* IE9 SVG, needs conditional override of 'filter' to 'none' */
+background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIxMSUiIHN0b3AtY29sb3I9IiMyMzUzOGEiIHN0b3Atb3BhY2l0eT0iMSIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjNzVhZGQ4IiBzdG9wLW9wYWNpdHk9IjEiLz4KICA8L2xpbmVhckdyYWRpZW50PgogIDxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9InVybCgjZ3JhZC11Y2dnLWdlbmVyYXRlZCkiIC8+Cjwvc3ZnPg==);
+background: -moz-linear-gradient(top,  #23538a 11%, #75add8 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(11%,#23538a), color-stop(100%,#75add8)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top,  #23538a 11%,#75add8 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top,  #23538a 11%,#75add8 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top,  #23538a 11%,#75add8 100%); /* IE10+ */
+background: linear-gradient(to bottom,  #23538a 11%,#75add8 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#23538a', endColorstr='#75add8',GradientType=0 ); /* IE6-8 */
+
+
+}
+.pc_frame_top > .inner {
+    max-width:1200px;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.pc_frame {
+    margin-bottom: 20px;
+    margin-top:0px;
+    width: 100%;
+    display:block;
+    background-color:white;
+}
+
+.pc_frame_inner {
+   /* padding:25px 20px 20px 20px; */
+    padding-top:10px;
+    max-width:1200px;
+    margin-left:auto;
+    margin-right:auto;
+
+}
+
+
+
+.box {
+    border: none;
+}
+
+
+
+.pc_frame .message {
+    background-color:#EAF3F5;
+    border-color:#99ccff;
+    background-color:#ffffcc;
+    border-color:#ffcc00; 
+}
+
+.pc_page_content_inner {
+   padding-left:20px;
+   padding-right:20px;
+}
+.pc_page_content table td {
+   padding:2px;
+}
+.pc_page_content .cart_item_table  td:nth-child(3) {
+    width:1%;
+    white-space:nowrap;   
+}
+#pc_sitepaymenthistory_page .payment_method_widget_header  td:nth-child(3) {
+    width:1%;
+    white-space:nowrap;   
+}
+
+ </style>  
+
+ <style>
+
+/* ------- Responsive CSS Nav Styling ----------- */
+.nav_bar_shadow {
+width:100%;
+height: 10px;
+/* IE9 SVG, needs conditional override of 'filter' to 'none' */
+background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzAwMDAwMCIgc3RvcC1vcGFjaXR5PSIwLjY1Ii8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMDAwMDAiIHN0b3Atb3BhY2l0eT0iMCIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+background: -moz-linear-gradient(top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0) 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0.65)), color-stop(100%,rgba(0,0,0,0))); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top, rgba(0,0,0,0.65) 0%,rgba(0,0,0,0) 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top, rgba(0,0,0,0.65) 0%,rgba(0,0,0,0) 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top, rgba(0,0,0,0.65) 0%,rgba(0,0,0,0) 100%); /* IE10+ */
+background: linear-gradient(to bottom, rgba(0,0,0,0.65) 0%,rgba(0,0,0,0) 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6000000', endColorstr='#00000000',GradientType=0 ); /* IE6-8 */
+}
+
+.responsive_nav_bar {
+   width:100%; 
+   background: steelblue; height: 50px;
+}
+.responsive_nav_bar > .inner {
+    max-width:800px;
+    margin-left:auto;
+    margin-right:auto;
+
+}
+
+.css_menu {
+}
+
+/*Strip the ul of padding and list styling*/
+.css_menu ul {
+    z-index: 10000;
+    list-style-type:none;
+    margin:0;
+    padding:0;
+    position: absolute;
+}
+
+/*Create a horizontal list with spacing*/
+.css_menu > ul > li {
+    display:inline-block;
+    float: left;
+    margin-right: 0px;
+}
+
+/*Style for menu links*/
+.css_menu li a {
+    display:block;
+    min-width:140px;
+    height: 50px;
+    text-align: center;
+    line-height: 50px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #fff;
+    background: transparent; /* steelblue; */
+    text-decoration: none;
+}
+
+/*Hover state for top level links*/
+#menu > li:hover > a {
+    background: #2b506e; /* #19c589; */
+}
+
+/*Style for dropdown links*/
+.css_menu li:hover ul a {
+    background:  #f3f3f3; 
+    color: #2f3036;
+    height: 40px;
+    line-height: 40px;
+}
+
+/*Hover state for dropdown links*/
+.css_menu li:hover ul a:hover {
+    background: steelblue; /* #19c589; */
+    color: #fff;
+}
+
+/*Hide dropdown links until they are needed*/
+.css_menu li ul {
+    display: none;
+}
+
+/*Make dropdown links vertical*/
+#menu li ul li {
+    display: block;
+    float: none;
+}
+
+/*Prevent text wrapping*/
+.css_menu li ul li a {
+    width: auto;
+    min-width: 100px;
+    padding: 0 20px;
+}
+
+/*Display the dropdown on hover*/
+.css_menu > ul > li > a:hover + .hidden, .css_menu .hidden:hover {
+    display: block;
+}
+
+/*Style 'show menu' label button and hide it by default*/
+.show-menu {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    text-decoration: none;
+    color: #fff;
+    background: #2b506e; /* #19c589; */
+    text-align: center;
+    padding: 10px 0;
+    display: none;
+}
+
+/*Hide checkbox*/
+.css_menu input[type=checkbox]{
+    display: none;
+}
+
+/*Show menu when invisible checkbox is checked*/
+.css_menu input[type=checkbox]:checked ~ #menu{
+    display: block;
+}
+
+
+/*Responsive Styles*/
+
+@media screen and (max-width : 760px){
+    /*Make dropdown links appear inline*/
+    
+.css_menu li a {
+    background:  steelblue; 
+    }
+        
+    .css_menu ul {
+        z-index: 10000;
+        position: static;
+        display: none;
+    }
+    /*Create vertical spacing*/
+    .css_menu > ul > li {
+        margin-bottom: 1px;
+    }
+    /*Make all menu links full width*/
+    .css_menu ul li, li a {
+        position:relative;
+        z-index: 10001;
+        width: 100%;
+    }
+    /*Display 'show menu' link*/
+    .show-menu {
+        display:block;
+        margin-top: 0px; /* 11px; */
+    }
+}
+
+/* ------- End of Responsive CSS Nav Styling -------- */
+
+/* Fixed width layout (optional) version */
+.pc_frame_top .inner {
+   max-width:800px;
+   margin-left:auto;
+   margin-right:auto;
+
+}
+.pc_page_content_inner {
+   max-width:800px;
+   margin-left:auto;
+   margin-right:auto;
+}
+</style>  
+
+<body id="htmlBody" >
+<div id="topbar" style="width:100%;" >
+<div style="color:white;padding:4px;margin:0px 0px 0px 0px;background:black;">
+Sample Site Template
+</div>
+</div>
+    
+    <!--  Edit custom banner and navigation here -->
+        <div class="pc_frame_top" >
+           <div class="inner">
+            <img class="pc_logo" src="/s.gif" />
+            <!-- <span style="color:white;font-size:3em;">Acme</span> -->
+
+          
+    
+        </div><!-- inner -->
+        </div>
+<div class="responsive_nav_bar" >
+    <div class="inner">
+    <!-- Responsive CSS Nav -->                       
+    <div class="css_menu"> 
+    <label for="show-menu" class="show-menu">Show Menu</label>
+    <input type="checkbox" id="show-menu" role="button"/>
+        <ul id="menu">
+        <li><a href="{!$Site.CurrentSiteURL}">Home</a></li>
+        <li>
+            <a href="#">Events ￬</a>
+            <ul class="hidden">
+                <li><a href="{!$Site.CurrentSiteURL}evt__SiteEventList">Calendar</a>
+                </li>
+                <apex:outputPanel layout="none" rendered="{!NOT(ISPICKVAL($User.UserType,'Guest'))}">  
+                    <li> <a href="{!$Site.CurrentSiteURL}evt__SiteMyEvents" title=""> My Events </a> </li>
+                </apex:outputPanel>                
+               
+            </ul>
+        </li>
+        <li>
+            <a href="#">Other Add-Ons ￬</a>
+            <ul class="hidden">
+                <li><a href="{!$Site.CurrentSiteURL}dn8n__SiteDonation?id=a1480000003eopM">Donation Page</a></li>
+                <li><a href="{!$Site.CurrentSiteURL}eslt__SiteEstoreProducts?id=a1280000001mgxt">eStore Lite Product List</a></li>
+                <li><a href="{!$Site.CurrentSiteURL}eslt__SiteEStoreSubscription?id=a1280000001mh25">eStore Lite Subscription</a></li>
+        <apex:outputPanel layout="none" rendered="{!NOT(ISPICKVAL($User.UserType,'Guest'))}">  
+                <li> <a href="{!$Site.CurrentSiteURL}quot__SiteInvoices" title=""> Invoices </a> </li>
+        </apex:outputPanel>
+                
+            </ul>
+        </li>
+
+
+        <apex:outputPanel layout="none" rendered="{!(ISPICKVAL($User.UserType,'Guest'))}">  
+        <li><a href="{!$Site.CurrentSiteURL}pymt__SiteLogin">Login</a></li>
+        </apex:outputPanel>
+        <apex:outputPanel layout="none" rendered="{!NOT(ISPICKVAL($User.UserType,'Guest'))}">  
+        <li>
+            <a href="#">My Account <i class="fa fa-long-arrow-down"></i></a>
+            <ul class="hidden">
+                <li> <a href="{!$Site.CurrentSiteURL}pymt__SitePaymentHistory" title=""> Payment History </a> </li>
+                <li> <a href="{!$Site.CurrentSiteURL}pymt__SiteSubscriptions" title=""> Subscriptions </a> </li>
+                <li> <a href="{!$Site.CurrentSiteURL}pymt__SiteScheduledPayments" title=""> Scheduled Payments </a> </li>
+                <li> <a href="{!$Site.CurrentSiteURL}pymt__SiteManagePmtMethods" title=""> Payment Methods </a> </li>
+                <li> <a href="{!$Site.CurrentSiteURL}pymt__SiteUserProfile" title=""> User Profile </a> </li>
+                <li> <a href="{!$Site.CurrentSiteURL}pymt__ChangePassword" title=""> Change Password </a> </li>
+                <li> <a href="{!$Site.Prefix}/secur/logout.jsp" title=""> {!$Label.site.logout} </a> </li>
+            </ul>
+        </li>
+        </apex:outputPanel>
+
+
+        <li>
+            <a href="#">Test Pages <i class="fa fa-long-arrow-down"></i></a>
+            <ul class="hidden">
+                <li><a href="{!$Site.CurrentSiteURL}pymt__SiteStyleTest">Site Style Test</a></li>
+            </ul>
+        </li>
+
+    </ul>
+    </div>
+    <!-- End of Responsive CSS Nav -->  
+    </div>
+</div><!-- end of responsive_nav_bar -->
+<div class="nav_bar_shadow"></div>
+
+    <div class="pc_frame">
+    <div class="pc_frame_inner">
+    
+    <apex:insert name="body"/>
+   
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<apex:outputPanel layout="none" rendered="{!(ISPICKVAL($User.UserType,'Guest'))}">  
+<script>
+    function changeLanguage(languageCode){ 
+        var urlstring = window.location.href;
+        if (urlstring.includes('lang=')) {
+            urlstring = urlstring.replace(/(lang=)[^\&]+/, '$1' + languageCode);
+        } else {
+            urlstring += ( urlstring.match( /[\?]/g ) ? '&' : '?' ) + 'lang='+languageCode;
+        }
+        window.location.href = urlstring;
+        return false;
+    }
+    </script>
+<a href="#" onclick="javascript:changeLanguage('en');return false;"><img src="http://icons.iconarchive.com/icons/icondrawer/flags/24/us.png"/></a>
+<a href="#" onclick="javascript:changeLanguage('es');return false;"><img src="http://icons.iconarchive.com/icons/icondrawer/flags/24/Mexico-icon.png"/></a>
+</apex:outputPanel>
+    <apex:insert name="footer">
+    <!--  Add custom footer here -->
+    <div style="text-align:center;width:100%;font-size:.5em;font-weight:bold;font:Verdana;color:#A4A4A4;">{!$Label.site.powered_by} Linvio PaymentConnect</div>
+    </apex:insert>
+    
+    </div><!--  end pc_frame_inner -->
+    </div><!--  end pc_frame -->
+
+</body>
+</apex:page>

@@ -1,0 +1,31 @@
+<apex:page id="DonationPageTemplate" showHeader="false" sideBar="false">
+    <head>
+        <link rel="shortcut icon" href="{!$Site.Prefix}/favicon.ico"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <apex:stylesheet value="{!URLFOR($Resource.pymt__PaymentConnect,'styles/sites_basic.css')}" />
+        <apex:stylesheet value="{!URLFOR($Resource.pymt__PaymentConnect,'styles/sites_basic_responsive.css')}" />
+        <apex:stylesheet value="{!URLFOR($Resource.pymt__PaymentConnect,'styles/sites_buttons_fields.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.pymt__PaymentConnect,'styles/css_buttons/blue.css')}" />
+        <apex:stylesheet value="{!URLFOR($Resource.dn8n__LinvioDonations,'styles/sites_basic.css')}" />
+        <link rel="stylesheet" type="text/css" href="{!URLFOR($Resource.eslt__eStoreLiteResources,'styles/sites_basic.css')}" /> 
+        <link rel="stylesheet" type="text/css" href="{!URLFOR($Resource.dn8n__LinvioDonations,'styles/sites_basic.css')}" />
+        <apex:stylesheet value="{!URLFOR($Resource.bootstrapNew, 'bootstrap-3.3.6-dist/css/bootstrap.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.DonationResources, 'styles/fonts.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.DonationResources, 'styles/normalize.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.DonationResources, 'styles/donation.css')}"/>
+    </head>
+    <body>
+        <div class="logo-container">
+            <apex:outputLink value="http://www.pensionfund.org">
+                <apex:image value="{!URLFOR($Resource.DonationResources, 'images/pension_fund.svg')}" styleClass="logo"/>
+            </apex:outputLink>
+        </div>
+        <c:DonationBanner />
+        <div class="content--wrapper">
+            <div class="flex-row container">
+                <apex:insert name="body"/>
+                <apex:insert name="footer"/>
+            </div>
+        </div>
+    </body>
+</apex:page>

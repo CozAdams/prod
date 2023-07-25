@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workflow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldUpdates>
+        <fullName>Old_RecordTypeId</fullName>
+        <field>Old_Record_Type__c</field>
+        <formula>PRIORVALUE( RecordTypeId )</formula>
+        <name>Old RecordTypeId</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Formula</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Potential_Fraud_Flag_cleared_dt</fullName>
+        <field>Potential_Fraud_Flag_Cleared_date__c</field>
+        <formula>Now()</formula>
+        <name>Potential Fraud Flag cleared dt</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Formula</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>true</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Transactions_Disabled1</fullName>
+        <description>Once Fraud Approval process is approved update Transaction disabled to False</description>
+        <field>Transactions_Disabled__c</field>
+        <literalValue>0</literalValue>
+        <name>Transactions Disabled</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>true</reevaluateOnChange>
+    </fieldUpdates>
+    <rules>
+        <fullName>Old RecordTypeId</fullName>
+        <actions>
+            <name>Old_RecordTypeId</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>false</active>
+        <description>used for disabling withdrawal when  fraud is suspected.</description>
+        <formula>AND(              Transactions_Disabled__c = True,               ISCHANGED(RecordTypeId),                NOT(ISBLANK(RecordTypeId))               )</formula>
+        <triggerType>onAllChanges</triggerType>
+    </rules>
+    <rules>
+        <fullName>Update Account Summary1</fullName>
+        <actions>
+            <name>Potential_Fraud_Flag_cleared_dt</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <actions>
+            <name>Transactions_Disabled1</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>false</active>
+        <criteriaItems>
+            <field>Contact.Potential_Fraud_Approval_Status__c</field>
+            <operation>equals</operation>
+            <value>Approved</value>
+        </criteriaItems>
+        <description>used for disabling withdrawal when fraud is suspected.</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+</Workflow>

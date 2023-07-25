@@ -1,0 +1,32 @@
+<aura:component controller="AccountSummaryService">
+    <aura:attribute name="case" type="Case" required="true"/>
+    <aura:attribute name="TDRA_ACC_TYPE" type="String" access="Private" />
+    <aura:attribute name="currentUser" type="User" required="true"/>
+    <aura:attribute name="currentAccountSummary" type="Account_Summary__c" required="true"/>
+    <aura:attribute name="accountSummaryList" type="Account_Summary__c[]"/>
+    <aura:attribute name="hasMatchingAccount" type="Boolean" default="false" />
+    <aura:attribute name="show403bForm" type="Boolean" default ="fasle"/>
+
+    
+    
+    <aura:method name="getAccountSummaries" action="{!c.getAccountSummaries}"/>
+    <aura:method name="accountSummaryValidation" action="{!c.handleAccountSelectValidation}"/>
+    <lightning:notificationsLibrary aura:id="accountSummaryAccountSelectNotifications"/>
+
+    <aura:if isTrue="{!v.hasMatchingAccount}">
+        <div class="slds-var-p-top_x-small">
+            <lightning:select aura:id="accountSummarySelect" onchange="{!c.handleSelectionChange}" label="* Select an Account to Transfer Funds to">
+                <option value="">Please select an account</option>
+                <aura:iteration items="{!v.accountSummaryList}" var="accountSummary">
+                    <option value="{!accountSummary.Id}">{!accountSummary.Name}</option>
+                </aura:iteration>
+
+                <aura:if isTrue="{!v.currentAccountSummary.Plan_ID__c == v.TDRA_ACC_TYPE}">
+
+                    <option value="new403b">New Roth 403(b)</option>
+
+                </aura:if>
+            </lightning:select>
+        </div>
+    </aura:if>
+</aura:component>

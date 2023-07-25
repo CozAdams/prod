@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata" fqn="addressSearchRecordPage">
+    <apiVersion>46.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>Address Search</masterLabel>
+    <description>Populate record fields using Google Maps API autocompletion.</description>
+    <targets>
+        <target>lightning__RecordPage</target>
+        <target>lightningCommunity__Page</target>
+        <target>lightningCommunity__Default</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__RecordPage">
+            <property name="street" label="Street Field" description="API name of the field to map to the Street field" type="String" />
+            <property name="street2" label="Address Line 2 Field" description="API name of the field to map to the Address Line 2 field" type="String" />
+            <property name="city" label="City Field" description="API name of the field to map to the City field" type="String" />
+            <property name="state" label="State/Province Field" description="API name of the field to map to the State/Province field" type="String" />
+            <property name="postalCode" label="Postal Code Field" description="API name of the field to map to the Postal Code field" type="String" />
+            <property name="country" label="Country Field" description="API name of the field to map to the Country field" type="String" />
+            <property name="lat" label="Latitude Field" description="API name of the field to map to the Latitude field" type="String" />
+            <property name="lng" label="Longitude Field" description="API name of the field to map to the Longitude field" type="String" />
+            <objects>
+                <object>Account</object>
+                <object>Contact</object>
+                <object>Lead</object>
+            </objects>
+        </targetConfig>
+        <targetConfig targets="lightningCommunity__Default">
+            <property name="recordId" type="String" label="Record Id" description="Automatically bind the page's record Id to the component variable" default="{!recordId}" />
+            <property name="objectApiName" type="String" label="Object Name" description="Automatically bind the page's object name to the component variable" default="{!objectApiName}" />
+            <property name="street" label="Street Field" description="API name of the field to map to the Street field" type="String" />
+            <property name="street2" label="Address Line 2 Field" description="API name of the field to map to the Address Line 2 field" type="String" />
+            <property name="city" label="City Field" description="API name of the field to map to the City field" type="String" />
+            <property name="state" label="State/Province Field" description="API name of the field to map to the State/Province field" type="String" />
+            <property name="postalCode" label="Postal Code Field" description="API name of the field to map to the Postal Code field" type="String" />
+            <property name="country" label="Country Field" description="API name of the field to map to the Country field" type="String" />
+            <property name="lat" label="Latitude Field" description="API name of the field to map to the Latitude field" type="String" />
+            <property name="lng" label="Longitude Field" description="API name of the field to map to the Longitude field" type="String" />
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

@@ -1,0 +1,45 @@
+<aura:component implements="lightning:availableForFlowScreens" access="global">
+    <aura:handler name="enrollmentEvent" event="c:enrollmentTypeEvent" action="{!c.handleEnrollmentEvent}"/>
+    
+    <aura:attribute name="styleBorderRadius" type="string" default="25px" />
+    <aura:attribute name="styleBorderStyle" type="string" default="solid"/>
+    <aura:attribute name="styleBorderWidth" type="string" default="2px"/>
+    <aura:attribute name="styleBorderColor" type="string" default="white"/>
+    
+    <aura:attribute name="stylePaddingTop" type="string" default="0px"/>
+    <aura:attribute name="stylePaddingRight" type="string" default="15px"/>
+    <aura:attribute name="stylePaddingBottom" type="string" default="0px"/>
+    <aura:attribute name="stylePaddingLeft" type="string" default="15px"/>
+    
+    <aura:attribute name="formNames" type="String[]"/>
+    <aura:attribute name="groupName" type="String" default="Sample Group Name"/>
+    <!--
+    <aura:attribute name="nameBAA" type="string" defualt="Benefit Accumulation Account Enrollment Form"/>
+    <aura:attribute name="nameRothIRA" type="string" defualt="Roth IRA Enrollment Form"/>
+    <aura:attribute name="nameTraditionalIRA" type="string" defualt="Traditional IRA Enrollment Form"/>
+    <aura:attribute name="nameTDRA" type="string" defualt="TDRA Enrollment Form"/>
+    <aura:attribute name="namePension" type="string" defualt="Pension Plan Enrollment Form"/>
+    -->
+    <aura:attribute name="height" type="string" default="50px"/>
+    <aura:attribute name="styleTextColor" type="string" default="white"/>
+    <aura:attribute name="styleBackgroundColor" type="string" default="rgb(0, 48, 102)"/>
+    
+    <aura:attribute name="destinationFlowTransition" type="string" default="next"/>
+    <aura:attribute name="selectedFormType" type="string"/>
+    
+    <div class="slds-box slds-m-bottom_medium" style="background-color:#EEEEEE;">
+        <div class="slds-text-heading_small slds-p-bottom_large">{!v.groupName}</div>
+        <div class="slds-grid slds-grid_align-space slds-wrap">
+            <aura:iteration items="{!v.formNames}" var="formName">
+                <div class="slds-col">
+                    <c:imageButtonfsc enrollmentType="{!formName}" styleTextColor="{!v.styleTextColor}" styleBackgroundColor="{!v.styleBackgroundColor}"
+                                      styleBorderRadius="{!v.styleBorderRadius}" styleBorderStyle="{!v.styleBorderStyle}"
+                                      styleBorderWidth="{!v.styleBorderWidth}" styleBorderColor="{!v.styleBorderColor}" stylePaddingTop="{!v.stylePaddingTop}"
+                                      stylePaddingRight="{!v.stylePaddingRight}" stylePaddingBottom="{!v.stylePaddingBottom}" stylePaddingLeft="{!v.stylePaddingLeft}"
+                                      destinationFlowTransition="{!v.destinationFlowTransition}" imageHeight="{!v.height}" navigateFlow="{!v.navigateFlow}"/>
+                </div>
+            </aura:iteration>
+        </div>
+    </div>
+    
+</aura:component>

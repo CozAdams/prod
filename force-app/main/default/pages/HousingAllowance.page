@@ -1,0 +1,96 @@
+<apex:page controller="HousingAllowance" action="{!initialize}" doctype="html-5.0" sidebar="false" showHeader="false" title="Housing Allowance">
+    <apex:image url="{!$Resource.pfccLogo}" width="275" height="73" style="margin:25px;"/>
+    <br/>
+    <apex:pageMessages ></apex:pageMessages>
+    <apex:outputPanel id="thePanel" rendered="{!displayForm}">
+    <div style="margin-top:25px; margin-left:25px; margin-right:125px;">
+        <div style="float: left;">
+            <apex:outputText value="{0,date,MM/dd/yyyy}">
+                <apex:param value="{!Today()}" />
+            </apex:outputText>
+            <br/>
+            <br/>
+            {!contactRecord.Name}<br/>
+            {!contactRecord.Home_Address_Street_1__c} {!contactRecord.Home_Address_Street_2__c}<br/>
+            {!contactRecord.Home_Address_City__c}, {!contactRecord.Home_Address_State_Province__c}, {!contactRecord.Home_Address_Zip__c}<br/>
+        </div>
+        <div style="font-weight: bold; text-align: right;">
+            PIN #: {!pin}
+        </div>
+    </div>
+
+    <div style="clear: both;"></div>
+
+    <div style="margin-top:40px; margin-left:25px; margin-right:125px;">
+        <p>
+            Dear {!contactRecord.FirstName}
+        </p>
+        <p>
+            <apex:outputPanel rendered="{!contactRecord == null || contactRecord.Credentialed_Clergy_Type__c != 'Commissioned'}">
+                One of the great benefits to choosing Pension Fund of the Christian Church (Disciples of Christ) (“Pension Fund”) as your retirement provider is that unlike most other mainstream retirement providers, you can still claim a housing allowance in retirement. Because we are a church plan, Pension Fund’s Board of Directors is authorized to act on behalf of the church in designating a portion of your pension, annuity and/or Tax-Deferred Retirement Account (TDRA) payout as Housing Allowance.
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!contactRecord.Credentialed_Clergy_Type__c == 'Commissioned'}">
+                One of the great benefits to choosing Pension Fund of the Christian Church (Disciples of Christ) (“Pension Fund”) as your retirement provider is that unlike most other mainstream retirement providers, you can still claim a housing allowance if you are still licensed or commissioned in retirement. Because we are a church plan, Pension Fund’s Board of Directors is authorized to act on behalf of the church in designating a portion of your pension, annuity and/or Tax-Deferred Retirement Account (TDRA) payout as Housing Allowance.
+            </apex:outputPanel>
+        </p>
+        <p>
+            Your designation of a Housing Allowance must be made annually and in advance. For 2019, the Board of Directors will designate sixty percent (60%) of your pension as Housing Allowance. If this amount is acceptable to you, no further action is needed.
+        </p>
+        <p>
+            However, if appropriate, you may request a larger amount (up to 100%) of your benefit as Housing Allowance for 2019. If you wish to do so, please indicate your request below and submit this form to us <b>before December 15, 2018</b>.  This online form will automatically submit your request to Pension Fund and an email confirmation will be sent to you for your records. Please keep that email confirmation for future reference and tax filing purposes.
+        </p>
+        <p>
+            <b>Please Note:</b> If you are receiving a Pension Plan retirement pension as well as a monthly payout from your TDRA, you must designate 100% of your housing allowance from your pension before making a designation of any remaining amount from your TDRA payout.
+        </p>
+        <p>
+            For help calculating your 2019 Housing Allowance, the following resources are available on our website:
+        </p>
+        <p>
+            <apex:outputLink value="https://pensionfund.org/uploads/Housing-Allowance-Information-for-Retired-Ministers-2018.pdf">Information for Retired Ministers Requesting Housing Allowance</apex:outputLink>
+        </p>
+        <p>
+            <apex:outputLink value="https://pensionfund.org/uploads/Housing-Allowance-for-Retired-Ministers-Worksheet_180827_202803.pdf">Housing Allowance Worksheet for Retired Ministers</apex:outputLink>
+        </p>
+        <p>
+            Sincerely,
+        </p>
+        <p>
+            <img height="122" width="335" src="https://pensionfund--c.na51.content.force.com/servlet/servlet.ImageServer?id=0150V00000DL5r5&oid=00Dd0000000c4vV&lastMod=1506965757000"/>
+        </p>
+        <p>
+            <i>Todd Adams, President</i>
+        </p>
+        <p>
+            <b style="text-decoration: underline;">HOUSING ALLOWANCE REQUEST (A confirmation of your request will be emailed for your records)</b><br/>
+            I am requesting that the Board of Directors of the Pension Fund of the Christian Church (Disciples of Christ) designate a portion of my Pension/ Annuity/ TDRA payout as Housing Allowance for 2019.
+        </p>
+    </div>
+    <apex:form >
+    <div style="margin-top:10px; margin-left:25px; margin-right:125px; font-weight: bold;">
+        <table>
+            <tr>
+                <td>Pension Designate</td><td><apex:input value="{!pensionCustomPercentage}" style="margin-left:5px; width:25px;"/>% of my pension</td>
+            </tr>
+            <tr>
+                <td>TDRA Designate</td><td><apex:input value="{!tdraCustomPercentage}" style="margin-left:5px; width:25px;"/>% of my TDRA payout</td>
+            </tr>
+            <tr>
+                <td>Annuity Designate</td><td><apex:input value="{!annuityCustomPercentage}" style="margin-left:5px; width:25px;"/>% of my annuity payout</td>
+            </tr>
+        </table>
+    </div>
+    <div style="margin-top:40px; margin-left:25px; margin-right:125px;">
+        <apex:inputCheckbox value="{!acceptTerms}"/> By checking this box and typing my name below, I certify that I am the person whose name appears above and that the information submitted in this electronic form is correct and complete to the best of my knowledge.<br/>
+        <b>Signature:</b> <apex:input value="{!signature}" style="margin-left:25px; margin-top:10px; width:250px; text-align:center;"/><br/>
+        <apex:commandButton action="{!submitHousingAllowance}" value="Submit" style="margin-top:10px; width:150px;"/>
+    </div>
+    <div style="margin-top:40px; margin-left:25px; margin-right:125px;">
+        <hr/>
+        <p>
+
+            <b>Please note: The information provided in this form is not intended to provide or be a substitute for specific individualized accounting or tax planning advice.</b>
+        </p>
+    </div>
+    </apex:form>
+    </apex:outputPanel>
+</apex:page>

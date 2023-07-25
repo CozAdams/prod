@@ -1,0 +1,20 @@
+<aura:component implements="force:lightningQuickActionWithoutHeader,force:hasRecordId">
+
+    <aura:attribute name="isOneTimePayment" type="Boolean" default="true" />
+    <aura:attribute name="paymentType" type="String" default="oneTime" />
+
+    <lightning:select name="paymentType" label="Payment Type" required="true" value="{!v.paymentType}">
+        <option value="oneTime">One Time Payment</option>
+        <option value="recurring">Recurring Payment</option>
+    </lightning:select>
+
+    <aura:if isTrue="{!v.paymentType == 'oneTime' }">
+        <c:billerDirectSHO recordId = "{!v.recordId}" onclose="{!c.closeModal}"></c:billerDirectSHO>
+
+        <aura:set attribute="else">
+                <c:billerDirectSSO recordId = "{!v.recordId}"  onclose="{!c.closeModal}"></c:billerDirectSSO>
+        </aura:set>
+  </aura:if> 
+
+  
+</aura:component>

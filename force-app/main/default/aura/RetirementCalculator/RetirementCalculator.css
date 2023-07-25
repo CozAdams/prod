@@ -1,0 +1,57 @@
+.THIS .slds-dropdown-trigger .slds-dropdown--left {
+    left: -180px;
+}
+.THIS .slds-slider__value,
+.THIS .slds-slider-label__range,
+.THIS .slider_label-hidden .slds-slider-label {
+    display: none;
+}
+.THIS .slds-slider {
+    margin-top: 1rem;
+}
+.THIS .slider_label-hidden .slds-slider {
+    margin-top: 1.25rem;
+}
+.THIS .slds-slider__range::-webkit-slider-thumb {
+    background-color: rgb(65, 91, 130);
+}
+.THIS .slds-slider__range::-moz-range-thumb {
+    background-color: rgb(65, 91, 130);
+}
+.THIS input[type="date"] {
+    padding-right: 1rem;
+}
+
+@page {
+    size: A4;
+}
+@media print {
+    .THIS .print-results {
+        font-size: 10px;
+        width:50%;
+    }
+    .THIS .print-canvas {
+        width:50%;
+    }
+    .THIS .print-canvas canvas{
+        width:100%!important;
+        height:325px!important;
+    }
+    .THIS.results-card{
+        page-break-after:always;
+    }
+    .THIS .slds-box{
+        margin-bottom:5px;
+        padding:5px;
+    }
+    .THIS .slds-grid li.slds-p-vertical_xx-small {
+        padding-top: 2px;
+        padding-bottom: 2px;
+    }
+    .THIS .estimated-monthly-pension {
+        margin: 0px;
+    }
+    .THIS .slds-card__header {
+        margin-bottom: 5px;
+    }
+}

@@ -1,0 +1,163 @@
+<template>
+    <!-- Overview Message -->
+    <br>
+    You may establish either an IRA with the Pension Fund of the Christian Church if you are:
+    <ul>
+        <li>an employee or former employee of an employer that is eligible to participate in the Defined Contribution Retirement Accounts of the Pension Fund of the Christ Church (Disciples of Christ) ("DCRA"); or</li>
+        <li>the spouse of such eligible employee or former employee, if you file a joint tax return with the employee or former employee.</li>
+    </ul>
+    See <a href="https://pensionfund.org/uploads/Eligibility_for_IRA_Contributions.pdf">Eligibility for a Pension Fund Traditional IRA or Roth IRA</a> for information as to whether you are eligible to make regular contributions, rollover/transfer contributions, or both, to an IRA. You can make regular contributions to an IRA from your spouse's taxable compensation if you file a joint tax return with your spouse. If you are the spouse of an employee or former employee, you may only roll or transfer assets into the IRA from retirement plans or IRAs held in your name.
+    <br><br>
+    To open your IRA, please complete the below contribution information. A minimum of $100 is required to open your IRA but you can also select to do a monthly recurring contribution of a different amount.
+    <br><br>
+    Once your IRA is open, you may also choose to rollover or transfer funds from other financial institutions. If you’d like to perform a rollover or transfer into your IRA, please contact Pension Fund and we will assist you in this process.
+
+    <!-- Single Sum Section -->
+    <div class="section-div">
+        <div class="slds-text-heading_small">
+            Single Sum Contribution
+        </div>
+
+        <!-- Checkbox -->
+        <lightning-input 
+            type="checkbox" 
+            label="One-time debit (ACH) from my bank account" 
+            name="isSingle"
+            class="check-field"
+            data-field-name="isSingle"
+            checked={isSingle}
+            onchange={handleCheckboxChange}>
+        </lightning-input>
+
+        <!-- Single Sum Input -->
+        <template if:true={isSingle}>
+            <!-- Amount -->
+            <lightning-input 
+                type="number"
+                name="singleAmount"
+                data-field-name="singleAmount"
+                class="formValidate slds-m-top_x-small slds-m-bottom_x-small"
+                label="I am remitting an initial after-tax contribution amount to my account equal to $"
+                value={singleAmount}
+                formatter="currency"
+                step="0.01"
+                min=100
+                max={maxAmount}
+                message-when-range-underflow={ERROR_SINGLE_AMT_MIN}
+                message-when-range-overflow={ERROR_SINGLE_AMT_MAX}
+                message-when-value-missing={ERROR_SINGLE_AMT_REQ}
+                onblur={handleCurrencyInputChange}
+                required="true">
+            </lightning-input>
+
+            <!-- Tax Year -->
+            <lightning-combobox
+                name="taxYear"
+                data-field-name="taxYear"
+                label="I irrevocably elect for my initial single sum contribution to apply to the following tax year:"
+                value={taxYear}
+                options={taxYearOptions}
+                onchange={handleTaxYearChange}
+                class="formValidate slds-m-top_x-small slds-m-bottom_x-small"
+                required="true">
+            </lightning-combobox>
+
+            <!-- Date -->
+            <lightning-input 
+                type="date"
+                name="singleDate"
+                data-field-name="singleDate"
+                label="One-Time Effective on:"
+                value={singleDate}
+                class="formValidate slds-m-top_x-small slds-m-bottom_x-small"
+                min={singleDateMin}
+                message-when-range-underflow="Date must be after today's date."
+                message-when-value-missing="Date is required."
+                onchange={handleInputChange}
+                required="true">
+            </lightning-input>
+            <p><b>Please note:</b> 5 business days are required in order to process your request.</p>
+            <div class="slds-m-top_x-small">
+                <p><i>Contributions must be received by the tax filing deadline, without extensions, for the year for which the contribution is being made (generally, by April 15). <b>If no year is indicated, the contribution will apply to the current tax year.</b> For future contributions, complete the IRA Contribution Form or elect to make recurring contributions below.</i></p>
+            </div>
+        </template>
+    </div>
+    
+    <!-- Recurring Section -->
+    <div class="section-div">
+        <div class="slds-text-heading_small">
+            Recurring Contributions
+        </div>
+
+        <!-- Checkbox -->
+        <lightning-input 
+            type="checkbox" 
+            label="I authorize recurring after-tax contributions to be made to my IRA" 
+            name="isRecurring"
+            class="check-field slds-m-top_x-small slds-m-bottom_x-small"
+            data-field-name="isRecurring"
+            checked={isRecurring}
+            onchange={handleCheckboxChange}>
+        </lightning-input>
+
+        <!-- Recurring Input -->
+        <template if:true={isRecurring}>
+            <p><b>IMPORTANT:</b> A minimum initial contribution of $100 is required to open an IRA. Regular contributions may not exceed the yearly limits set forth by the IRS. For a Roth IRA only, these limits may be less if you have modified adjusted gross income that exceeds a certain amount. Regular contributions made to a Traditional IRA reduce the amount you can contribute to a Roth IRA, and vice versa. To view these all these limits, please visit IRS.gov.</p>
+
+            <!--  Amount -->
+            <lightning-input 
+                type="number"
+                name="recurringAmount"
+                data-field-name="recurringAmount"
+                class="formValidate slds-m-top_x-small slds-m-bottom_x-small"
+                label="Recurring contributions of $"
+                value={recurringAmount}
+                formatter="currency"
+                step="0.01"
+                min=.01
+                message-when-range-underflow={ERROR_RECUR_AMT_MIN}
+                message-when-value-missing={ERROR_RECUR_AMT_REQ}
+                onblur={handleCurrencyInputChange}
+                required="true">
+            </lightning-input>
+
+            <!-- Day of Month -->
+            <lightning-radio-group 
+                name="recurringDay"
+                data-field-name="recurringDay"
+                label="will be debited on the"
+                options={recurringDayOptions}
+                value={recurringDay}
+                type="radio"
+                onchange={handleInputChange}
+                message-when-value-missing="Day of the month is required when Recurring Contributions is selected."
+                class="formValidate slds-m-top_x-small slds-m-bottom_x-small"
+                required="true">
+            </lightning-radio-group>
+
+            <!-- Date -->
+            <lightning-input 
+                type="date"
+                label="Recurring Effective on:"
+                name="recurringDate"
+                data-field-name="recurringDate"
+                value={recurringDate}
+                class="formValidate slds-m-top_x-small slds-m-bottom_x-small"
+                min={recurringDateMin}
+                message-when-range-underflow="Date cannot be before the start of next month."
+                message-when-value-missing="Date is required."
+                onchange={handleInputChange}
+                required="true">
+            </lightning-input>
+            <p><b>Please note:</b> 5 business days are required in order to process your request.</p>
+        </template>
+    </div>
+
+    <!-- Navigation Buttons -->
+    <div class="section-div button-div">
+        <div class="button-group">
+            <lightning-button data-name="btnBack" label="Previous" onclick={navigate}></lightning-button>
+            <lightning-button data-name="btnNext" label="Next" variant="brand" onclick={navigate}></lightning-button>
+        </div>
+    </div>
+</template>

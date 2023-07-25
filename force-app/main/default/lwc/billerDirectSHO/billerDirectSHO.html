@@ -1,0 +1,68 @@
+<template>
+    <div class="newdivtest">
+        </br>
+        <lightning-formatted-text class="slds-text-heading_small slds-align_absolute-center slds-p-horizontal_small" style=" padding-bottom: 5px;" value={header} ></lightning-formatted-text>
+        
+        <template if:true={isIRA}>
+            <!-- Tax Year -->
+            <lightning-combobox
+                class="deposit-form-field"
+                name="taxYear"
+                data-field-name="taxYear"
+                label="Tax Year"
+                value={taxYear}
+                options={taxYearOptions}
+                message-when-value-missing={ERROR_MSG_REQUIRED}
+                onchange={handleTaxYearChange}
+                required>
+            </lightning-combobox>
+        </template>
+
+        </br>        
+        <lightning-input 
+            class="deposit-form-field amount" 
+            type='Number' name='Amount' 
+            label="Amount to deposit" 
+            formatter="currency" 
+            min="10" value={amount} 
+            step=".01" 
+            message-when-value-missing="Dollar amount cannot be blank" 
+            message-when-range-underflow="Dollar amount cannot be less than $10" 
+            onchange={handleAmountChange} required>
+        </lightning-input>
+
+        <template if:true={isIRA}>
+            <!-- IRS Link -->
+            <lightning-formatted-url
+                value="https://www.irs.gov/retirement-plans/plan-participant-employee/retirement-topics-ira-contribution-limits"
+                label="IRS Limits"
+                target="_blank"
+                tooltip="Click here to view contribution limit info at IRS.gov"
+            ></lightning-formatted-url>
+        </template>
+
+        <!--53 demo / test link -->
+       <!-- <form action="https://53demo.billerdirectexpress.com/ebpp/PFCCSHO/SHO" method="post" target="_blank"> -->
+        <!-- 53 Prodction BillerDirect Link -->
+        <form action="https://53.billerdirectexpress.com/ebpp/PFCCSHO/SHO" method="post" target="_blank">
+            <input  type="hidden" name="AccountNumber" value={accountNumber} />
+            <input  type="hidden" name="Amount" value={amount} />
+            <input  type="hidden" name="Name" value={name} />
+            <input  type="hidden" name="Pin" value={pin} />
+            <input  type="hidden" name="Email" value={email} />
+            <input  type="hidden" name="ContactID" value={contactId} />
+            <input  type="hidden" name="Account_Summary_ID" value={accountSummaryId} />
+            <input  type="hidden" name="TaxYear" value={taxYear} />
+            <input  type="hidden" name="SHO" value={SHO} />
+            <input  type="hidden" name="ClientID" value="7a08aeb1-42a5-4e60-9a33-c93f0a1b2a4c" />
+            <input  type="hidden" name="ID" value={hashID} />
+            </br>
+            <input  class="slds-button slds-button_neutral" value="Next" type="button" onclick={handleClick}>
+        </form>
+
+
+    
+        
+    </div>
+        
+</template>

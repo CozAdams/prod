@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata" fqn="addressSearchFlow">
+    <apiVersion>46.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>Address Search</masterLabel>
+    <description>Populate fields fields using Google Maps API autocompletion. Usable in Flows.</description>
+    <targets>
+        <target>lightning__FlowScreen</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__FlowScreen">
+            <property name="street" label="Street Value" description="Value to map to the Street field" type="String"/>
+            <property name="street2" label="Address Line 2 Value" description="Value to map to the Address Line 2 field" type="String"/>
+            <property name="city" label="City Value" description="Value to map to the City field" type="String"/>
+            <property name="state" label="State/Province Value" description="Value to map to the State/Province field" type="String"/>
+            <property name="postalCode" label="Postal Code Value" description="Value to map to the the Postal Code field" type="String"/>
+            <property name="country" label="Country Value" description="Value to map to the Country field" type="String"/>
+            <property name="lat" label="Latitude Value" description="Value to map to the Latitude field" type="String"/>
+            <property name="lng" label="Longitude Value" description="Value to map to the Longitude field" type="String"/>
+            <property name="verificationReq" label="Address Verification Required" description="Value to map to the Address Verification Required field" type="Boolean"/>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

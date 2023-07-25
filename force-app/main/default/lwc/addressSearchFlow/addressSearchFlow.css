@@ -1,0 +1,16 @@
+.address-container {
+  position: relative;
+}
+
+.address-autocomplete-input-container {
+  position: relative;
+  margin-bottom: 0.5rem;
+}
+
+.slds-card__footer {
+  padding: 0.75rem 0 0;
+}
+
+.message {
+  padding: .5rem;
+}

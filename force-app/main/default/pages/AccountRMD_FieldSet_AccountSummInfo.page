@@ -1,0 +1,10 @@
+<apex:page standardController="Account_RMD__c">
+<apex:pageBlock >  
+<span style="font-family: sans-serif; font-size: 10pt;">
+     <apex:repeat value="{!$ObjectType.Account_RMD__c.FieldSets.Account_RMD_Acct_Summary_values}" var="fields">
+         <span class="label" style="align:left">{!fields.label}</span>:&nbsp;&nbsp;
+         <apex:outputtext value="{!Account_RMD__c[fields]}" /><br/>           
+    </apex:repeat>   
+</span>
+</apex:pageBlock>
+</apex:page>

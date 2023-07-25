@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <description>Jitterbit Update Member when an updated field is updated.</description>
+        <name>Jitterbit_Update_Member</name>
+        <label>Jitterbit Update Member</label>
+        <locationX>176</locationX>
+        <locationY>335</locationY>
+        <actionName>Contact.Jitterbit_Update_Member</actionName>
+        <actionType>outboundMessage</actionType>
+        <connector>
+            <targetReference>Jitterbit_Update_Member_GP</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+    </actionCalls>
+    <actionCalls>
+        <description>Jitterbit Update Member GP</description>
+        <name>Jitterbit_Update_Member_GP</name>
+        <label>Jitterbit Update Member GP</label>
+        <locationX>176</locationX>
+        <locationY>455</locationY>
+        <actionName>Contact.Jitterbit_Update_Member_GP</actionName>
+        <actionType>outboundMessage</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+    </actionCalls>
+    <apiVersion>55.0</apiVersion>
+    <description>Jitterbit Update Member  LW &amp; GP</description>
+    <environments>Default</environments>
+    <interviewLabel>Jitterbit Update Member  LW &amp; GP {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Jitterbit Update Member  LW &amp; GP</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Jitterbit_Update_Member</targetReference>
+        </connector>
+        <filterFormula>and ( ISPICKVAL({!$Record.Contact_Type__c}, &apos;Member&apos;),
+ {!$Record.LastModifiedBy.LastName} &lt;&gt; &apos;SBC-SF APIUser&apos;,  
+{!$Record.LastModifiedBy.LastName} &lt;&gt; &apos;PFCC_JobRun&apos;, 
+
+OR(
+ISCHANGED({!$Record.Birthdate}),
+ISCHANGED({!$Record.Contact_Type__c}),
+ISCHANGED({!$Record.Credentialed_Clergy_Type__c}),
+ISCHANGED({!$Record.Current_City__c}),
+ISCHANGED({!$Record.Current_Country__c}),
+ISCHANGED({!$Record.Current_State__c}),
+ISCHANGED({!$Record.Current_Street_1__c}),
+ISCHANGED({!$Record.Current_Street_2__c}),
+ISCHANGED({!$Record.Current_ZIP__c}),
+ISCHANGED({!$Record.Death_Date__c}),
+ISCHANGED({!$Record.Email}),
+ISCHANGED({!$Record.Estate_Trust_SSN__c}),
+ISCHANGED({!$Record.FirstName}),
+ISCHANGED({!$Record.Gender__c}),
+ISCHANGED({!$Record.LastName}),
+ISCHANGED({!$Record.Marital_Status__c}),
+ISCHANGED({!$Record.Marriage_Date__c}),
+ISCHANGED({!$Record.Member_Type__c}),
+ISCHANGED({!$Record.MiddleName}),
+ISCHANGED({!$Record.PFCC_Employee__c}),
+ISCHANGED({!$Record.PIN__c}),
+ISCHANGED({!$Record.Phone}),
+ISCHANGED({!$Record.Salutation}),
+ISCHANGED({!$Record.Social_Insurance_Number__c}),
+ISCHANGED({!$Record.Social_Security_Number__c}),
+ISCHANGED({!$Record.Suffix}),
+
+ISCHANGED({!$Record.Contact_Status__c}),
+ISCHANGED({!$Record.MailingCity}),
+ISCHANGED({!$Record.MailingCountry}),
+ISCHANGED({!$Record.MailingPostalCode}),
+ISCHANGED({!$Record.MailingState}),
+ISCHANGED({!$Record.MailingStreet}),
+ISCHANGED({!$Record.Mailing_Address_Line_2__c})
+)
+)</filterFormula>
+        <object>Contact</object>
+        <recordTriggerType>Update</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

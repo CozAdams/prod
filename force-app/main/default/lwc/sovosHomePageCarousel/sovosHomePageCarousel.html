@@ -1,0 +1,147 @@
+<template>
+    <!-- SPINNER -->
+    <template if:true={isLoading}>
+        <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+    </template>
+
+    <!-- TILES -->
+    <lightning-card title="Quick Actions" style="height: 200px; display: grid;">
+        <div class="carousel">
+            <div class="gallery-cell">
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col slds-p-around_small">
+                        <!--<div class="box">
+                            <div class="ribbon ribbon-top-left"><span class="ribbonText">NEW</span></div>
+                        </div>-->
+                  <!--      <div class="slds-box tile" onclick={handleContributions}>
+                            <p>Setup/Manage Recurring Contributions</p> 
+                        </div> -->
+                        
+                    </div>
+
+                    <div class="slds-col slds-p-around_small">
+                        <!--<div class="box">
+                            <div class="ribbon ribbon-top-left"><span class="ribbonText">NEW</span></div>
+                        </div>-->
+                        <div class="slds-box tile" onclick={handleProfileTab3}>
+                            <span style="padding: 5px; text-align: center; vertical-align: -webkit-baseline-middle;">View My Tax Documents</span>
+                        </div>
+                    </div>
+
+                    <div class="slds-col slds-p-around_small">
+                        <!--<div class="box">
+                            <div class="ribbon ribbon-top-left"><span class="ribbonText">NEW</span></div>
+                        </div>-->
+                        <div class="slds-box tile" onclick={handleProfileTab1}>
+                            <span style="padding: 5px; text-align: center; vertical-align: -webkit-baseline-middle;">Update My Information</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="gallery-cell">
+                <div class="slds-grid slds-gutters" style="padding-left: 25px;">
+                    <div class="slds-col slds-p-around_small">
+                        <!--<div class="box">
+                            <div class="ribbon ribbon-top-left"><span class="ribbonText">NEW</span></div>
+                        </div>-->
+                        <div class="slds-box tile" onclick={handleProfileTab2}>
+                            <span style="padding: 5px; text-align: center; vertical-align: -webkit-baseline-middle;">View My Documents</span>
+                        </div>
+                    </div>
+
+                    <div class="slds-col slds-p-around_small">
+                        <!--<div class="box">
+                            <div class="ribbon ribbon-top-left"><span class="ribbonText">NEW</span></div>
+                        </div>-->
+                        <div class="slds-box tile" onclick={handleProfileTab2}>
+                            <span style="padding: 5px; text-align: center; vertical-align: -webkit-baseline-middle;">Securely Upload Documents</span>
+                        </div>
+                                <div onclick={handleContributions}><p> - </p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </lightning-card>
+
+    <!-- MANAGE RECURRING CONTRIBUTIONS POPUP -->
+    <template if:true={isModalOpen}>
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                <!--    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Setup/Manage Recurring Contributions</h2> -->   <!--JS SE-2949 rename-->
+                </header>
+                <div class="slds-modal__content slds-p-around_small" id="modal-content-id-0" style="font-size: 18px;">
+                <!--    <form action="https://53demo.billerdirectexpress.com/PayIQ/Api/SSO/SAML/Redirect" method="POST" target="_blank"> -->
+                 <form action="https://53.billerdirectexpress.com/PayIQ/Api/SSO/SAML/Redirect" method="POST" target="_blank">
+                        <!--<div class="slds-modal__content slds-p-around_small" id="modal-content-id-1" style="color: black;">
+                            <p><b>Payment Type:</b> Recurring Payment</p>
+                        </div>-->
+                        
+                        <input name="SAMLResponse" value={bodyValue} type="hidden"/>
+                        <!--
+                        <div class="slds-modal__content" id="modal-content-id-2" style="color: #088756">
+                            <lightning-button variant="base" label="Schedule Recurring Payments" title="Schedule Recurring Payments" onclick={handleClick} class="slds-m-left_x-small"></lightning-button>
+                        </div>
+                        -->
+                        <div class="slds-modal__content slds-p-around_small" id="modal-content-id-3" style="color: black;">
+                            <!--JS SE-2949 Modal Update-->
+                            <p style="text-align: center;">You will be securely handed off from the Pension Fund Member Portal to Fifth Third, our bank of record, to setup/manage your recurring ACH contribution. This will open in a new tab, which you will need to close once you complete your transaction. Your Member Portal will remain open in the current tab, so you do not need to re-sign in.</p>
+                            <br/>
+                            <p style="text-align: center;">Once you land on the Fifth Third site, click on Recurring Contribution to get started.</p>
+                            
+                            <img style="max-height: 400px" src={RecurringContribImage}/>
+                            <br/><br/>
+                            <p style="text-align: center;">Need additional help? Click <a href="https://pensionfund.org/login/member-portal-login/faqs" target="_blank">HERE</a> to view our FAQ page.</p>
+                            <br/><br/>
+                            <p style="text-align: center; color: #013066"><b>If you have further questions, please contact Member Relations at 866.495.7322.</b></p>
+                            <!--JS SE-2949 Modal Update-->
+                        </div>
+                    </form>
+                </div>
+                <footer class="slds-modal__footer"> <!-- style="text-align: left;" -->
+                    <lightning-button variant="neutral" label="Cancel" title="Cancel" onclick={handleCancel} style="padding: 5px;"></lightning-button>
+                    <lightning-button variant="neutral" label="Next" title="Next" onclick={handleClick} style="padding: 5px;"></lightning-button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+    <!-- Manage No Account Found Modal -->
+    <template if:true={showNoAccountFound}>
+        <section role="dialog" tabindex="-1" aria-modal="true" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+         <!--        <h2 class="slds-text-heading_medium slds-hyphenate">Setup/Manage Recurring Contributions</h2> -->
+                </header>
+
+                <div class="slds-modal__content slds-p-around_small">
+                    <lightning-layout vertical-align="center">
+                        <lightning-layout-item size="6" padding="around-small">
+                            <div style="text-align: center; font-weight: bold; font-size: x-large;">Oops!</div>
+                            <div style="text-align: center; font-size: x-large;">We're Sorry</div>
+                            <br/>
+                            <div style="text-align: center; font-size: x-large;">
+                                <lightning-button variant="brand" label="Open New Account" title="Open New Account" onclick={handleNewEnrollment} class="slds-m-left_x-small new-account-button"></lightning-button>
+                            </div>
+                            
+                        </lightning-layout-item>
+                        <lightning-layout-item size="6" padding="around-small">
+                            <div class="slds-modal__content slds-p-around_small slds-text-align_center"><img style="max-height: 200px" src={OopsImage}/></div>
+                        </lightning-layout-item>
+                    </lightning-layout>
+                </div>
+
+                <div class="slds-modal__content slds-p-around_small" style="color: black; font-size: 18px;">
+                    <p style="text-align: center;">You currently do not have an eligible account to set up a recurring contribution. This applies only to our individual savings and retirement accounts. However, you can easily open an IRA or Benefit Accumulation Account inside the Portal by clicking the “Open a New Account” button above. Once you receive confirmation that your new account has been opened, you can return and set up recurring contributions.</p>
+                </div>
+                
+                <footer class="slds-modal__footer"> <!-- style="text-align: left;" -->
+                    <lightning-button variant="neutral" label="Cancel" title="Cancel" onclick={handleCancel} style="padding: 5px;"></lightning-button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>

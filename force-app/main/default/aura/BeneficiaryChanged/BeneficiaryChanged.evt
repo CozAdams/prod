@@ -1,0 +1,4 @@
+<aura:event type="COMPONENT" description="BeneficiaryChanged">
+    <aura:attribute name="beneficiary" type="Object"/>
+    <aura:attribute name="isNew" type="Boolean"/>
+</aura:event>

@@ -1,0 +1,10 @@
+<apex:component id="DonationBanner" controller="DonationBannerController">
+    <style>
+        .banner .slide {
+            background-image: url('{!imageUrl}');
+        }
+    </style>
+    <div class="banner">
+        <div class="slide"> </div>
+    </div>
+</apex:component>

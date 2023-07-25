@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>52.0</apiVersion>
+    <targets> 
+        <target>lightningCommunity__Page</target>
+        <target>lightningCommunity__Default</target>
+        <target>lightning__FlowScreen</target>
+        <target>lightning__AppPage</target>
+        <target>lightning__RecordPage</target>
+        <target>lightning__HomePage</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightningCommunity__Default">
+            <property name="threatMetrixResponseScore" label="Threat Metrix Response" description="" type="Integer"/>
+            <property name="userId" label="User Id" type="String"/>
+            <property name="authenticated" label="Authenticated" type="Boolean"/>
+        </targetConfig>
+            <targetConfig targets="lightning__FlowScreen">
+                <property name="userId" label="User Id" type="String"/>
+                <property name="authenticated" label="Authenticated" type="Boolean"/>
+            </targetConfig>
+    </targetConfigs>
+    <isExposed>true</isExposed>
+</LightningComponentBundle>

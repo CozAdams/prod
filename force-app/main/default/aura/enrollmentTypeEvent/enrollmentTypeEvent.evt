@@ -1,0 +1,3 @@
+<aura:event type="COMPONENT" description="Event fired from different Enrollment Form buttons">
+    <aura:attribute name="enrollmentType" type="String"/>
+</aura:event>

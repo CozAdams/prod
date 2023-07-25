@@ -1,0 +1,353 @@
+<!--
+    /***********************************************************************
+    ** Name        : LeadForm
+    ** Created By  : Khushboo Modi, Revelant
+    ** Email       : khushboo.modi@revelanttech.com
+    ** Created Date: 02/15/2017
+    ** Description : Creates Leads and collects all lead information
+    ** Changes:
+
+    **********************************************************************/
+-->
+<apex:page showHeader="false" standardStylesheets="false" controller="LeadFormController">
+    <head>
+        <apex:stylesheet value="https://pensionfund.org/salesforce-forms.css"/>
+        <!--apex:stylesheet value="https://pensionfund.org/assets/_compiled/styles.7b53cbf3b97ba3c8cad592b3e1b4cc95.css"/-->
+        <apex:stylesheet value="{!URLFOR($Resource.bootstrapNew, 'bootstrap-3.3.6-dist/css/bootstrap.min.css')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.jQuery1)}"/>
+        <apex:includeScript value="{!URLFOR($Resource.bootstrapNew, 'bootstrap-3.3.6-dist/js/bootstrap.min.js')}"/>
+        <style>
+            input[type=checkbox], input[type=radio] {
+                margin: 10px 50px 0px;
+                line-height: normal;
+            }
+            .border {
+                border: 1px solid black;
+            }
+            .errorMsg {
+                color: red;
+            }
+            .row {
+                padding-top: 15px;
+            }
+            .disabled {
+                cursor: not-allowed;
+                background-color: #EEEEEE;
+            }
+            .required:after {
+              content:"*";
+              color:red;
+            }
+            .button {
+                text-align: center;
+                cursor: pointer;
+                width: 200px;
+                -webkit-appearance: none;
+                transition: all .25s ease-out;
+                border: 1px solid transparent;
+                border-radius: 5px;
+                padding: 10px 10px 10px 10px;
+                background: #2199e8;
+                color: #fff;
+            }
+
+            .button-group input {
+                display: none;
+            }
+
+            .button-group input:checked + label,
+            .button-group input:checked + label:active {
+                background-color: salmon;
+            }
+        </style>
+        <script>
+            function prodInterests() {
+                var prodValues = [];
+                $('input:checked[data-interest]').each(function(){
+                    prodValues.push($(this).attr('data-interest'));
+                });
+                var retPlan = $("#retPlanOrg").is(':checked');
+                submitForm(prodValues.join(';'), retPlan);
+            }
+
+            $(function () {
+                // Add change handler to yes/no checkboxes to change label text to Yes or No
+                $('[data-yesno]').change(function() {
+                    $('label[for=' + this.id +']').html(this.checked ? "Yes" : "No");
+                }).change();
+            });
+        </script>
+    </head>
+    <body>
+        <div class="container">
+            <apex:image url="{!$Resource.pfccLogo}" width="275" height="73" />
+            <hr/>
+            <apex:outputPanel id="mainForm">
+                <apex:outputPanel rendered="{!success}">
+                    <div class="row">
+                        <div class="col-xs-8 alert alert-success" >
+                            <apex:outputText value="{!displayMessage}" escape="false" />
+                        </div>
+                    </div>
+                </apex:outputPanel>
+                <apex:outputPanel rendered="{!!success}">
+                    <apex:outputPanel rendered="{!displayMessage != ''}">
+                        <div class="row">
+                            <div class="col-xs-8 alert alert-danger" >
+                                <apex:outputText value="{!displayMessage}" escape="false" />
+                            </div>
+                        </div>
+                    </apex:outputPanel>
+                    <apex:form >
+                        <div class="button-group" align="center" style="margin-top: 50px; ">
+                            <div align="left">
+                                <apex:outputLabel rendered="{!type == 'ind'}" styleClass="required" value="I'm interested in having an Area Director contact me in regard to the following: (select all that apply)" />
+                                <apex:outputLabel rendered="{!type == 'org'}" styleClass="required" value="I am interested in having an Area Director contact me in regard to offering the following products to those employed by my church/ organization: (select all that apply)" />
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div align="left">
+                                        <apex:outputLabel value="Employer- Sponsored Retirement Products"/>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6">
+                                    <input id="checkbox1" type="checkbox" data-interest="US Pension">
+                                        <label class="button" for="checkbox1">Pension Plan</label>
+                                    </input>
+                                </div>
+                                <apex:outputPanel rendered="{!$CurrentPage.parameters.geo != 'pr' && $CurrentPage.parameters.geo != 'ca'}">
+                                    <div class="col-xs-6">
+                                        <input id="checkbox2" type="checkbox" data-interest="Traditional 403(b)">
+                                            <label class="button" for="checkbox2">Tax-Deferred Retirement Account</label>
+                                        </input>
+                                    </div>
+                                </apex:outputPanel>
+                            </div>
+                            <apex:outputPanel rendered="{!$CurrentPage.parameters.geo != 'pr' && $CurrentPage.parameters.geo != 'ca'}">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div align="left">
+                                            <apex:outputLabel value="Individual Saving and Retirement Products"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <input id="checkbox3" type="checkbox" data-interest="Traditional IRA">
+                                            <label class="button" for="checkbox3">Traditional IRA</label>
+                                        </input>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <input id="checkbox4" type="checkbox" data-interest="Roth IRA">
+                                            <label class="button" for="checkbox4">Roth IRA</label>
+                                        </input>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <input id="checkbox5" type="checkbox" data-interest="IRA Rollover">
+                                            <label class="button" for="checkbox5">Rollover an existing IRA</label>
+                                        </input>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <input id="checkbox6" type="checkbox" data-interest="Benefit Accumulation">
+                                            <label class="button" for="checkbox6">Benefit Accumulation Account (after-tax savings)</label>
+                                        </input>
+                                    </div>
+                                </div>
+                            </apex:outputPanel>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div align="left">
+                                        <apex:outputLabel value="Other"/>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6">
+                                    <input id="checkbox7" type="checkbox" data-interest="Ministerial Relief">
+                                        <label class="button" for="checkbox7">How to donate to ministers in need</label>
+                                    </input>
+                                </div>
+                                <div class="col-xs-6">
+                                    <input id="checkbox9" type="checkbox" data-interest="Student Gift Program">
+                                        <label class="button" for="checkbox9">Student Gift Program</label>
+                                    </input>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <input id="checkbox8" type="checkbox" data-interest="General Updates">
+                                        <label class="button" for="checkbox8">General Updates</label>
+                                    </input>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <apex:outputLabel styleClass="required" value="First Name"/>
+                                <apex:inputField styleClass="form-control" value="{!newLead.FirstName}"/>
+                            </div>
+                            <div class="col-xs-6">
+                                <apex:outputLabel styleClass="required" value="Last Name"/>
+                                <apex:inputText styleClass="form-control" value="{!newLead.LastName}"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <apex:outputLabel value="Phone" styleClass="required"/>
+                                <apex:inputField styleClass="form-control" value="{!newLead.Phone}"/>
+                            </div>
+                            <div class="col-xs-6">
+                                <apex:outputLabel styleClass="required" value="Email"/>
+                                <apex:inputField styleClass="form-control" value="{!newLead.Email}"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <apex:outputPanel rendered="{!type == 'ind'}">
+                                <div class="col-xs-6">
+                                    <apex:outputLabel value="City"/>
+                                    <apex:inputField styleClass="form-control" value="{!newLead.City}"/>
+                                </div>
+                            </apex:outputPanel>
+                            <!-- default to showing US state list if geo param not specified or geo not in 'pr', 'ca' -->
+                            <apex:outputPanel rendered="{!type == 'ind' && $CurrentPage.parameters.geo != 'pr' && $CurrentPage.parameters.geo != 'ca'}">
+                                <div class="col-xs-6">
+                                    <apex:outputLabel value="State/Province" styleClass="required"/>
+                                    <apex:selectList styleClass="form-control" value="{!newLead.State}" multiselect="false" size="1">
+                                        <apex:selectOption itemLabel="AK" itemValue="AK"/>
+                                        <apex:selectOption itemLabel="AL" itemValue="AL"/>
+                                        <apex:selectOption itemLabel="AR" itemValue="AR"/>
+                                        <apex:selectOption itemLabel="AZ" itemValue="AZ"/>
+                                        <apex:selectOption itemLabel="CA" itemValue="CA"/>
+                                        <apex:selectOption itemLabel="CO" itemValue="CO"/>
+                                        <apex:selectOption itemLabel="CT" itemValue="CT"/>
+                                        <apex:selectOption itemLabel="DC" itemValue="DC"/>
+                                        <apex:selectOption itemLabel="DE" itemValue="DE"/>
+                                        <apex:selectOption itemLabel="FL" itemValue="FL"/>
+                                        <apex:selectOption itemLabel="GA" itemValue="GA"/>
+                                        <apex:selectOption itemLabel="HI" itemValue="HI"/>
+                                        <apex:selectOption itemLabel="IA" itemValue="IA"/>
+                                        <apex:selectOption itemLabel="ID" itemValue="ID"/>
+                                        <apex:selectOption itemLabel="IL" itemValue="IL"/>
+                                        <apex:selectOption itemLabel="IN" itemValue="IN"/>
+                                        <apex:selectOption itemLabel="KS" itemValue="KS"/>
+                                        <apex:selectOption itemLabel="KY" itemValue="KY"/>
+                                        <apex:selectOption itemLabel="LA" itemValue="LA"/>
+                                        <apex:selectOption itemLabel="MA" itemValue="MA"/>
+                                        <apex:selectOption itemLabel="MD" itemValue="MD"/>
+                                        <apex:selectOption itemLabel="ME" itemValue="ME"/>
+                                        <apex:selectOption itemLabel="MI" itemValue="MI"/>
+                                        <apex:selectOption itemLabel="MN" itemValue="MN"/>
+                                        <apex:selectOption itemLabel="MO" itemValue="MO"/>
+                                        <apex:selectOption itemLabel="MS" itemValue="MS"/>
+                                        <apex:selectOption itemLabel="MT" itemValue="MT"/>
+                                        <apex:selectOption itemLabel="NC" itemValue="NC"/>
+                                        <apex:selectOption itemLabel="ND" itemValue="ND"/>
+                                        <apex:selectOption itemLabel="NE" itemValue="NE"/>
+                                        <apex:selectOption itemLabel="NH" itemValue="NH"/>
+                                        <apex:selectOption itemLabel="NJ" itemValue="NJ"/>
+                                        <apex:selectOption itemLabel="NM" itemValue="NM"/>
+                                        <apex:selectOption itemLabel="NV" itemValue="NV"/>
+                                        <apex:selectOption itemLabel="NY" itemValue="NY"/>
+                                        <apex:selectOption itemLabel="OH" itemValue="OH"/>
+                                        <apex:selectOption itemLabel="OK" itemValue="OK"/>
+                                        <apex:selectOption itemLabel="OR" itemValue="OR"/>
+                                        <apex:selectOption itemLabel="PA" itemValue="PA"/>
+                                        <apex:selectOption itemLabel="RI" itemValue="RI"/>
+                                        <apex:selectOption itemLabel="SC" itemValue="SC"/>
+                                        <apex:selectOption itemLabel="SD" itemValue="SD"/>
+                                        <apex:selectOption itemLabel="TN" itemValue="TN"/>
+                                        <apex:selectOption itemLabel="TX" itemValue="TX"/>
+                                        <apex:selectOption itemLabel="UT" itemValue="UT"/>
+                                        <apex:selectOption itemLabel="VA" itemValue="VA"/>
+                                        <apex:selectOption itemLabel="VT" itemValue="VT"/>
+                                        <apex:selectOption itemLabel="WA" itemValue="WA"/>
+                                        <apex:selectOption itemLabel="WI" itemValue="WI"/>
+                                        <apex:selectOption itemLabel="WV" itemValue="WV"/>
+                                        <apex:selectOption itemLabel="WY" itemValue="WY"/>
+                                    </apex:selectList>
+                                </div>
+                            </apex:outputPanel>
+                            <!-- show 2-character state field for geo in 'pr', 'ca' -->
+                            <apex:outputPanel rendered="{!type == 'ind' && $CurrentPage.parameters.geo == 'pr' || $CurrentPage.parameters.geo == 'ca'}">
+                                <div class="col-xs-6">
+                                    <apex:outputLabel value="State/Province" styleClass="required"/>
+                                    <apex:inputField styleClass="form-control" value="{!newLead.State}" html-size="2" html-maxlength="2"/>
+                                </div>
+                            </apex:outputPanel>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <apex:outputPanel rendered="{!type == 'ind'}">
+                                    <apex:outputLabel styleClass="required" value="Your Church/Organization"/>
+                                </apex:outputPanel>
+                                <apex:outputPanel rendered="{!type == 'org'}">
+                                    <apex:outputLabel styleClass="required" value="Church/Organization Name"/>
+                                </apex:outputPanel>
+                                <apex:inputText styleClass="form-control" value="{!newLead.Company}"/>
+                            </div>
+                            <apex:outputPanel rendered="{!type == 'ind'}">
+                                <div class="col-xs-6">
+                                    <apex:outputLabel value="How many full-time employees does you Church/Organization have?"/>
+                                    <apex:inputField styleClass="form-control" value="{!newLead.Number_of_Employees__c}"/>
+                                </div>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!type == 'org'}">
+                                <div class="col-xs-6">
+                                    <apex:outputLabel value="How many full-time employees do you employ?"/>
+                                    <apex:inputField styleClass="form-control" value="{!newLead.Number_of_Employees__c}"/>
+                                </div>
+                            </apex:outputPanel>
+                        </div>
+                        <apex:outputPanel rendered="{!type == 'org'}">
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <apex:outputLabel value="Church/Organization City"/>
+                                    <apex:inputField styleClass="form-control" value="{!newLead.Employer_City__c}"/>
+                                </div>
+                                <div class="col-xs-6">
+                                    <apex:outputLabel styleClass="required" value="Church/Organization State/Province"/>
+                                    <apex:inputField styleClass="form-control" value="{!newLead.Employer_State_Province__c}"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <apex:outputLabel value="Church/Organization Zip/Postal Code"/>
+                                    <apex:inputField styleClass="form-control" value="{!newLead.Employer_Zip__c}"/>
+                                </div>
+                                <div class="col-xs-6">
+                                    <apex:outputLabel value="Your role at your Church/Organization"/>
+                                    <apex:inputField styleClass="form-control" value="{!newLead.Title}"/>
+                                </div>
+                            </div>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!type == 'ind'}">
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <apex:outputLabel value="Preferred Method of Contact"/>
+                                    <apex:inputField styleClass="form-control" value="{!newLead.Contact_Preference__c}"/>
+                                </div>
+                            </div>
+                        </apex:outputPanel>
+                        <apex:outputPanel id="type">
+                            <apex:outputPanel rendered="{!type == 'org'}">
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <apex:outputLabel value="Preferred Method of Contact"/>
+                                        <apex:inputField styleClass="form-control" value="{!newLead.Contact_Preference__c}"/>
+                                    </div>
+                                </div>
+                            </apex:outputPanel>
+                        </apex:outputPanel>
+                         <div class="row" align="center" style="padding-top:40px;">
+                            <div class="col-xs-12">
+                                <apex:commandButton value="Submit" styleClass="btn btn-success" style="padding-left:30px;padding-right:30px; margin-bottom:3em;" onclick="prodInterests();return false"/>
+                            </div>
+                        </div>
+                        <apex:actionFunction name="submitForm" action="{!submitForm}" reRender="mainForm">
+                            <apex:param name="selectedItems1" value="" assignTo="{!newLead.Interests__c}" />
+                            <apex:param name="retPlan" value="" assignTo="{!newLead.Retirement_Planning__c}" />
+                        </apex:actionFunction>
+                    </apex:form>
+                </apex:outputPanel>
+            </apex:outputPanel>
+        </div>
+    </body>
+</apex:page>

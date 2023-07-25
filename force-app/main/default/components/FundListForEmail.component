@@ -1,0 +1,28 @@
+<apex:component controller="FundListForEmailController" access="global">
+	<apex:attribute name="paymentId" type="String" assignTo="{!currentPaymentId}" description="payment Id with shopping cart items"/>
+
+	<p><strong>Your donation details are below:</strong></p>
+	<p>Date of payment:&nbsp;&nbsp;<apex:outputField value="{!currentPayment.CreatedDate}"/></p>
+	<table>
+		<tr>
+			<th>Fund</th>
+			<th>Amount</th>
+		</tr>
+		<apex:repeat value="{!shoppingCartItems}" var="shoppingCartItem">
+			<tr>
+				<td><apex:outputField value="{!shoppingCartItem.Name}"/></td>
+				<td><apex:outputField value="{!shoppingCartItem.pymt__Total__c}"/></td>
+			</tr>
+		</apex:repeat>
+	</table>
+
+	<p> <strong> Donation Frequency:</strong> {!frequency} </p>
+	<apex:outputPanel layout="none" rendered="{!inHonorMemoryOf != null}">
+		<p> <strong> In Memory of: </strong> {!inHonorMemoryOf} </p>
+	</apex:outputPanel>
+
+	<apex:outputPanel layout="none" rendered="{!donationHonoree != null}">
+		<p> <strong> In Honor of: </strong> {!donationHonoree} </p>
+	</apex:outputPanel>
+
+</apex:component>

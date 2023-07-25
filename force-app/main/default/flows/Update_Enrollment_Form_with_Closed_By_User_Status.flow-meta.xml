@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>49.0</apiVersion>
+    <interviewLabel>Update Enrollment Form with Closed By User Status {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Update Enrollment Form with Closed By User Status</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordUpdates>
+        <name>Update_Enrollment_form</name>
+        <label>Update Enrollment form</label>
+        <locationX>246</locationX>
+        <locationY>47</locationY>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>InputEnrollmentForm</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>Status__c</field>
+            <value>
+                <stringValue>Closed By User</stringValue>
+            </value>
+        </inputAssignments>
+        <object>Enrollment_Form__c</object>
+    </recordUpdates>
+    <startElementReference>Update_Enrollment_form</startElementReference>
+    <status>Active</status>
+    <variables>
+        <name>InputEnrollmentForm</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>

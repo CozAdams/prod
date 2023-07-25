@@ -1,0 +1,56 @@
+<template>
+    <div class="address-container">
+      <c-google-address-search onaddressselected={handleAddressSelected}></c-google-address-search>
+      <form>
+        <template if:true={showSpinner}>
+          <lightning-spinner alternative-text="Saving"></lightning-spinner>
+        </template>
+        <fieldset class="slds-form-element slds-form-element_compound slds-form-element_address">
+          <legend class="slds-form-element__legend slds-form-element__label">Address</legend>
+          <div class="slds-form-element__control">
+            <lightning-input 
+              type="checkbox"
+              label="My address is not listed"
+              name="verificationReq"
+              value={verificationReq}
+              class="slds-p-around_none override-checkbox"
+              onchange={handleVerificationChange}>
+            </lightning-input>
+            <template if:true={_showOverrideMessage}>
+              <div class="message">
+                If you cannot find your address using the search tool provided, please check this box to manually enter your address. If you need help providing your new address, email our Member Relations team at <a href="mailto:pfcc1@pensionfund.org">pfcc1@pensionfund.org</a>.
+              </div>
+            </template>
+            <lightning-textarea type="text" label="Street" name="street" value={street} required="true" class="address-form-field slds-p-around_none override-dependent" onchange={handleChange}></lightning-textarea>
+            <lightning-input type="text" label="Street Line 2" name="street2" value={street2} class="address-form-field slds-p-around_none" onchange={handleChange}></lightning-input>
+            <div class="slds-grid slds-wrap">
+              <div class={gridClassColOne}>
+                <lightning-input type="text" label="City" name="city" value={city} required="true" class="address-form-field slds-p-around_none override-dependent" onchange={handleChange}></lightning-input>
+              </div>
+              <div class={gridClassColTwo}>
+                <lightning-input type="text" label="State/Province" name="state" value={state} required="true" class="address-form-field slds-p-around_none override-dependent" onchange={handleChange}></lightning-input>
+              </div>
+              <div class={gridClassColOne}>
+                <lightning-input type="text" label="Postal Code" name="postalCode" value={postalCode} required="true"  class="address-form-field slds-p-around_none override-dependent" onchange={handleChange}></lightning-input>
+              </div>
+              <div class={gridClassColTwo}>
+                <template if:true={countryOptions.data}>
+                  <lightning-combobox
+                    name="country"
+                    class="address-form-field slds-p-around_none override-dependent"
+                    data-field-name="country"
+                    label="Country"
+                    value={country}
+                    placeholder="Select Country..."
+                    options={countryOptions.data.values}
+                    onchange={handleChange}
+                    required>
+                </lightning-combobox>
+                </template>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+</template>

@@ -1,0 +1,279 @@
+<template>
+    <br>
+    <!-- General Message -->
+    As a member, the following types of contributions may be made to the TDRA 403(b)/Roth 403(b) on your behalf through your employer:
+    <ul>
+        <li><b>Employer contributions</b>, if permitted under your employer's Participation Agreement.</li>
+        <li><b>Employee contributions</b>, if permitted under your employer's Participation Agreement.</li>
+    </ul>
+    In addition, you may also elect the following contributions to a TDRA 403(b)/Roth 403(b):
+    <ul>
+        <li><b>Rollover contributions</b> from an IRA or eligible retirement plan. Complete and return Application for Rollover Contribution to TDRA or TDRA Application for In-Plan Roth Rollover.</li>
+        <li><b>Contract exchange/plan-to-plan transfer</b> from another contract/account under your employer's 403(b) plan. Complete and return Application for Contract Exchange/Plan-to-Plan Transfer to TDRA.</li>
+    </ul>
+    Once your TDRA 403(b)/Roth 403(b) is open, you may rollover or transfer funds from other financial institutions. If you’d like to perform a rollover or transfer into your TDRA 403(b)/Roth 403(b), please contact Pension Fund and we will assist you in this process.
+    <br /><br />
+
+    <b>Check all that apply</b>
+    <div>
+        <u>Employer Contribution</u>
+        <lightning-checkbox-group 
+        data-id ="employerCheckboxGroup"
+        name="employerContributionTypes"
+        class="form-validate"
+        options={employerContributionTypeOptions}
+        value={employerContributionTypes}
+        onchange={toggleContributionType}
+        >
+    </lightning-checkbox-group>
+    <br/>
+    </div>
+    <div>
+        <u>Employee Contribution </u>
+
+        <lightning-checkbox-group 
+        data-id ="employeeCheckboxGroup"
+        name="employeeContributionTypes"
+        class="form-validate"
+        options={employeeContributionTypeOptions}
+        value={employeeContributionTypes}
+        onchange={toggleContributionType}
+        >
+        </lightning-checkbox-group>
+
+    </div>
+
+
+    <!-- Employer Dues -->
+    <template if:true={showEmployerSection}>
+        <div class="section-header">Pre-Tax TDRA 403(b) Employer Contributions</div>
+        <div class="section-header-note"><b>{ MSG_EMPLOYER_SECTION }</b></div>
+        <hr>
+
+        <b>{ MSG_SECTION_EMPLOYER_EQUAL_TO }</b>
+        <br><!--<br>
+        { MSG_MEMBER_CONFIRMATION } -->
+        
+        <!-- Dollar Amount -->
+        <div class="top-padding">
+            <lightning-input 
+                data-id="employerAmount"
+                name="employerAmount"
+                class="form-validate"
+                type="number"
+                label={LABEL_AMOUNT}
+                value={employerAmount}
+                min=0.01
+                step=".01"
+                message-when-range-underflow={ERROR_RANGE_MIN}
+                onblur={handleInputChange}>
+            </lightning-input>
+        </div>
+
+        <div class="top-padding"><b>Or</b></div>
+
+        <!-- Percent Amount -->
+        <div class="top-padding">
+            <lightning-input 
+                data-id="employerPercent"
+                name="employerPercent"
+                class="form-validate"
+                type="number"
+                label={LABEL_PERCENT}
+                value={employerPercent}
+                min=0.01
+                max=100
+                step=".01"
+                message-when-range-underflow={ERROR_RANGE_MIN}
+                message-when-range-overflow={ERROR_RANGE_MAX}
+                onblur={handleInputChange}>
+            </lightning-input>
+        </div>
+    </template>
+
+    <!-- Roth Employer Dues -->
+
+    <template if:true={showRothEmployerSection}>
+        <div class="section-header">Post-Tax Roth 403(b) Employer Contributions</div>
+        <div class="section-header-note"><b>{ MSG_EMPLOYER_SECTION }</b></div>
+        <hr>
+
+        <b>{ MSG_SECTION_EMPLOYER_EQUAL_TO }</b>
+        <br><!--<br>
+        { MSG_MEMBER_CONFIRMATION } -->
+        
+        <!-- Dollar Amount -->
+        <div class="top-padding">
+            <lightning-input 
+                data-id="rothEmployerAmount"
+                name="rothEmployerAmount"
+                class="form-validate"
+                type="number"
+                label={LABEL_AMOUNT}
+                value={rothEmployerAmount}
+                min=0.01
+                step=".01"
+                message-when-range-underflow={ERROR_RANGE_MIN}
+                onblur={handleInputChange}>
+            </lightning-input>
+        </div>
+
+        <div class="top-padding"><b>Or</b></div>
+
+        <!-- Percent Amount -->
+        <div class="top-padding">
+            <lightning-input 
+                data-id="rothEmployerPercent"
+                name="rothEmployerPercent"
+                class="form-validate"
+                type="number"
+                label={LABEL_PERCENT}
+                value={rothEmployerPercent}
+                min=0.01
+                max=100
+                step=".01"
+                message-when-range-underflow={ERROR_RANGE_MIN}
+                message-when-range-overflow={ERROR_RANGE_MAX}
+                onblur={handleInputChange}>
+            </lightning-input>
+        </div>
+    </template>
+    
+
+    <!-- Member Dues -->
+    <template if:true={showMemberSection}>
+        <div class="section-header">Pre-Tax TDRA 403(b) Employee Contributions;</div>
+        <div class="section-header-note"><b>{ MSG_MEMBER_SECTION }</b></div>
+        <hr>
+
+        <b>{ MSG_SECTION_COMPLETE }</b>
+        <br><br>
+        { MSG_MEMBER_CONFIRMATION }
+        
+        <!-- Dollar Amount -->
+        <div class="top-padding">
+            <lightning-input 
+                data-id="memberAmount"
+                name="memberAmount"
+                class="form-validate"
+                type="number"
+                label={LABEL_AMOUNT}
+                value={memberAmount}
+                min=0.01
+                step=".01"
+                max={maxAmount}
+                message-when-range-underflow={ERROR_RANGE_MIN}
+                message-when-range-overflow={ERROR_RANGE_MAX_AMT}
+                onblur={handleInputChange}>
+            </lightning-input>
+        </div>
+
+        <div class="top-padding"><b>Or</b></div>
+
+        <!-- Percent Amount -->
+        <div class="top-padding">
+            <lightning-input 
+                data-id="memberPercent"
+                name="memberPercent"
+                class="form-validate"
+                type="number"
+                label={LABEL_PERCENT}
+                value={memberPercent}
+                min=0.01
+                max=100
+                step=".01"
+                message-when-range-underflow={ERROR_RANGE_MIN}
+                message-when-range-overflow={ERROR_RANGE_MAX_PERCENT}
+                onblur={handleInputChange}>
+            </lightning-input>
+        </div>
+    </template>
+
+
+
+    <!--Roth Member Dues -->
+
+    <template if:true={showRothMemberSection}>
+        <div class="section-header">Post-Tax Roth 403(b) Employee Contributions</div>
+        <div class="section-header-note"><b>{ MSG_MEMBER_SECTION }</b></div>
+        <hr>
+
+        <b>{ MSG_SECTION_COMPLETE }</b>
+        <br><br>
+        { MSG_MEMBER_CONFIRMATION }
+        
+        <!-- Dollar Amount -->
+        <div class="top-padding">
+            <lightning-input 
+                data-id="rothMemberAmount"
+                name="rothMemberAmount"
+                class="form-validate"
+                type="number"
+                label={LABEL_AMOUNT}
+                value={rothMemberAmount}
+                min=0.01
+                step=".01"
+                max={maxAmount}
+                message-when-range-underflow={ERROR_RANGE_MIN}
+                message-when-range-overflow={ERROR_RANGE_MAX_AMT}
+                onblur={handleInputChange}>
+            </lightning-input>
+        </div>
+
+        <div class="top-padding"><b>Or</b></div>
+
+        <!-- Percent Amount -->
+        <div class="top-padding">
+            <lightning-input 
+                data-id="rothMemberPercent"
+                name="rothMemberPercent"
+                class="form-validate"
+                type="number"
+                label={LABEL_PERCENT}
+                value={rothMemberPercent}
+                min=0.01
+                max=100
+                step=".01"
+                message-when-range-underflow={ERROR_RANGE_MIN}
+                message-when-range-overflow={ERROR_RANGE_MAX_PERCENT}
+                onblur={handleInputChange}>
+            </lightning-input>
+        </div>
+    </template>
+
+
+
+    <!-- Per Pay Period Message -->
+    <div class="top-padding"><b>Per pay period</b>{ MSG_PAY_PERIOD }</div>
+    
+    <!-- Buttons -->
+    <div class="button-group">
+        <lightning-button data-name="btnBack" label="Previous" onclick={navigate}></lightning-button>
+        <lightning-button data-name="btnNext" label="Next" variant="brand" onclick={navigate}></lightning-button>
+    </div>
+
+    <!-- <div class="top-padding"> -->
+        <!-- <lightning-radio-group 
+            data-id="contributionType"
+            options={contributionTypeOptions}
+            value={contributionType}
+            type="radio"
+            class="form-validate"
+            variant="label-hidden"
+            onchange={toggleContributionType}
+            required>
+        </lightning-radio-group> -->
+    <!-- </div> -->
+
+    
+
+    <!-- <div class="top-padding">
+        <lightning-checkbox-group 
+            name="contributionType"
+            label="Test"
+            options={contributionTypeOptions}
+            onchange={toggleContributionType}
+            required>
+        </lightning-checkbox-group>
+    </div> -->
+</template>

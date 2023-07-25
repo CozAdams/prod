@@ -1,0 +1,71 @@
+.address-autocomplete-input-container {
+  position: relative;
+  margin-bottom: 0.5rem;
+}
+
+.address-autocomplete-container {
+  background: rgb(255,255,255);
+  border: 1px solid rgb(221, 219, 218);
+  border-radius: 0.25rem;
+  z-index: 2;
+  position: absolute;
+  margin-top: 0.25rem;
+  width: calc(100% - 2rem);
+  display: none;
+}
+
+.visible {
+  display: block;
+}
+
+.address-autocomplete-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.address-item > a {
+  height: auto;
+  display: block;
+  padding: 0.5rem;
+  color: rgb(8, 7, 7);
+}
+
+.address-item > a:hover, .address-item > a:focus {
+  background-color: rgb(243, 242, 242);
+  text-decoration: none;
+}
+
+.address-option {
+  padding: 0.5rem 0;
+  position: relative;
+}
+
+.address-option-icon {
+  position: absolute;
+  left: 0.5rem;
+  top: 50%;
+  margin-top: calc(-0.5 * 2rem);
+}
+
+.address-option-text {
+  font-size: 0.8125rem;
+  font-weight: 400;
+  color: rgb(62, 62, 60);
+  padding-left: calc(2 * 0.5rem + 2rem);
+  display: inline-block;
+}
+
+.address-option-text .firstline {
+  padding: 0;
+}
+
+.address-option-text .secondline {
+  padding-bottom: 0;
+  padding-top: 0.125rem;
+}
+
+.address-option-text .match {
+  color: rgb(8, 7, 7);
+  font-weight: 700;
+}

@@ -1,0 +1,5 @@
+<apex:page standardController="Case">       
+    <apex:relatedList list="NotesAndAttachments">
+        <apex:facet name="header">&nbsp;</apex:facet>    <!--This line of code removing the attachment header-->        
+    </apex:relatedList>
+</apex:page>

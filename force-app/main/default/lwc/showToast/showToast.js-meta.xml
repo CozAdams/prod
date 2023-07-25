@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="urn:metadata.tooling.soap.sforce.com" fqn="showToast">
+    <apiVersion>57.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>Shows Toast Message</masterLabel>
+    <targets>
+        <target>lightning__FlowScreen</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__FlowScreen">
+            <property name="title" label="Title" type="String" role="inputOnly" />
+            <property name="message" label="Message Text" type="String" role="inputOnly" />
+            <property name="urlLabel" label="Message Url Label" type="String" role="inputOnly" />
+            <property name="variant" label="Variant" type="String" role="inputOnly" description="Possible values: error, success, info, warning"/>
+            <property name="mode" label="Mode" type="String" role="inputOnly" />
+            <property name="recordId" label="Object Record Id" type="String" role="inputOnly" />
+            <property name="triggerNavigationNextEvent" label="Triggers Next Navigation" type="Boolean" role="inputOnly" /> 
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

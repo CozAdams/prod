@@ -1,0 +1,14 @@
+<aura:component controller="AccountSummaryService">
+	<aura:attribute name="case" type="Case" required="true"/>
+	<aura:attribute name="eSignature" type="String" required="true"/>
+
+    <lightning:notificationsLibrary aura:id="eSignatureNotificationLibrary"/>
+	<aura:method name="eSignatureFieldValidation" action="{!c.handleESignatureFieldValidation}"/>
+
+	<div class="slds-p-top_medium">
+		<lightning:input aura:id="eSignatureField" type="checkbox" name="eSignatureConfirmation" label="E-Signature Agreement" value="{!v.case.E_Signature_Confirmed__c}" required="true" />
+		<div class="slds-p-top_x-small slds-text-body_regular">
+			<lightning:formattedRichText class="slds-text-body_small slds-text-color_weak" value="{!v.eSignature}"/>
+		</div>
+	</div>
+</aura:component>

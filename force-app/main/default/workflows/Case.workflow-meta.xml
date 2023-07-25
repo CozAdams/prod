@@ -1,0 +1,1106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workflow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <alerts>
+        <fullName>Case_New_Employee_Transaction_Request</fullName>
+        <description>Case - New Employee Transaction Request</description>
+        <protected>false</protected>
+        <recipients>
+            <recipient>clewis@pensionfund.org</recipient>
+            <type>user</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>unfiled$public/Case_New_Employee_Transaction_Request_1629726937020</template>
+    </alerts>
+    <alerts>
+        <fullName>Close_EP_Support_Case</fullName>
+        <description>Close EP Support Case</description>
+        <protected>false</protected>
+        <recipients>
+            <type>creator</type>
+        </recipients>
+        <senderAddress>pfcc1@pensionfund.org</senderAddress>
+        <senderType>OrgWideEmailAddress</senderType>
+        <template>Community_Templates/Support_Form_Complete</template>
+    </alerts>
+    <alerts>
+        <fullName>General_Termination_letter</fullName>
+        <ccEmails>pension_fund_of_the_christian_church@wwpdl.vnet.ibm.com</ccEmails>
+        <description>General Termination letter</description>
+        <protected>false</protected>
+        <recipients>
+            <field>ContactEmail</field>
+            <type>email</type>
+        </recipients>
+        <senderAddress>pfcc1@pensionfund.org</senderAddress>
+        <senderType>OrgWideEmailAddress</senderType>
+        <template>Test_Template/General_Termination_Letter</template>
+    </alerts>
+    <alerts>
+        <fullName>New_EP_Support_Case</fullName>
+        <description>New EP Support Case</description>
+        <protected>false</protected>
+        <recipients>
+            <type>creator</type>
+        </recipients>
+        <senderAddress>pfcc1@pensionfund.org</senderAddress>
+        <senderType>OrgWideEmailAddress</senderType>
+        <template>Community_Templates/Support_Form_Submission</template>
+    </alerts>
+    <alerts>
+        <fullName>Notifcation_of_Termination_Pension_Plan_No_Response_Voluntary_Inactive_L_M</fullName>
+        <ccEmails>ksimpson@pensionfund.org</ccEmails>
+        <description>Notifcation of Termination- Pension Plan No Response/ Voluntary Inactive - L&amp;M</description>
+        <protected>false</protected>
+        <recipients>
+            <field>ContactEmail</field>
+            <type>email</type>
+        </recipients>
+        <senderAddress>pfcc1@pensionfund.org</senderAddress>
+        <senderType>OrgWideEmailAddress</senderType>
+        <template>Termination/Notifcation_of_Termination_Pension_Plan_No_Response_Voluntary_Inactive_L_M</template>
+    </alerts>
+    <alerts>
+        <fullName>Notification_for_Pension_Plan_If_member_responds_with_COE_Minister</fullName>
+        <ccEmails>ksimpson@pensionfund.org</ccEmails>
+        <description>Notification for Pension Plan- If member responds with COE - Minister</description>
+        <protected>false</protected>
+        <recipients>
+            <field>ContactEmail</field>
+            <type>email</type>
+        </recipients>
+        <senderAddress>pfcc1@pensionfund.org</senderAddress>
+        <senderType>OrgWideEmailAddress</senderType>
+        <template>Termination/Notification_for_Pension_Plan_If_member_responds_with_COE_Minister</template>
+    </alerts>
+    <alerts>
+        <fullName>Notification_for_Pension_Plan_Pay_Own_Dues_Minister</fullName>
+        <ccEmails>ksimpson@pensionfund.org</ccEmails>
+        <description>Notification for Pension Plan- Pay Own Dues - Minister</description>
+        <protected>false</protected>
+        <recipients>
+            <field>ContactEmail</field>
+            <type>email</type>
+        </recipients>
+        <senderAddress>pfcc1@pensionfund.org</senderAddress>
+        <senderType>OrgWideEmailAddress</senderType>
+        <template>Termination/Notification_for_Pension_Plan_Pay_Own_Dues_Minister</template>
+    </alerts>
+    <alerts>
+        <fullName>Notification_of_Pending_Termination_Pension_Plan_After_3_months</fullName>
+        <ccEmails>ksimpson@pensionfund.org</ccEmails>
+        <description>Notification of Pending Termination- Pension Plan - After 3 months</description>
+        <protected>false</protected>
+        <recipients>
+            <field>ContactEmail</field>
+            <type>email</type>
+        </recipients>
+        <senderAddress>pfcc1@pensionfund.org</senderAddress>
+        <senderType>OrgWideEmailAddress</senderType>
+        <template>Termination/Notification_of_Pending_Termination_Pension_Plan_After_3_Months</template>
+    </alerts>
+    <alerts>
+        <fullName>Notification_of_Pending_Termination_Pension_Plan_Lay</fullName>
+        <ccEmails>ksimpson@pensionfund.org</ccEmails>
+        <description>Notification of Pending Termination- Pension Plan - Lay</description>
+        <protected>false</protected>
+        <recipients>
+            <field>ContactEmail</field>
+            <type>email</type>
+        </recipients>
+        <senderAddress>pfcc1@pensionfund.org</senderAddress>
+        <senderType>OrgWideEmailAddress</senderType>
+        <template>Termination/Notification_of_Pending_Termination_Pension_Plan_Lay</template>
+    </alerts>
+    <alerts>
+        <fullName>Notification_of_Pending_Termination_Pension_Plan_Minister</fullName>
+        <ccEmails>ksimpson@pensionfund.org</ccEmails>
+        <description>Notification of Pending Termination- Pension Plan - Minister</description>
+        <protected>false</protected>
+        <recipients>
+            <field>ContactEmail</field>
+            <type>email</type>
+        </recipients>
+        <senderAddress>pfcc1@pensionfund.org</senderAddress>
+        <senderType>OrgWideEmailAddress</senderType>
+        <template>Termination/Notification_of_Pending_Termination_Pension_Plan_Minister</template>
+    </alerts>
+    <alerts>
+        <fullName>Notification_of_Pending_Termination_Pension_Plan_TDRA_Lay</fullName>
+        <ccEmails>ksimpson@pensionfund.org</ccEmails>
+        <description>Notification of Pending Termination- Pension Plan &amp; TDRA - Lay</description>
+        <protected>false</protected>
+        <recipients>
+            <field>ContactEmail</field>
+            <type>email</type>
+        </recipients>
+        <senderAddress>pfcc1@pensionfund.org</senderAddress>
+        <senderType>OrgWideEmailAddress</senderType>
+        <template>Termination/Notification_of_Pending_Termination_Pension_Plan_TDRA_Lay</template>
+    </alerts>
+    <alerts>
+        <fullName>Notification_of_Pending_Termination_Pension_Plan_TDRA_Minister</fullName>
+        <ccEmails>ksimpson@pensionfund.org</ccEmails>
+        <description>Notification of Pending Termination- Pension Plan &amp; TDRA - Minister</description>
+        <protected>false</protected>
+        <recipients>
+            <field>ContactEmail</field>
+            <type>email</type>
+        </recipients>
+        <senderAddress>pfcc1@pensionfund.org</senderAddress>
+        <senderType>OrgWideEmailAddress</senderType>
+        <template>Termination/Notification_of_Pending_Termination_Pension_Plan_TDRA_Minister</template>
+    </alerts>
+    <alerts>
+        <fullName>Notification_of_Pending_Termination_Pension_Plan_TDRA_No_Response_Inactive</fullName>
+        <ccEmails>ksimpson@pensionfund.org</ccEmails>
+        <description>Notification of Pending Termination- Pension Plan &amp; TDRA No Response/ Inactive</description>
+        <protected>false</protected>
+        <recipients>
+            <field>ContactEmail</field>
+            <type>email</type>
+        </recipients>
+        <senderAddress>pfcc1@pensionfund.org</senderAddress>
+        <senderType>OrgWideEmailAddress</senderType>
+        <template>Termination/Notification_of_Pending_Termination_Pension_Plan_TDRA_No_Response_Voluntary</template>
+    </alerts>
+    <alerts>
+        <fullName>Notification_of_Pending_Termination_TDRA_Lay</fullName>
+        <ccEmails>pension_fund_of_the_christian_church@wwpdl.vnet.ibm.com</ccEmails>
+        <description>Notification of Pending Termination- TDRA - Lay</description>
+        <protected>false</protected>
+        <recipients>
+            <field>ContactEmail</field>
+            <type>email</type>
+        </recipients>
+        <senderAddress>pfcc1@pensionfund.org</senderAddress>
+        <senderType>OrgWideEmailAddress</senderType>
+        <template>Termination/Notification_of_Pending_Termination_TDRA_Lay</template>
+    </alerts>
+    <alerts>
+        <fullName>Notification_of_Pending_Termination_TDRA_Minister</fullName>
+        <ccEmails>pension_fund_of_the_christian_church@wwpdl.vnet.ibm.com</ccEmails>
+        <description>Notification of Pending Termination- TDRA- Minister</description>
+        <protected>false</protected>
+        <recipients>
+            <field>ContactEmail</field>
+            <type>email</type>
+        </recipients>
+        <senderAddress>pfcc1@pensionfund.org</senderAddress>
+        <senderType>OrgWideEmailAddress</senderType>
+        <template>Termination/Notification_of_Pending_Termination_TDRA_Minister</template>
+    </alerts>
+    <alerts>
+        <fullName>Notify_the_completion</fullName>
+        <description>Notify the completion</description>
+        <protected>false</protected>
+        <recipients>
+            <recipient>rmereddy@pensionfund.org</recipient>
+            <type>user</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>Community_Templates/Online_Transaction_Close_Case</template>
+    </alerts>
+    <alerts>
+        <fullName>Online_Transaction_Case_Approved</fullName>
+        <description>Online Transaction Case Approved</description>
+        <protected>false</protected>
+        <recipients>
+            <field>ContactEmail</field>
+            <type>email</type>
+        </recipients>
+        <senderAddress>pfcc1@pensionfund.org</senderAddress>
+        <senderType>OrgWideEmailAddress</senderType>
+        <template>Community_Templates/Online_Transaction_Close_Case</template>
+    </alerts>
+    <alerts>
+        <fullName>Online_Transaction_Submitted</fullName>
+        <description>Online Transaction Submitted</description>
+        <protected>false</protected>
+        <recipients>
+            <field>ContactEmail</field>
+            <type>email</type>
+        </recipients>
+        <senderAddress>pfcc1@pensionfund.org</senderAddress>
+        <senderType>OrgWideEmailAddress</senderType>
+        <template>Community_Templates/Online_Transaction_Notification</template>
+    </alerts>
+    <alerts>
+        <fullName>Option_Form</fullName>
+        <description>Option Form</description>
+        <protected>false</protected>
+        <recipients>
+            <type>creator</type>
+        </recipients>
+        <senderAddress>pfcc1@pensionfund.org</senderAddress>
+        <senderType>OrgWideEmailAddress</senderType>
+        <template>Test_Template/Option_Form</template>
+    </alerts>
+    <alerts>
+        <fullName>Pension_Plan_Retirement</fullName>
+        <ccEmails>ksimpson@pensionfund.org</ccEmails>
+        <description>Pension Plan - Retirement</description>
+        <protected>false</protected>
+        <recipients>
+            <field>ContactEmail</field>
+            <type>email</type>
+        </recipients>
+        <senderAddress>pfcc1@pensionfund.org</senderAddress>
+        <senderType>OrgWideEmailAddress</senderType>
+        <template>Termination/Pension_Plan_Retirement</template>
+    </alerts>
+    <alerts>
+        <fullName>Refund_Application_Email</fullName>
+        <ccEmails>ksimpson@pensionfund.org</ccEmails>
+        <description>Refund Application Email</description>
+        <protected>false</protected>
+        <recipients>
+            <type>creator</type>
+        </recipients>
+        <senderAddress>pfcc1@pensionfund.org</senderAddress>
+        <senderType>OrgWideEmailAddress</senderType>
+        <template>Termination/Pension_Plan_Refund</template>
+    </alerts>
+    <alerts>
+        <fullName>quot__Support_Authorization_Received</fullName>
+        <description>Support Authorization Received</description>
+        <protected>false</protected>
+        <recipients>
+            <type>owner</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>quot__Quotes_and_Invoices/quot__QI_Support_Auth_Received</template>
+    </alerts>
+    <fieldUpdates>
+        <fullName>Approved_to_Treasury_Approver_2</fullName>
+        <field>OwnerId</field>
+        <lookupValue>Treasury_Approver</lookupValue>
+        <lookupValueType>Queue</lookupValueType>
+        <name>Assigned to Treasury Approver</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>LookupValue</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Approved_to_Treasury_Associate</fullName>
+        <field>OwnerId</field>
+        <lookupValue>Treasury</lookupValue>
+        <lookupValueType>Queue</lookupValueType>
+        <name>Approved to Treasury Associate</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>LookupValue</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Assign_to_Account_Processor</fullName>
+        <field>OwnerId</field>
+        <lookupValue>Account_Processor</lookupValue>
+        <lookupValueType>Queue</lookupValueType>
+        <name>Assign to Account Processor</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>LookupValue</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Assign_to_Approver_Queue</fullName>
+        <description>Assign to Treasury Associate Queue</description>
+        <field>OwnerId</field>
+        <lookupValue>Treasury</lookupValue>
+        <lookupValueType>Queue</lookupValueType>
+        <name>Assign to Treasury Associate Queue</name>
+        <notifyAssignee>true</notifyAssignee>
+        <operation>LookupValue</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Assign_to_Employee_Transactions</fullName>
+        <description>Assign to Employee Transactions</description>
+        <field>OwnerId</field>
+        <lookupValue>Employee_Transactions_Approver</lookupValue>
+        <lookupValueType>Queue</lookupValueType>
+        <name>Assign to Employee Transactions</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>LookupValue</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Assign_to_Employee_Transactions_Approver</fullName>
+        <description>Assign to Employee Transactions Approver</description>
+        <field>OwnerId</field>
+        <lookupValue>Employee_Transactions_Approver</lookupValue>
+        <lookupValueType>Queue</lookupValueType>
+        <name>Assign to Employee Transactions Approver</name>
+        <notifyAssignee>true</notifyAssignee>
+        <operation>LookupValue</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Assign_to_Executive_Team</fullName>
+        <field>OwnerId</field>
+        <lookupValue>Executive_Team</lookupValue>
+        <lookupValueType>Queue</lookupValueType>
+        <name>Assign to Executive Team</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>LookupValue</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Assign_to_High_Transactions_Treasury</fullName>
+        <field>OwnerId</field>
+        <lookupValue>High_Transaction_Treasury</lookupValue>
+        <lookupValueType>Queue</lookupValueType>
+        <name>Assign to High Transactions Treasury</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>LookupValue</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Assign_to_Member_Relations_Approver</fullName>
+        <field>OwnerId</field>
+        <lookupValue>Member_Relations_Approver</lookupValue>
+        <lookupValueType>Queue</lookupValueType>
+        <name>Assign to Member Relations Approver</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>LookupValue</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Assign_to_Member_Relations_Associate</fullName>
+        <field>OwnerId</field>
+        <lookupValue>Member_Relations_Associate</lookupValue>
+        <lookupValueType>Queue</lookupValueType>
+        <name>Assign to Member Relations Associate</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>LookupValue</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Assign_to_Online_Transactions_Queue</fullName>
+        <field>OwnerId</field>
+        <lookupValue>Online_Transactions</lookupValue>
+        <lookupValueType>Queue</lookupValueType>
+        <name>Assign to Online Transactions Queue</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>LookupValue</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Assign_to_Treasury_Associate</fullName>
+        <field>OwnerId</field>
+        <lookupValue>Treasury</lookupValue>
+        <lookupValueType>Queue</lookupValueType>
+        <name>Assign to Treasury Associate</name>
+        <notifyAssignee>true</notifyAssignee>
+        <operation>LookupValue</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Case_Populate_Subject_for_Info_Change</fullName>
+        <field>Subject</field>
+        <formula>CASE(Reason_Subcategory__c, 
+	&apos;Name Change&apos;, &apos;Name change request for &apos; + Contact.FirstName + &apos; &apos; + Contact.LastName, 
+	&apos;Phone Change&apos;, &apos;Phone Change Request&apos;, 
+	&apos;Email Change&apos;, &apos;Email Change Request&apos;, 
+	&apos;Bank&apos;, &apos;Bank account closed or created.&apos;, 
+	&apos;Unsearchable Address&apos;, &apos;Address Change&apos;, 
+	&apos;&apos;
+)</formula>
+        <name>Case Populate Subject for Info Change</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Formula</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Case_RecordType_Field_update_to_OLT</fullName>
+        <description>Case RecordType Field update to Online Transaction Withdrawl</description>
+        <field>RecordTypeId</field>
+        <lookupValue>Online_Transactions_Withdrawal</lookupValue>
+        <lookupValueType>RecordType</lookupValueType>
+        <name>Case RecordType Field update to OLT</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>LookupValue</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Check_Lock_Box</fullName>
+        <field>Approval_Process_Lock__c</field>
+        <literalValue>1</literalValue>
+        <name>Check Lock Box</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Close_Case</fullName>
+        <description>close the case</description>
+        <field>Status</field>
+        <literalValue>Closed</literalValue>
+        <name>Close Case</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Close_the_Case2</fullName>
+        <field>Status</field>
+        <literalValue>Approved</literalValue>
+        <name>Close the Case</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Enrollment_Completed_Date</fullName>
+        <description>Set Enrollment Completed date to today</description>
+        <field>Enrollment_Completed_Date__c</field>
+        <formula>today()</formula>
+        <name>Enrollment Completed Date</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Formula</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Enrollment_type_TDRA</fullName>
+        <field>Enrollment_Type__c</field>
+        <formula>&quot;Tax-Deferred 403(b) Retirement Account&quot;</formula>
+        <name>Enrollment type TDRA</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Formula</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Executive_Team_Bypass</fullName>
+        <field>Bypass_Executive_Team__c</field>
+        <literalValue>1</literalValue>
+        <name>Executive Team Bypass</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>HT_Team_Bypass</fullName>
+        <field>Bypass_High_Transactions_Team__c</field>
+        <literalValue>1</literalValue>
+        <name>HT Team Bypass</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Missing_Invalid_Information</fullName>
+        <field>Status</field>
+        <literalValue>Missing/Invalid Information</literalValue>
+        <name>Missing/Invalid Information</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Pending_Account_Processor_Approval</fullName>
+        <field>Status</field>
+        <literalValue>Pending Account Processor Approval</literalValue>
+        <name>Pending Account Processor Approval</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Pending_MR_Associate_Approval</fullName>
+        <field>Status</field>
+        <literalValue>Processing</literalValue>
+        <name>Pending MR Associate Approval</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Pending_Treasury_Approver_Approval</fullName>
+        <field>Status</field>
+        <literalValue>Pending treasury approver approval</literalValue>
+        <name>Pending Treasury Approver Approval</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Pending_Treasury_Associate_Approval</fullName>
+        <field>Status</field>
+        <literalValue>Pending treasury associate approval</literalValue>
+        <name>Pending Treasury Associate Approval</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>PopulateSubject</fullName>
+        <description>Populates Subject</description>
+        <field>Subject</field>
+        <formula>Account_Summary__r.Name + &quot;_&quot;
+
++ TEXT(Portal_Transaction_Type__c) + &quot;_&quot;
+
++ LEFT(TEXT(CreatedDate),10)</formula>
+        <name>PopulateSubject</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Formula</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Processing</fullName>
+        <field>Status</field>
+        <literalValue>Processing</literalValue>
+        <name>Processing</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Set_Date_of_Distribution</fullName>
+        <description>Set Date of Distribution set by final approval.</description>
+        <field>Date_of_Distribution__c</field>
+        <formula>today()</formula>
+        <name>Set Date of Distribution</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Formula</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Set_Employer_email_for_journey</fullName>
+        <description>Set 	Employer email for journey - set when  initial validation is true and again when status is enrollment complete</description>
+        <field>Employer_email_for_journey__c</field>
+        <formula>if(isblank(Account.Enrollment_Notification_Contact__r.npe01__WorkEmail__c), Employer_E_mail_Address__c ,Account.Enrollment_Notification_Contact__r.npe01__WorkEmail__c)</formula>
+        <name>Set 	Employer email for journey</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Formula</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Status_To_Rejected</fullName>
+        <description>Status To Rejected</description>
+        <field>Status</field>
+        <literalValue>Rejected</literalValue>
+        <name>Status To Rejected</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Status_to_Approved</fullName>
+        <description>Status to Approved</description>
+        <field>Status</field>
+        <literalValue>Approved</literalValue>
+        <name>Status to Approved</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>true</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Status_updateapproved</fullName>
+        <field>Status</field>
+        <literalValue>Approved</literalValue>
+        <name>Status Update - Approved</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Uncheck_Lock_Box</fullName>
+        <field>Approval_Process_Lock__c</field>
+        <literalValue>0</literalValue>
+        <name>Uncheck Lock Box</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Update_US_Pension_Type_Field</fullName>
+        <field>Enrollment_Type__c</field>
+        <formula>&quot;Pension Plan&quot;</formula>
+        <name>Update US Pension Type Field</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Formula</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <outboundMessages>
+        <fullName>Jitterbit_Send_Case</fullName>
+        <apiVersion>48.0</apiVersion>
+        <description>Workflow: Web Service Update Case
+action - Jitterbit Send Case</description>
+        <endpointUrl>https://pfcc-serenity.azurewebsites.net/api/serenity/sendCase</endpointUrl>
+        <fields>Affiliation_Start_Date__c</fields>
+        <fields>Alternate_Payee_PIN__c</fields>
+        <fields>CaseNumber</fields>
+        <fields>Date_of_Death__c</fields>
+        <fields>Id</fields>
+        <fields>Last_Day_Worked__c</fields>
+        <fields>Marital_Status__c</fields>
+        <fields>Marriage_Date__c</fields>
+        <fields>Org_PIN__c</fields>
+        <fields>Original_Deceased_Member__c</fields>
+        <fields>Original_Member__c</fields>
+        <fields>PIN__c</fields>
+        <fields>Reason</fields>
+        <fields>Reason_Subcategory__c</fields>
+        <includeSessionId>false</includeSessionId>
+        <integrationUser>sbc_api@pensionfund.org</integrationUser>
+        <name>Jitterbit Send Case</name>
+        <protected>false</protected>
+        <useDeadLetterQueue>false</useDeadLetterQueue>
+    </outboundMessages>
+    <outboundMessages>
+        <fullName>Jitterbit_Send_Disability</fullName>
+        <apiVersion>48.0</apiVersion>
+        <description>Workflow Rule: Web Service Send Disability</description>
+        <endpointUrl>https://pfcc-serenity.azurewebsites.net/api/serenity/sendDisability</endpointUrl>
+        <fields>ClosedDate</fields>
+        <fields>Id</fields>
+        <fields>Org_PIN__c</fields>
+        <fields>PIN__c</fields>
+        <includeSessionId>false</includeSessionId>
+        <integrationUser>sbc_api@pensionfund.org</integrationUser>
+        <name>Jitterbit Send Disability</name>
+        <protected>false</protected>
+        <useDeadLetterQueue>false</useDeadLetterQueue>
+    </outboundMessages>
+    <outboundMessages>
+        <fullName>Jitterbit_Send_Withdrawal</fullName>
+        <apiVersion>52.0</apiVersion>
+        <description>workflow Web Service Send Withdrawal 
+
+Jitterbit Send Withdrawal</description>
+        <endpointUrl>https://pfcc-serenity.azurewebsites.net/api/serenity/sendWithdrawal</endpointUrl>
+        <fields>Account_Summary__c</fields>
+        <fields>Accrued_Interest__c</fields>
+        <fields>CaseNumber</fields>
+        <fields>Date_of_Distribution__c</fields>
+        <fields>Distribution_Start_Date__c</fields>
+        <fields>Distriution_Code__c</fields>
+        <fields>Id</fields>
+        <fields>Lifeworks_Total_Gross__c</fields>
+        <fields>Withdraw_TDRA_Options__c</fields>
+        <includeSessionId>false</includeSessionId>
+        <integrationUser>sbc_api@pensionfund.org</integrationUser>
+        <name>Jitterbit Send Withdrawal</name>
+        <protected>false</protected>
+        <useDeadLetterQueue>false</useDeadLetterQueue>
+    </outboundMessages>
+    <rules>
+        <fullName>Assign CSR case to processor queue</fullName>
+        <actions>
+            <name>Assign_to_Account_Processor</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>Case.Record_Type_ID__c</field>
+            <operation>equals</operation>
+            <value>0120V000001tbh2</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Case.Origin</field>
+            <operation>notEqual</operation>
+            <value>MemberPortal,Member Portal</value>
+        </criteriaItems>
+        <description>Assigns new CSR cases to processor queues</description>
+        <triggerType>onCreateOnly</triggerType>
+    </rules>
+    <rules>
+        <fullName>Case %3A Online Transactions - Withdrawal</fullName>
+        <actions>
+            <name>Case_RecordType_Field_update_to_OLT</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>Case.Portal_Transaction_Type__c</field>
+            <operation>equals</operation>
+            <value>Withdrawal</value>
+        </criteriaItems>
+        <description>Online Transactions  to  Online Transactions - Withdrawal record type when it is a withdrawl</description>
+        <triggerType>onAllChanges</triggerType>
+    </rules>
+    <rules>
+        <fullName>Case Enrollment Set Enrollment Journey email address</fullName>
+        <actions>
+            <name>Set_Employer_email_for_journey</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>true</active>
+        <booleanFilter>3 and (1 or 2)</booleanFilter>
+        <criteriaItems>
+            <field>Case.Initial_Validation_Completed__c</field>
+            <operation>equals</operation>
+            <value>True</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Case.Status</field>
+            <operation>equals</operation>
+            <value>Enrollment Complete</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Case.Account_Type__c</field>
+            <operation>equals</operation>
+            <value>US Pension Plan,Tax-Deferred 403(b) Retirement Account,457(b) Deferred Compensation Plan,Pension Plan Disability,New Church Start,Pension Plan Student Gift,Pension Plan Change of Employer,Pension Plan</value>
+        </criteriaItems>
+        <description>Case Enrollment Set Email for enrollment journey  Sets the field to the  email address on the org (employer notification) if present otherwise the employer email address on the case.   At Initial validation complete and again at status enrollment complete</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>Case Populate Subject for Info Change</fullName>
+        <actions>
+            <name>Case_Populate_Subject_for_Info_Change</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>Case.Reason_Subcategory__c</field>
+            <operation>equals</operation>
+            <value>Bank,Name Change,Email Change,Phone Change,Unsearchable Address</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Case.Origin</field>
+            <operation>notEqual</operation>
+            <value>MemberPortal,Member Portal</value>
+        </criteriaItems>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>Close Case</fullName>
+        <actions>
+            <name>Close_Case</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>Case.Reason</field>
+            <operation>equals</operation>
+            <value>Transferred Call</value>
+        </criteriaItems>
+        <description>Auto closes the case if certain case reasons are selected</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>EP Support Case Closed</fullName>
+        <actions>
+            <name>Close_EP_Support_Case</name>
+            <type>Alert</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>Case.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Support Case</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Case.Status</field>
+            <operation>equals</operation>
+            <value>Closed</value>
+        </criteriaItems>
+        <description>Send email when ep support case is closed</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>EP Support Case Creation</fullName>
+        <actions>
+            <name>New_EP_Support_Case</name>
+            <type>Alert</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>Case.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Support Case</value>
+        </criteriaItems>
+        <description>Send email when ep support case is first created</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>Enrollment Completed Date</fullName>
+        <actions>
+            <name>Enrollment_Completed_Date</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>Case.Status</field>
+            <operation>equals</operation>
+            <value>Enrollment Complete</value>
+        </criteriaItems>
+        <description>Enrollment Completed Date set to today when enrollment is first set to Enrollment Completed date</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>Online Transaction Approved</fullName>
+        <actions>
+            <name>Online_Transaction_Case_Approved</name>
+            <type>Alert</type>
+        </actions>
+        <active>true</active>
+        <booleanFilter>1 AND 2 AND 3 AND 4</booleanFilter>
+        <criteriaItems>
+            <field>Case.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Online Transactions,Online Transactions - Withdrawal</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Case.Portal_Transaction_Type__c</field>
+            <operation>equals</operation>
+            <value>Withdrawal,Transfer,Deposit,Pay Dues,Internal Transfer</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Case.Status</field>
+            <operation>equals</operation>
+            <value>Closed,Approved</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Case.Origin</field>
+            <operation>equals</operation>
+            <value>MemberPortal</value>
+        </criteriaItems>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>Online Transaction Submitted</fullName>
+        <actions>
+            <name>Online_Transaction_Submitted</name>
+            <type>Alert</type>
+        </actions>
+        <active>true</active>
+        <booleanFilter>1 AND 2 AND 3 AND 4</booleanFilter>
+        <criteriaItems>
+            <field>Case.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Online Transactions,Online Transactions - Withdrawal</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Case.Portal_Transaction_Type__c</field>
+            <operation>equals</operation>
+            <value>Withdrawal,Transfer,Deposit,Pay Dues,Internal Transfer</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Case.Status</field>
+            <operation>equals</operation>
+            <value>Processing,Open</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Case.Origin</field>
+            <operation>equals</operation>
+            <value>MemberPortal</value>
+        </criteriaItems>
+        <triggerType>onCreateOnly</triggerType>
+    </rules>
+    <rules>
+        <fullName>Populate Case Subject</fullName>
+        <actions>
+            <name>PopulateSubject</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>Case.Portal_Transaction_Type__c</field>
+            <operation>equals</operation>
+            <value>Withdrawal,Internal Transfer,Deposit,Pay Dues</value>
+        </criteriaItems>
+        <description>Populate Case Subject</description>
+        <triggerType>onCreateOnly</triggerType>
+    </rules>
+    <rules>
+        <fullName>Web Service Send Disability</fullName>
+        <actions>
+            <name>Jitterbit_Send_Disability</name>
+            <type>OutboundMessage</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>Case.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Disability</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Case.Status</field>
+            <operation>equals</operation>
+            <value>Approved</value>
+        </criteriaItems>
+        <description>sends a disability enrollment to Lifeworks when a disability case is completed and closed</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>Web Service Update Case</fullName>
+        <actions>
+            <name>Jitterbit_Send_Case</name>
+            <type>OutboundMessage</type>
+        </actions>
+        <active>true</active>
+        <booleanFilter>2 and 6 and 7 and ((1 AND 3) OR (4 AND 5))</booleanFilter>
+        <criteriaItems>
+            <field>Case.Status</field>
+            <operation>equals</operation>
+            <value>Closed</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Case.LastModifiedById</field>
+            <operation>notEqual</operation>
+            <value>SBC-SF APIUser,PFCC_JobRun</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Case.Reason</field>
+            <operation>notEqual</operation>
+            <value>Termination of Employment</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Case.Status</field>
+            <operation>equals</operation>
+            <value>Processing,Closed</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Case.Reason</field>
+            <operation>equals</operation>
+            <value>Termination of Employment</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Case.Reason_Subcategory__c</field>
+            <operation>notEqual</operation>
+            <value>Billing Inquiry</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Contact.PIN__c</field>
+            <operation>notEqual</operation>
+        </criteriaItems>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>Web Service Withdrawal Case Approved send to LW</fullName>
+        <actions>
+            <name>Jitterbit_Send_Withdrawal</name>
+            <type>OutboundMessage</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>Case.Status</field>
+            <operation>equals</operation>
+            <value>Approved</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Case.Date_of_Distribution__c</field>
+            <operation>greaterOrEqual</operation>
+            <value>11/16/2021</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Case.LastModifiedById</field>
+            <operation>notEqual</operation>
+            <value>SBC-SF APIUser,PFCC_JobRun</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Case.Withdraw_TDRA_Options__c</field>
+            <operation>notEqual</operation>
+            <value>Recurring</value>
+        </criteriaItems>
+        <description>Withdrawal Case Approved send to LW - status = approved date of completion &gt; 11/16/2021</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>enrollment type update</fullName>
+        <actions>
+            <name>Update_US_Pension_Type_Field</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>Case.Type</field>
+            <operation>equals</operation>
+            <value>US Pension</value>
+        </criteriaItems>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>enrollment type update - tdra</fullName>
+        <actions>
+            <name>Enrollment_type_TDRA</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>true</active>
+        <booleanFilter>1 OR 2 OR 3</booleanFilter>
+        <criteriaItems>
+            <field>Case.Type</field>
+            <operation>equals</operation>
+            <value>ER_Traditional 403(b)</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Case.Type</field>
+            <operation>equals</operation>
+            <value>EE_Traditional 403(b)</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Case.Type</field>
+            <operation>equals</operation>
+            <value>RO_Traditional 403(b)</value>
+        </criteriaItems>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>quot__Support Authorization Received</fullName>
+        <actions>
+            <name>quot__Support_Authorization_Received</name>
+            <type>Alert</type>
+        </actions>
+        <active>false</active>
+        <criteriaItems>
+            <field>Case.IsClosed</field>
+            <operation>equals</operation>
+            <value>False</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Case.quot__Auth_Payment_Processed__c</field>
+            <operation>equals</operation>
+            <value>True</value>
+        </criteriaItems>
+        <description>Notification of support (Case) authorization from customer.</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <tasks>
+        <fullName>Complete_enrollment_process_in_SBC</fullName>
+        <assignedToType>owner</assignedToType>
+        <description>Reminder to complete the enrollment process in SBC if the Case is for Type of Roth IRA and IRA Type of Enrollment</description>
+        <dueDateOffset>0</dueDateOffset>
+        <notifyAssignee>true</notifyAssignee>
+        <offsetFromField>Case.CreatedDate</offsetFromField>
+        <priority>Normal</priority>
+        <protected>false</protected>
+        <status>Not Started</status>
+        <subject>Complete enrollment process in SBC</subject>
+    </tasks>
+</Workflow>

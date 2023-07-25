@@ -1,0 +1,46 @@
+<aura:component implements="force:lightningQuickActionWithoutHeader,force:hasRecordId" controller="AccountSummaryService">
+    <!-- Init Values -->
+    <aura:attribute name="accountSummary" type="Account_Summary__c" /> <!-- JS SE-2803 -->
+    <aura:attribute name="showDeposit" type="Boolean" default="false" />
+    <aura:attribute name="isOneTimePayment" type="Boolean" default="true" />
+    <aura:attribute name="paymentType" type="String" default="oneTime" />
+    <aura:attribute name="showRecurring" type="Boolean" default="false" /> <!--JS SE-2472 Redirect Recurring Payment to DepositAccountSummary -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+
+    <!-- JS SE-2803-->
+    <!-- Constants -->
+    <aura:attribute name="IRA_ACC_TYPE" type="String" access="Private" default="Traditional IRA"/>
+    <aura:attribute name="ROTH_ACC_TYPE" type="String" access="Private" default="Roth IRA"/>
+
+    <lightning:notificationsLibrary aura:id="depositNotificationLibrary"/>
+
+    <!-- JS SE-2933 Removed -->
+    <!--
+    <lightning:select aura:id="show1" name="paymentType" label="Payment Type" required="true" value="{!v.paymentType}">
+        <option value="oneTime">One Time Payment</option>
+        <option value="recurring">Recurring Payment</option>
+    </lightning:select>-->
+    <!-- JS SE-2933 Removed -->
+
+    <!-- JS SE-2933 Removed -->
+    <c:billerDirectSHO recordId = "{!v.recordId}" onclose="{!c.closeModal}"></c:billerDirectSHO>
+    <!--
+    <aura:if isTrue="{!v.paymentType == 'oneTime' }">
+        <c:billerDirectSHO recordId = "{!v.recordId}" onclose="{!c.closeModal}"></c:billerDirectSHO>
+
+        <aura:set attribute="else">
+            <br/>
+            <input aura:id="show1" class="slds-button slds-button_neutral" value="Next" type="button" onclick="{!c.next}"/>
+            -<c:billerDirectSSO recordId = "{!v.recordId}"  onclose="{!c.closeModal}"></c:billerDirectSSO>-->
+            <!--<c:DepositAccountSummary recordId = "{!v.recordId}"></c:DepositAccountSummary>-->
+        <!--</aura:set>
+    </aura:if>
+
+    <aura:if isTrue="{!v.showRecurring}">
+        <c:DepositAccountSummaryACHSHO showRecurring = "{!v.showRecurring}" recordId = "{!v.recordId}"></c:DepositAccountSummaryACHSHO>
+    </aura:if>
+    -->
+    <!-- JS SE-2933 Removed -->
+    
+</aura:component>

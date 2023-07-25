@@ -1,0 +1,5 @@
+<design:component>
+	<design:attribute name="formNames" label="Enrollment Form Names" required="true"/>
+    <design:attribute name="groupName" label="Group Name" required="true" default="Sample Group"/>
+    <design:attribute name="selectedFormType" label="Output Form Type"/>
+</design:component>

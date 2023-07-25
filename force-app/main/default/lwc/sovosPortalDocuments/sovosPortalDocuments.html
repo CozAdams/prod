@@ -1,0 +1,26 @@
+<template>
+    <template if:true={isLoading}>
+        <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+    </template>
+    <div class="slds-align_absolute-center">
+        <template if:true={hasData}>
+            <lightning-datatable class="slds-max-medium-table_stacked"
+                                key-field="id" 
+                                data={data} 
+                                columns={columns}
+                                hide-checkbox-column
+                                default-sort-direction={defaultSortDirection}
+                                sorted-direction={sortDirection}
+                                sorted-by={sortedBy}
+                                onsort={onHandleSort}
+                                onrowaction={handleRowAction}>
+            </lightning-datatable>
+        </template>
+
+        <template if:false={hasData}>
+            <div class="slds-notify slds-notify_alert" role="alert">
+                <h1>{errorMessage}</h1>
+            </div>
+        </template>
+    </div>
+</template>

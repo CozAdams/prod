@@ -1,0 +1,3 @@
+<apex:page standardController="Fund__c">
+    <SpringCMEos:SpringCM_EOSGrid objectType="Fund__c" objectId="{!Id}" />
+</apex:page>

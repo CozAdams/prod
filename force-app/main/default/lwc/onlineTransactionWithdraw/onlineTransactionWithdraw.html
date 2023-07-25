@@ -1,0 +1,540 @@
+<template>
+    <template if:true={showOtp}>
+            <c-threat-metrix-otp-popup user-id={userId}  onotpauthenticated={handleOptAuthenticated}></c-threat-metrix-otp-popup>
+    </template>
+    <template if:true={showTdraOrderingOptout}>
+        <div class="slds-var-p-top_xx-large">
+            <p>The TDRA is designed to provide for distribution of Pre-Tax
+                Contributions before Roth Contributions, unless a Member elects otherwise. Please check the box below if you agree to distribute Roth elective deferrals before your Pre-tax elective deferrals.</p>
+                <div class="slds-var-p-top_x-small">
+                    <lightning-input 
+                        type="checkbox" 
+                        label='I Agree'
+                        name="tdraOrderingAgreementCheckbox"
+                        data-field-name="tdraOrderingAgreementCheckbox"
+                        required>
+                    </lightning-input>
+                </div>
+                <div class="slds-grid slds-gutters slds-grid_align-center slds-var-p-top_medium">
+                    <div class="slds-col">
+                
+                        <lightning-button
+                        variant="brand"
+                        name="submit"
+                        label="Next" 
+                        onclick={handleTdraOderingSubmit}> </lightning-button>                  
+                      </div>
+                    <div class="slds-col">
+                        <lightning-button
+                        variant="brand"
+                        name="cancel"
+                        label="Cancel"
+                        onclick={handleTdraOderingCancel}> </lightning-button>
+                    </div>
+                </div>
+        </div>
+    </template>
+
+    <template if:true={showSpinner}>
+        <div style="padding-top: 50px;" class="slds-is-relative">
+            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+        </div>
+    </template>
+    <template if:true={showForm}>
+        <!-- Header -->
+        <lightning-formatted-rich-text
+            class="slds-text-body_small slds-text-color_weak" 
+            value={header}>
+        </lightning-formatted-rich-text>
+
+        <template if:true={showWithdrawalCount}>
+            <div class="slds-var-p-top_x-small">
+                { withdrawalCountMessage }
+            </div>
+        </template>
+
+        <!-- Reason -->
+        <template if:true={showReason}>
+            <div class="slds-var-p-top_x-small">
+                <lightning-combobox
+                    name="reason"
+                    class="withdraw-form-field"
+                    data-field-name="reason"
+                    label="Reason for Distribution"
+                    value={reason}
+                    placeholder="Select Reason for Distribution..."
+                    options={reasonOptions}
+                    message-when-value-missing={ERROR_MSG_REQUIRED}
+                    onchange={handleReasonChange}
+                    required>
+                </lightning-combobox>
+            </div>
+        </template>
+        <!-- Reason Date -->
+        <template if:true={showReasonDate}>
+            <div class="slds-var-p-top_x-small">
+                <lightning-input 
+                    name="reasonDate"
+                    class="withdraw-form-field"
+                    data-field-name="reasonDate"
+                    type="date"
+                    label="Selected Reason Date"
+                    value={reasonDate}
+                    max={todaysDate}
+                    message-when-range-overflow="Please select a date that is in the past."
+                    message-when-value-missing={ERROR_MSG_REQUIRED}
+                    onchange={handleFieldChange}
+                    required>
+                </lightning-input>
+            </div>
+        </template>
+        <!-- Reason Other -->
+        <template if:true={showReasonOther}>
+            <div class="slds-var-p-top_x-small">
+                <lightning-input 
+                    name="reasonOther"
+                    class="withdraw-form-field"
+                    data-field-name="reasonOther"
+                    type="text"
+                    label="Other Reason"
+                    value={reasonOther}
+                    onchange={handleFieldChange}>
+                </lightning-input>
+                <lightning-formatted-rich-text
+                    class="slds-text-body_small slds-text-color_weak" 
+                    value={otherNote}>
+                </lightning-formatted-rich-text>
+            </div>
+        </template>
+        <!-- Distribution Option -->
+        <div class="slds-var-p-top_x-small">
+            <lightning-radio-group
+                name="withdrawOption"
+                class="withdraw-form-field"
+                data-field-name="withdrawOption"
+                type="radio"
+                label="Distribution Options"
+                options={withdrawOptions}
+                value={withdrawOption}
+                message-when-value-missing={ERROR_MSG_REQUIRED}
+                onchange={handleWithdrawOptionChange}
+                required>
+            </lightning-radio-group>
+        </div>
+        <!-- Transfer and Rollover Rules -->
+        <template if:true={showTransferRules}>
+            <div class="slds-var-p-top_x-small">
+                <p class="slds-text-body_regular slds-truncate">
+                    <a href={transferRulesUrl} target="_blank">Transfer and Rollover Rules</a>
+                </p>
+            </div>
+        </template>
+        <template if:true={showDates}>
+            <!-- Recurring Start Date -->
+            <div class="slds-var-p-top_x-small">
+                <lightning-input 
+                    class="slds-var-p-top_x-small withdraw-form-field start-date"
+                    data-field-name="startDate"
+                    name="startDate"
+                    type="date"
+                    label="Distribution Start Date"
+                    min={todaysDate}
+                    message-when-range-underflow="Start date cannot be in the past."
+                    value={startDate}
+                    message-when-value-missing={ERROR_MSG_REQUIRED}
+                    onchange={handleStartDateChange}
+                    required>
+                </lightning-input>
+            </div>
+            <!-- Recurring End Date -->
+            <div class="slds-var-p-top_x-small">
+                <lightning-input 
+                    class="slds-var-p-top_x-small withdraw-form-field end-date"
+                    data-field-name="endDate"
+                    name="endDate"
+                    type="date"
+                    label="Distribution End Date"
+                    min={endDateMin}
+                    max={endDateMax}
+                    message-when-value-missing={ERROR_MSG_REQUIRED}
+                    message-when-range-underflow="Please use one-time distribution option, recurring option should be used for a period greater than 2 month period."
+                    message-when-range-overflow="Exceeds maximum time allowed for a recurring distribution."
+                    value={endDate}
+                    onchange={handleEndDateChange}>
+                </lightning-input>
+            </div>
+        </template>
+        <!-- Withdrawal Amount -->
+        <template if:true={showWithdrawalAmount}>
+            <div class="slds-var-p-top_x-small">
+                <lightning-input 
+                    name="withdrawalAmount"
+                    class="withdraw-form-field"
+                    data-field-name="withdrawalAmount"
+                    type="number"
+                    label="Amount"
+                    value={withdrawalAmount}
+                    formatter="currency"
+                    step="0.01"
+                    min={withdrawalAmountMin}
+                    message-when-value-missing={ERROR_MSG_REQUIRED}
+                    message-when-range-underflow={withdrawalAmountMinError}
+                    onblur={handleAmountChange}
+                    required>
+                </lightning-input>
+            </div>
+        </template>
+        <!-- Gross or Net -->
+        <template if:true={showGrossOrNet}>
+        <div class="slds-var-p-top_x-small">
+            <lightning-radio-group
+                name="grossOrNet"
+                class="withdraw-form-field"
+                data-field-name="grossOrNet"
+                type="radio"
+                label="Payment Amount Type"
+                options={grossOrNetOptions}
+                value={grossOrNet}
+                message-when-value-missing={ERROR_MSG_REQUIRED}
+                onchange={handleGrossOrNetChange}
+                required>
+            </lightning-radio-group>
+        </div>
+    </template>
+    <template if:true={showRoth403bWarning}>
+        <p class="slds-text-color_weak">All amounts requested are assumed to be gross for Roth 403b</p>
+    </template>
+        <!-- Payment Type -->
+        <template if:true={showPaymentType}>
+            <div class="slds-var-p-top_x-small">
+                <lightning-radio-group
+                    name="paymentType"
+                    class="withdraw-form-field"
+                    data-field-name="paymentType"
+                    type="radio"
+                    label="Payment Type"
+                    options={paymentTypeOptions}
+                    value={paymentType}
+                    message-when-value-missing={ERROR_MSG_REQUIRED}
+                    onchange={handlePaymentTypeChange}
+                    required>
+                </lightning-radio-group>
+            </div>
+        </template>
+        <!-- Mailing Address -->
+        <template if:true={showMailingAddress}>
+            <div class="slds-var-p-top_x-small">
+                <p>Check will be mailed to: </p>
+                <div class="slds-var-p-top_xx-small slds-box slds-box_xx-small text-bold">
+                    <p>{ accountSummary.fields.Member_Name__r.value.fields.MailingStreet.value }</p>
+                    <p>{ accountSummary.fields.Member_Name__r.value.fields.MailingCity.value }, { accountSummary.fields.Member_Name__r.value.fields.MailingState.value }</p>
+                    <p>{ accountSummary.fields.Member_Name__r.value.fields.MailingPostalCode.value }</p>
+                </div>
+            </div>
+        </template>
+        <!-- Wire Fee Note -->
+        <template if:true={showWireFeeNote}>
+            <p class="slds-var-p-top_x-small slds-text-body_small slds-text-color_weak">
+                { wireFeeNote }
+            </p>
+        </template>
+ 
+        <!-- Withholding Option -->
+        <!-- JS SE-2724 removed {isWithholdingOptionReadOnly} -->
+        <template if:true={showWithholdingOption}>
+            <div class="slds-var-p-top_x-small">
+                <lightning-combobox
+                    name="withholdingOption"
+                    class="withdraw-form-field"
+                    data-field-name="withholdingOption"
+                    label="Withholding Options"
+                    value={withholdingOption}
+                    placeholder="Select Withholding Option..."
+                    options={withholdingOptions}
+                    message-when-value-missing={ERROR_MSG_REQUIRED}
+                    onchange={handleWithholdingOptionChange}
+                    read-only="true" 
+                    required>
+                </lightning-combobox>
+            </div>
+        </template>
+        <!-- Allowances -->
+        <!-- JS SE-2724 set to read only -->
+        <template if:true={showAllowances}>
+            <div class="slds-var-p-top_x-small">
+                <lightning-input 
+                    name="allowances"
+                    class="withdraw-form-field"
+                    data-field-name="allowances"
+                    type="number"
+                    label="Number of Allowances"
+                    value={allowances}
+                    read-only="true"
+                    onblur={handleNumberInputChange}>
+                </lightning-input>
+            </div>
+        </template>
+        <!-- Marital Status -->
+        <!-- JS SE-2724 set to read only -->
+        <template if:true={showMaritalStatus}>
+            <div class="slds-var-p-top_x-small">
+                <lightning-combobox
+                    name="maritalStatus"
+                    class="withdraw-form-field"
+                    data-field-name="maritalStatus"
+                    label="Marital Status"
+                    value={maritalStatus}
+                    placeholder="Select Marital Status..."
+                    options={maritalStatusOptions}
+                    read-only="true"
+                    onchange={handleFieldChange}>
+                </lightning-combobox>
+            </div>
+        </template>
+        
+        <!-- START JS SE-2724 -->
+        <template if:true={showTdraComment}>
+            <div class="slds-var-p-top_large">
+                <lightning-formatted-rich-text 
+                    class="slds-text-body_small slds-text-color_weak" 
+                    value="IRS rules require a form W-4R / W-4P be completed if you wish to elect Federal Withholding other than the default. Please do so by completing ">
+                </lightning-formatted-rich-text>
+                <lightning-formatted-url value="https://pensionfund.org/forms/english-forms#withdraw" label="the applicable withdrawal form from our website" target="_blank" ></lightning-formatted-url>
+                <lightning-formatted-rich-text 
+                    class="slds-text-body_small slds-text-color_weak" 
+                    value=" and the applicable tax form and submitting to PFCC1@pensionfund.org.">
+                </lightning-formatted-rich-text>
+            </div>
+        </template>
+        <!-- START JS SE-2724 -->
+        <!-- Additional Withholding Type -->
+        <!-- START JS SE-2724 removed in UI -->
+        <!--
+        <template if:true={showAdditionalAmountType}>
+            <div class="slds-var-p-top_x-small">
+                <lightning-radio-group
+                    name="additionalAmountType"
+                    class="withdraw-form-field"
+                    data-field-name="additionalAmountType"
+                    type="radio"
+                    label="Additional Withholding Amount Type"
+                    options={additionalAmountTypeOptions}
+                    value={additionalAmountType}
+                    onchange={handleAdditionalAmountTypeChange}>
+                </lightning-radio-group>
+            </div>
+            Additional Withholding Dollar Amount
+            <template if:true={showAdditionalAmount}>
+                <div class="slds-var-p-top_x-small">
+                    <lightning-input 
+                        name="additionalDollarAmount"
+                        class="withdraw-form-field"
+                        data-field-name="additionalDollarAmount"
+                        type="number"
+                        label="Additional Withholding Dollar Amount (Included into your distribution amount)"
+                        value={additionalDollarAmount}
+                        formatter="currency"
+                        step="0.01"
+                        min="0.01"
+                        message-when-value-missing={ERROR_MSG_REQUIRED}
+                        message-when-range-underflow="Additional withholding amount must be greater than $0."
+                        onblur={handleNumberInputChange}
+                        required>
+                    </lightning-input>
+                </div>
+            </template>
+            Additional Withholding Percent Amount
+            <template if:true={showAdditionalPercent}>
+                <div class="slds-var-p-top_x-small">
+                    <lightning-input 
+                        name="additionalPercentAmount"
+                        class="withdraw-form-field"
+                        data-field-name="additionalPercentAmount"
+                        type="number"
+                        label="Additional Withholding Percent Amount (Included into your distribution amount)"
+                        value={additionalPercentAmount}
+                        formatter="percent-fixed"
+                        step="0.1"
+                        min="0.1"
+                        max="100"
+                        message-when-value-missing={ERROR_MSG_REQUIRED}
+                        message-when-range-underflow="Additional withholding percent must be greater than 0%."
+                        message-when-range-overflow="Additional withholding percent cannot be greater than 100%."
+                        onblur={handleNumberInputChange}
+                        required>
+                    </lightning-input>
+                </div>
+            </template>
+        </template>
+        -->
+        <!-- END JS SE-2724 removed in UI -->
+        <!-- Housing Allowance Section -->
+        <template if:true={showHousingAllowance}>
+            <br />
+            <div class="slds-text-body_small slds-text-color_weak custom-label">
+                Housing Allowance
+            </div>
+            <!-- Housing allowances checkbox -->
+            <div class="slds-var-p-top_x-small">
+                <lightning-input 
+                    type="checkbox" 
+                    label={HOUSING_CHECKBOX_LABEL}
+                    name="hasHousingAllowance"
+                    data-field-name="hasHousingAllowance"
+                    value={hasHousingAllowance}
+                    onchange={handleCheckboxChange}>
+                </lightning-input>
+            </div>
+        </template>
+        <!--JS SFMS-21 Hide if BAA-->
+        <!-- Distribution Payment Type -->
+        <template if:true={showdistributionPaymentType}>
+            <div class="slds-var-p-top_x-small">
+                <lightning-radio-group 
+                    name="distributionPaymentType" 
+                    data-field-name="distributionPaymentType"
+                    class="withdraw-form-field"
+                    label="Distribution Payment Type"
+                    options={distributionPaymentTypeOptions}
+                    value={distributionPaymentType}
+                    message-when-value-missing={ERROR_MSG_REQUIRED}
+                    onchange={handleDistributionPaymentTypeChange}
+                    type="radio"
+                    required>
+                </lightning-radio-group>
+            </div>
+        </template>
+        <template if:true={showRolloverContactFields}>
+            <!-- Name of Recipient -->
+            <div class="slds-var-p-top_x-small">
+                <lightning-input 
+                    name="rolloverRecipientName"
+                    class="withdraw-form-field" 
+                    data-field-name="rolloverRecipientName"
+                    type="text" 
+                    label="Name of Recipient" 
+                    value={rolloverRecipientName}
+                    message-when-value-missing={ERROR_MSG_REQUIRED}
+                    onchange={handleFieldChange}
+                    required>
+                </lightning-input>
+            </div>
+            <!-- Name of Trustee -->
+            <div class="slds-var-p-top_x-small">
+                <lightning-input 
+                    name="rolloverTrusteeName"
+                    class="withdraw-form-field" 
+                    data-field-name="rolloverTrusteeName"
+                    type="text" 
+                    label="Name of Trustee/Custodian" 
+                    value={rolloverTrusteeName}
+                    message-when-value-missing={ERROR_MSG_REQUIRED}
+                    onchange={handleFieldChange}
+                    required>
+                </lightning-input>
+            </div>
+            <!-- Contact Name -->
+            <div class="slds-var-p-top_x-small">
+                <lightning-input 
+                    name="rolloverContactName"
+                    class="withdraw-form-field" 
+                    data-field-name="rolloverContactName"
+                    type="text" 
+                    label="Contact Name" 
+                    value={rolloverContactName}
+                    message-when-value-missing={ERROR_MSG_REQUIRED}
+                    onchange={handleFieldChange}
+                    required>
+                </lightning-input>
+            </div>
+            <!-- Contact Phone Number -->
+            <div class="slds-var-p-top_x-small">
+                <lightning-input 
+                    name="rolloverRecipientPhone"
+                    class="withdraw-form-field" 
+                    data-field-name="rolloverRecipientPhone"
+                    type="text" 
+                    label="Phone Number" 
+                    value={rolloverRecipientPhone}
+                    message-when-value-missing={ERROR_MSG_REQUIRED}
+                    onchange={handleFieldChange}
+                    required>
+                </lightning-input>
+            </div>
+            <!-- JS SE-2496 Mailing Street -->
+            <div class="slds-var-p-top_x-small">
+                <lightning-input 
+                    name="rolloverRecipientStreet"
+                    class="withdraw-form-field" 
+                    data-field-name="rolloverRecipientStreet"
+                    type="text" 
+                    label="Mailing Street of Recipient" 
+                    value={rolloverRecipientStreet}
+                    message-when-value-missing={ERROR_MSG_REQUIRED}
+                    onchange={handleFieldChange}
+                    required>
+                </lightning-input>
+            </div>
+            <!-- Mailing City -->
+            <div class="slds-var-p-top_x-small">
+                <lightning-input 
+                    name="rolloverRecipientCity"
+                    class="withdraw-form-field" 
+                    data-field-name="rolloverRecipientCity"
+                    type="text" 
+                    label="Mailing City of Recipient" 
+                    value={rolloverRecipientCity}
+                    message-when-value-missing={ERROR_MSG_REQUIRED}
+                    onchange={handleFieldChange}
+                    required>
+                </lightning-input>
+            </div>
+            <!-- Mailing State -->
+            <div class="slds-var-p-top_x-small">
+                <lightning-input 
+                    name="rolloverRecipientState"
+                    class="withdraw-form-field" 
+                    data-field-name="rolloverRecipientState"
+                    type="text" 
+                    label="Mailing State of Recipient" 
+                    value={rolloverRecipientState}
+                    message-when-value-missing={ERROR_MSG_REQUIRED}
+                    onchange={handleFieldChange}
+                    required>
+                </lightning-input>
+            </div>
+            <!-- Mailing Country -->
+            <div class="slds-var-p-top_x-small">
+                <lightning-combobox
+                    name="reason"
+                    class="withdraw-form-field"
+                    data-field-name="rolloverRecipientCountry"
+                    label="Mailing Country of Recipient"
+                    value={rolloverRecipientCountry}
+                    placeholder="Select Country..."
+                    options={rolloverRecipientCountryOptions}
+                    message-when-value-missing={ERROR_MSG_REQUIRED}
+                    onchange={handleFieldChange}
+                    required>
+                </lightning-combobox>
+            </div>
+            <!-- Mailing Zip -->
+            <div class="slds-var-p-top_x-small">
+                <lightning-input 
+                    name="rolloverRecipientZip"
+                    class="withdraw-form-field" 
+                    data-field-name="rolloverRecipientZip"
+                    type="text" 
+                    label="Mailing Zip Code of Recipient" 
+                    value={rolloverRecipientZip}
+                    message-when-value-missing={ERROR_MSG_REQUIRED}
+                    onchange={handleFieldChange}
+                    required>
+                </lightning-input>
+            </div>
+        </template>
+        <!-- Threat Report Logging -->
+        <c-threat-metrix-logger onthreatmetrixscorechange = {evaluateThreatMetrixScore}   onthreatreportidchange={handleThreatReportIdChange} >
+        </c-threat-metrix-logger>
+    </template>
+</template>

@@ -1,0 +1,60 @@
+<aura:component implements="force:lightningQuickActionWithoutHeader,force:hasRecordId" controller="AccountSummaryService">
+	<!-- Init values -->
+	<aura:attribute name="accountPlanId" type="String" />
+
+	<aura:attribute name="case" type="Case" default="{'sObjectType':'Case'}" />
+	<aura:attribute name="showForm" type="Boolean" default="false" />
+	<aura:attribute name="showBankingInfo" type="Boolean" default="true" />
+	<aura:attribute name="isSaving" type="Boolean" />
+	<aura:attribute name="isSelectedAccountIntl" type="Boolean" default="false" />
+	<aura:attribute name="eSignature" type="String" />
+
+	<!-- Events and Handlers -->
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+	<aura:handler name="change" value="{!v.isSelectedAccountIntl}" action="{!c.handleBankAccountChange}"/>
+	
+	<!-- Form Lightning Web Component -->
+	<c:onlineTransactionWithdraw 
+		aura:id="formLWC"
+		accountSummaryId="{!v.recordId}" 
+		accountPlanId="{!v.accountPlanId}"
+		onsubmitbuttondisableevent ="{!c.submitButtonControl}"
+		case="{!v.case}" 
+		onaccountplanidchangeevent="{!c.setAccountPlanId}" 
+		onpaymenttypechangeevent="{!c.setShowBankingInfo}"
+		onissavingchangeevent="{!c.toggleSavingSpinner}"
+		onloadevent="{!c.showForm}"
+		onhideforms="{!c.hideForm}"
+		onclose="{!c.closeFormWindow}" 
+		/>
+
+	<aura:if isTrue="{!v.showForm}">
+		<!-- Bank Account -->
+		<aura:if isTrue="{!v.showBankingInfo}">
+			<c:BankingInformation 
+				aura:id="bankingInformationComp" 
+				targetObject="{!v.case}" 
+				targetField="Bank_Account__c" 
+				isSelectedAccountIntl="{!v.isSelectedAccountIntl}" />
+		</aura:if>
+
+		<!-- ESignature embedded component -->
+		<c:AccountSummaryESignature 
+			aura:id="eSignatureComp" 
+			case="{!v.case}" 
+			eSignature="{!v.eSignature}" />
+
+		<!-- Save button -->
+		<div class="slds-p-top_small">
+			<lightning:button 
+				label="Submit" 
+				aura:id="submitBtn"
+				onclick="{!c.save}" />
+		</div>
+
+		<!-- Saving spinner -->
+		<aura:if isTrue="{!v.isSaving}">
+				<lightning:spinner alternativeText="Loading" size="medium" />
+		</aura:if>
+	</aura:if>
+</aura:component>

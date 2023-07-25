@@ -1,0 +1,33 @@
+<aura:component implements="lightning:availableForFlowScreens" controller="TwilioAPILightningController">
+    <aura:attribute name="phoneList" type="List" description="List of all phone that the user can select" access="public"/>
+	<aura:attribute name="phoneNumber" type="String" description="The phone number that will be used to call the user" access="public"/>
+    <aura:attribute name="isoToCountryCodeMap" type="Map" description="Map each ISO code to corresponding country code" access="public"/>
+    <aura:attribute name="isoCodeList" type="List" description="Iso code List for user to select" access="public"/>
+    <aura:attribute name="countryCodeList" type="List" description="Country code List for user to select" access="public"/>
+    <aura:attribute name="isoCode" type="String" default="" description="The iso code user can select to render corresponding country codes" access="public"/>
+    <aura:attribute name="countryCode" type="String" description="The phone numbers country code which will be used in the API call" access="public"/>
+    <aura:attribute name="errorMessage" type="String" default="" description="Display error message if API fail" access="public"/>
+    <aura:attribute name="isLoading" type="Boolean" default="true" description="Boolean to control render when server finish loading" access="public"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <p><lightning:formattedText class="slds-text-color_error slds-text-title_bold" value="{!v.errorMessage}"/></p>
+    <p><lightning:formattedText value="{!$Label.c.Community_Login_Verification_Code_Instruction}" /></p>
+    <aura:if isTrue="{!not(v.isLoading)}">
+        <lightning:select aura:id="countryField" name="isoCode" label="Country" value="{!v.isoCode}" onchange="{!c.updateCountryCodeSelection}" required="true">
+            <aura:iteration items="{!v.isoCodeList}" var="isoCode">
+                <option text="{!isoCode}" value="{!isoCode}"/>
+            </aura:iteration>
+        </lightning:select>
+        <lightning:select aura:id="field" name="countryCode" label="Country Code" value="{!v.countryCode}" required="true">
+            <aura:iteration items="{!v.countryCodeList}" var="cCode">
+                <option text="{!cCode}" value="{!cCode}" selected="{!cCode.selected}"/>
+            </aura:iteration>
+        </lightning:select>
+        <lightning:select aura:id="field" name="phoneNumber" label="Phone Number" value="{!v.phoneNumber}" required="true" messageWhenValueMissing="Please select your phone number">
+            <aura:iteration items="{!v.phoneList}" var="phone">
+                <option text="{!phone.mask}" value="{!phone.actual}" selected="{!phone.selected}"/>
+            </aura:iteration>
+        </lightning:select>
+    </aura:if>
+    <lightning:button class="slds-size_full slds-m-top_medium" variant="brand" label="Verify Phone Number" onclick="{!c.navigationToNextPage}"/>
+    <p><lightning:formattedText class="slds-m-top_x-medium" linkify="true" value="{!$Label.c.Community_Login_Cannot_Find_Number}"/></p>
+</aura:component>

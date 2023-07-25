@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workflow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <alerts>
+        <fullName>new_enrollment_case_created_b</fullName>
+        <description>new enrollment case created by opportunity  -Process Builder - Enrollment Process Case Creation</description>
+        <protected>false</protected>
+        <recipients>
+            <recipient>bmclarty@pensionfund.org</recipient>
+            <type>user</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>Community_Templates/Online_Transaction_Close_Case</template>
+    </alerts>
+    <alerts>
+        <fullName>npsp__Opportunity_Email_Acknowledgment</fullName>
+        <description>Opportunity Email Acknowledgment</description>
+        <protected>false</protected>
+        <recipients>
+            <field>npsp__Primary_Contact__c</field>
+            <type>contactLookup</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>npsp__NPSP_Email_Templates/npsp__NPSP_Opportunity_Acknowledgment</template>
+    </alerts>
+    <fieldUpdates>
+        <fullName>Set_Opportunity_Name</fullName>
+        <description>This will set the opportunity name to default to  &apos;Org name&apos; - &apos;Record Type&apos; - &apos;Product&apos;.  Product will only display if selected.</description>
+        <field>Name</field>
+        <formula>Account.Name  &amp; &quot;: &quot; &amp;   $RecordType.Name  &amp; &quot;:  &quot; &amp;  TEXT(Type)</formula>
+        <name>Set Opportunity Name</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Formula</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>npsp__Opportunity_AcknowledgmentStatus_Update</fullName>
+        <description>Sets the Acknowledgment Status to &quot;Acknowledged&quot;</description>
+        <field>npsp__Acknowledgment_Status__c</field>
+        <literalValue>Acknowledged</literalValue>
+        <name>Opportunity Acknowledgment Status Update</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>npsp__Opportunity_Acknowledgment_Date_Update</fullName>
+        <description>sets the Acknowledgment Date to Today.</description>
+        <field>npsp__Acknowledgment_Date__c</field>
+        <formula>Today()</formula>
+        <name>Opportunity Acknowledgment Date Update</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Formula</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>npsp__Opportunity_Copy_FMV_to_Amount</fullName>
+        <description>Copy the Opportunities Fair Market Value field to the Amount field.</description>
+        <field>Amount</field>
+        <formula>npsp__Fair_Market_Value__c</formula>
+        <name>Opportunity Copy FMV to Amount</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Formula</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <outboundMessages>
+        <fullName>Jitterbit_Send_Donation</fullName>
+        <apiVersion>48.0</apiVersion>
+        <description>workflow GPSendDonationGL
+action Jitterbit Send Donation</description>
+        <endpointUrl>https://pfcc-serenity.azurewebsites.net/api/serenity/sendDonation</endpointUrl>
+        <fields>Amount</fields>
+        <fields>Amount_1__c</fields>
+        <fields>Amount_2__c</fields>
+        <fields>Amount_3__c</fields>
+        <fields>Amount_4__c</fields>
+        <fields>CloseDate</fields>
+        <fields>Description</fields>
+        <fields>Donation_Effective_Date__c</fields>
+        <fields>GL_Code_Fund_1__c</fields>
+        <fields>GL_Code_Fund_2__c</fields>
+        <fields>GL_Code_Fund_3__c</fields>
+        <fields>GL_Code_Fund_4__c</fields>
+        <fields>Id</fields>
+        <fields>Name</fields>
+        <fields>Payment_Reference_Number__c</fields>
+        <fields>Payment_Type__c</fields>
+        <includeSessionId>false</includeSessionId>
+        <integrationUser>sbc_api@pensionfund.org</integrationUser>
+        <name>Jitterbit Send Donation</name>
+        <protected>false</protected>
+        <useDeadLetterQueue>false</useDeadLetterQueue>
+    </outboundMessages>
+    <outboundMessages>
+        <fullName>Jitterbit_Send_Enrollment</fullName>
+        <apiVersion>48.0</apiVersion>
+        <description>workflow Web Service Update Enrollment
+action Jitterbit Send Enrollment</description>
+        <endpointUrl>https://pfcc-serenity.azurewebsites.net/api/serenity/sendEnrollment</endpointUrl>
+        <fields>CloseDate</fields>
+        <fields>Id</fields>
+        <fields>Member_PIN__c</fields>
+        <fields>Name</fields>
+        <fields>Type</fields>
+        <includeSessionId>false</includeSessionId>
+        <integrationUser>sbc_api@pensionfund.org</integrationUser>
+        <name>Jitterbit Send Enrollment</name>
+        <protected>false</protected>
+        <useDeadLetterQueue>false</useDeadLetterQueue>
+    </outboundMessages>
+    <rules>
+        <fullName>GPSendDonationGL</fullName>
+        <actions>
+            <name>Jitterbit_Send_Donation</name>
+            <type>OutboundMessage</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>Opportunity.StageName</field>
+            <operation>equals</operation>
+            <value>Posted</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.Record_Type__c</field>
+            <operation>contains</operation>
+            <value>Donation</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.Name</field>
+            <operation>notContain</operation>
+            <value>Payroll</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.Org_PIN__c</field>
+            <operation>notEqual</operation>
+            <value>50009116</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.Payment_Type__c</field>
+            <operation>notEqual</operation>
+            <value>PFCC Member Deduction</value>
+        </criteriaItems>
+        <description>Sends the donation information to jitterbit to be written to the file share and consumed by Great Plains</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>Web Service Update Enrollment</fullName>
+        <actions>
+            <name>Jitterbit_Send_Enrollment</name>
+            <type>OutboundMessage</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>Opportunity.StageName</field>
+            <operation>equals</operation>
+            <value>Closed Enrolled</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.Type</field>
+            <operation>notEqual</operation>
+            <value>Health Care Plans,Accident Insurance,Ministerial Relief,Supplemental Gift</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.LastModifiedById</field>
+            <operation>notEqual</operation>
+            <value>SBC-SF APIUser,PFCC_JobRun</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.LastModifiedById</field>
+            <operation>notContain</operation>
+            <value>mclarty</value>
+        </criteriaItems>
+        <description>Web Service Update Enrollment</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>npsp__Opportunity Copy FMV to Amount</fullName>
+        <actions>
+            <name>npsp__Opportunity_Copy_FMV_to_Amount</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>false</active>
+        <booleanFilter>(1 OR 2) AND (3 AND 4)</booleanFilter>
+        <criteriaItems>
+            <field>Opportunity.Amount</field>
+            <operation>equals</operation>
+            <value>0</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.Amount</field>
+            <operation>equals</operation>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.npsp__Fair_Market_Value__c</field>
+            <operation>notEqual</operation>
+            <value>0</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.npsp__Fair_Market_Value__c</field>
+            <operation>notEqual</operation>
+        </criteriaItems>
+        <description>Enable this rule to copy the Fair Market Value to the Amount field, when the Amount is zero or blank.</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>npsp__Opportunity Email Acknowledgment</fullName>
+        <actions>
+            <name>npsp__Opportunity_Email_Acknowledgment</name>
+            <type>Alert</type>
+        </actions>
+        <actions>
+            <name>npsp__Opportunity_AcknowledgmentStatus_Update</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <actions>
+            <name>npsp__Opportunity_Acknowledgment_Date_Update</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>false</active>
+        <description>Emails an acknowledgement to the Primary Contact for an Opportunity when the Acknowledgement Status is set to Email Acknowledgement Now.</description>
+        <formula>TEXT(npsp__Acknowledgment_Status__c) = $Label.npsp__sendAcknowledgmentFireStatus &amp;&amp;  npsp__Primary_Contact__r.Email &lt;&gt; NULL &amp;&amp;  npsp__Primary_Contact__r.npsp__Do_Not_Contact__c &lt;&gt; True &amp;&amp;  npsp__Primary_Contact__r.HasOptedOutOfEmail &lt;&gt; True &amp;&amp;  npsp__Primary_Contact__r.npsp__Deceased__c &lt;&gt; True</formula>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+</Workflow>

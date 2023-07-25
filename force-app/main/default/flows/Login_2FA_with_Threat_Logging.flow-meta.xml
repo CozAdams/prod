@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>51.0</apiVersion>
+    <interviewLabel>Login 2FA with Threat Logging {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Login 2FA with Threat Logging</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>FREE_FORM_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>Flow</processType>
+    <start>
+        <locationX>50</locationX>
+        <locationY>50</locationY>
+        <connector>
+            <targetReference>Twilio_2FA</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
+    <subflows>
+        <name>Threat_Logging</name>
+        <label>Threat Logging</label>
+        <locationX>531</locationX>
+        <locationY>69</locationY>
+        <flowName>Member_Login_Threat_Logging</flowName>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </subflows>
+    <subflows>
+        <name>Twilio_2FA</name>
+        <label>Twilio 2FA</label>
+        <locationX>416</locationX>
+        <locationY>69</locationY>
+        <connector>
+            <targetReference>Threat_Logging</targetReference>
+        </connector>
+        <flowName>Two_Factor_Authentication</flowName>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </subflows>
+</Flow>

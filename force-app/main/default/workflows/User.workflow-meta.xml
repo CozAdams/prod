@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workflow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <alerts>
+        <fullName>Potential_Fraud_Alert_Send_an_email_Ph_only_chgd</fullName>
+        <description>Potential Fraud Alert- Send an email - Ph only chgd</description>
+        <protected>false</protected>
+        <recipients>
+            <field>Email</field>
+            <type>email</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>Approval_Process_Communications/Contact_Info_was_updated_Email</template>
+    </alerts>
+    <alerts>
+        <fullName>Potential_Fraud_Alert_Send_an_email_to_Old_Email</fullName>
+        <description>Potential Fraud Alert- Send an email to Old Email</description>
+        <protected>false</protected>
+        <recipients>
+            <field>oldEmail__c</field>
+            <type>email</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>Approval_Process_Communications/Contact_Info_was_updated_Email</template>
+    </alerts>
+    <fieldUpdates>
+        <fullName>OldTwilioPhNumber</fullName>
+        <field>OldTwilioPhNumber__c</field>
+        <formula>PRIORVALUE( Twilio_Phone_Number__c )</formula>
+        <name>OldTwilioPhNumber</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Formula</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Old_Email</fullName>
+        <field>oldEmail__c</field>
+        <formula>PRIORVALUE(Email)</formula>
+        <name>Old Email</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Formula</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Old_Phone_Number</fullName>
+        <field>Old_Phone_Number__c</field>
+        <name>Old Phone Number</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <rules>
+        <fullName>Old Email</fullName>
+        <actions>
+            <name>Potential_Fraud_Alert_Send_an_email_to_Old_Email</name>
+            <type>Alert</type>
+        </actions>
+        <actions>
+            <name>Old_Email</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>false</active>
+        <formula>ISCHANGED(Email)</formula>
+        <triggerType>onAllChanges</triggerType>
+    </rules>
+    <rules>
+        <fullName>Old Phone number</fullName>
+        <actions>
+            <name>Potential_Fraud_Alert_Send_an_email_Ph_only_chgd</name>
+            <type>Alert</type>
+        </actions>
+        <actions>
+            <name>Old_Phone_Number</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>false</active>
+        <description>Update Old Phone number field and Send an email (to email in the Email field)</description>
+        <formula>ISCHANGED(Phone)</formula>
+        <triggerType>onAllChanges</triggerType>
+    </rules>
+    <rules>
+        <fullName>OldTwilioPhNumber</fullName>
+        <actions>
+            <name>OldTwilioPhNumber</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>false</active>
+        <description>Old Twilio Phone Number</description>
+        <formula>ISCHANGED(Twilio_Phone_Number__c)</formula>
+        <triggerType>onAllChanges</triggerType>
+    </rules>
+</Workflow>

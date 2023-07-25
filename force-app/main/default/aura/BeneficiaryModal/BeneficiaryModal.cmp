@@ -1,0 +1,136 @@
+<aura:component description="BeneficiaryModal" controller="BeneficiaryService" >
+    <aura:attribute name="beneficiary" access="public" type="BeneficiaryListWrapper" description="The wrapper object for the beneficiary"/>
+    <aura:attribute name="formFields" type="Object" description="All the fields used for the form"/>
+    <aura:attribute name="accountSummaryId" type="Id"/>
+    <aura:attribute name="accountMemberId" type="Id" description="The Id of the account record for the account summary" />
+    <aura:attribute name="relationshipOptions" type="Object"/>
+    <aura:attribute name="beneficiaryTypeOptions" type="Object"/>
+    <aura:attribute name="saveError" type="String" default=""/>
+    <aura:attribute name="isSaving" type="Boolean" default="false"/>
+    <aura:attribute name="isNew" type="Boolean" access="private"/>
+    <aura:attribute name="modalTitle" type="String" access="private"/>
+    <aura:method name="openModal" action="{!c.showModal}" />
+    <aura:registerEvent name="beneficiaryChanged" type="c:BeneficiaryChanged"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <div aria-hidden="true" role="dialog" class="slds-modal slds-modal--large slds-fade-in-hide"  tabindex="-1" aura:id="modalContainer">
+        <div class="slds-modal__container" style="max-width:50rem;">
+            <aura:if isTrue="{!v.isSaving}">
+                <lightning:spinner alternativeText="Loading" size="medium" />
+            </aura:if>
+
+            <div class="slds-modal__header">
+                <button class="slds-button slds-button--icon-inverse slds-modal__close slds-m-right_x-small" onclick="{!c.hideModal}">
+                    <lightning:icon iconName="utility:close" size="medium" variant="bare"/>
+                    <span class="slds-assistive-text">Close</span>
+                </button>
+                <h2 class="slds-text-heading--medium">{!v.modalTitle}</h2>
+            </div>
+            <div class="slds-modal__content slds-p-around--medium">
+
+                <div class="modalContent">
+                    <!-- Display the new contact form -->
+                    <div class="Create Contact">
+                        <h3 class="slds-section-title--divider">Beneficiary Information</h3>
+                        <br/>
+                        <lightning:layout multipleRows="true">
+                            <lightning:layoutItem padding="around-small" size="6" smallDeviceSize="12" mediumDeviceSize="6">
+                                <lightning:input aura:id="beneficiaryAddForm" required="true" label="First Name" value="{!v.formFields.firstName}"/>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem padding="around-small" size="6" smallDeviceSize="12" mediumDeviceSize="6" >
+                                <lightning:input aura:id="beneficiaryAddForm" required="true" label="Last Name" value="{!v.formFields.lastName}"/>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem padding="around-small" size="6" smallDeviceSize="12" mediumDeviceSize="6">
+                                <lightning:input aura:id="beneficiaryAddForm" label="Birthdate" value="{!v.formFields.birthdate}" type="date" format="MM/dd/yyyy"/>
+                            </lightning:layoutItem>
+
+                            <lightning:layoutItem padding="around-small" size="6" smallDeviceSize="12" mediumDeviceSize="6" >
+                                <lightning:input aura:id="beneficiaryAddForm" label="Social Security Number" value="{!v.formFields.socialSecurityNumber}"
+                                                 messageWhenPatternMismatch="Social Security Number must be 9 characters."
+                                                 pattern="\d{9}"/>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem padding="around-small" size="6" smallDeviceSize="12" mediumDeviceSize="6" >
+                                <lightning:input  maxlength="40" label="Phone" value="{!v.formFields.phone}" type="tel"/>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem padding="around-small" size="6" smallDeviceSize="12" mediumDeviceSize="6" >
+                                <lightning:select aura:id="beneficiaryAddForm" name="Relationship" label="Relationship"
+                                                  value="{!v.formFields.relationshipType}" required="true" >
+                                    <aura:iteration items="{!v.relationshipOptions}" var="item" >
+                                        <option value="{!item.key}" text="{!item.value}" />
+                                    </aura:iteration>
+                                </lightning:select>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem padding="around-small" size="6" smallDeviceSize="12" mediumDeviceSize="6" >
+                                <lightning:select aura:id="beneficiaryAddForm" name="Beneficiary Type" label="Beneficiary Type"
+                                                  value="{!v.formFields.beneficiaryType}" required="true" >
+                                    <aura:iteration items="{!v.beneficiaryTypeOptions}" var="item" >
+                                        <option value="{!item.key}" text="{!item.value}" />
+                                    </aura:iteration>
+                                </lightning:select>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem padding="around-small" size="6" smallDeviceSize="12" mediumDeviceSize="6" >
+                                <lightning:input aura:id="beneficiaryAddForm" label="Percentage" formatter="percent-fixed" min="0" max="100"
+                                                 type="number" step='0.01' value="{!v.formFields.beneficiaryPercentage}" required="true"/>
+                            </lightning:layoutItem>
+                        </lightning:layout>
+                        <br/>
+
+                        <h3 class="slds-section-title--divider">Address Information</h3>
+                        <br/>
+                        <lightning:layout multipleRows="true">
+                            <lightning:layoutItem padding="around-small" size="6" smallDeviceSize="12" mediumDeviceSize="6">
+                                <lightning:input label="Mailing Street" maxlength="255" value="{!v.formFields.mailingStreet}"/>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem padding="around-small" size="6" smallDeviceSize="12" mediumDeviceSize="6">
+                                <lightning:input label="Other Street" maxlength="255" value="{!v.formFields.otherStreet}"/>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem padding="around-small" size="6" smallDeviceSize="12" mediumDeviceSize="6">
+                                <lightning:input label="Mailing City" maxlength="40" value="{!v.formFields.mailingCity}"/>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem padding="around-small" size="6" smallDeviceSize="12" mediumDeviceSize="6">
+                                <lightning:input label="Other City"   maxlength="40" value="{!v.formFields.otherCity}"/>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem padding="around-small" size="6" smallDeviceSize="12" mediumDeviceSize="6">
+                                <lightning:input label="Mailing State" maxlength="80" value="{!v.formFields.mailingState}"/>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem padding="around-small" size="6" smallDeviceSize="12" mediumDeviceSize="6">
+                                <lightning:input label="Other State" maxlength="80" value="{!v.formFields.otherState}"/>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem padding="around-small" size="6" smallDeviceSize="12" mediumDeviceSize="6">
+                                <lightning:input label="Mailing Postal Code" maxlength="20" value="{!v.formFields.mailingPostalCode}"/>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem padding="around-small" size="6" smallDeviceSize="12" mediumDeviceSize="6">
+                                <lightning:input label="Other Postal Code" maxlength="20" value="{!v.formFields.otherPostalCode}"/>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem padding="around-small" size="6" smallDeviceSize="12" mediumDeviceSize="6">
+                                <lightning:input label="Mailing Country" maxlength="80" value="{!v.formFields.mailingCountry}"/>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem padding="around-small" size="6" smallDeviceSize="12" mediumDeviceSize="6">
+                                <lightning:input label="Other Country" maxlength="80" value="{!v.formFields.otherCountry}"/>
+                            </lightning:layoutItem>
+                        </lightning:layout>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-modal__footer">
+
+
+                <div class="slds-grid slds-grid--vertical-align-center ">
+                    <div class="slds-col slds-size_4-of-5 slds-text-align_left ">
+
+                        <div class="errorText">
+                            <aura:if isTrue="{!not(empty(v.saveError))}">{!v.saveError}</aura:if>
+                        </div>
+                    </div>
+                    <div class="slds-col slds-size_1-of-5 slds-float_right slds-border_right">
+                        <lightning:button label="{!$Label.c.Cancel}" title="Cancel" onclick="{!c.hideModal}"/>
+                        <lightning:button label="{!$Label.c.Save}" title="Save" onclick="{!c.handleSave}" class="slds-button slds-button_brand"/>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div  class="slds-backdrop slds-backdrop--hide"  aura:id="modalBackdrop"></div>
+</aura:component>

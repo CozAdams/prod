@@ -1,0 +1,229 @@
+<template>
+    <lightning-combobox
+        name="distributionReason"
+        class="withdraw-form-field"
+        data-field-name="distributionReason"
+        label="Reason for Distribution"
+        value={distributionReason}
+        placeholder="Select Reason for Distribution..."
+        options={distributionReasonOptions}
+        message-when-value-missing={ERROR_MSG_REQUIRED}
+        onchange={handleFieldChange}
+        required>
+    </lightning-combobox>
+
+    <!-- Reason Date -->
+    <template if:true={showReasonDate}>
+        <div class="slds-var-p-top_x-small">
+            <lightning-input 
+                name="reasonDate"
+                class="withdraw-form-field"
+                data-field-name="reasonDate"
+                type="date"
+                label="Selected Reason Date"
+                value={reasonDate}
+                max={todaysDate}
+                message-when-range-overflow="Please select a date that is in the past."
+                message-when-value-missing={ERROR_MSG_REQUIRED}
+                onchange={handleFieldChange}
+                required>
+            </lightning-input>
+        </div>
+    </template>
+
+     <!-- Distribution Option -->
+    <div class="slds-var-p-top_x-small">
+        <lightning-radio-group
+            name="distributionOption"
+            class="withdraw-form-field"
+            data-field-name="distributionOption"
+            type="radio"
+            label="Distribution Options"
+            options={distributionOptionPicklistOptions}
+            value={distributionOption}
+            message-when-value-missing={ERROR_MSG_REQUIRED}
+            onchange={handleFieldChange}
+            required>
+        </lightning-radio-group>
+    </div>
+        <!-- Transfer and Rollover Rules -->
+        <template if:true={showTransferRules}>
+            <div class="slds-var-p-top_x-small">
+                <p class="slds-text-body_regular slds-truncate">
+                    <a href={transferRulesUrl} target="_blank">Transfer and Rollover Rules</a>
+                </p>
+            </div>
+        </template>
+
+        <template if:true={showDistributionOptionDates}>
+            <div class="slds-var-p-top_x-small">
+                <lightning-input 
+                    class="slds-var-p-top_x-small withdraw-form-field"
+                    data-field-name="startDate"
+                    name="startDate"
+                    type="date"
+                    label="Date of withdraw"
+                    min={todaysDate}
+                    message-when-range-underflow="Start date cannot be in the past."
+                    value={startDate}
+                    message-when-value-missing={ERROR_MSG_REQUIRED}
+                    onchange={handleFieldChange}
+                    required>
+                </lightning-input>
+            </div>
+        </template>
+
+        <!-- Withdrawal Amount -->
+        <template if:true={showWithdrawalAmount}>
+            <div class="slds-var-p-top_x-small">
+                <lightning-input 
+                    name="withdrawalAmount"
+                    class="withdraw-form-field"
+                    data-field-name="withdrawalAmount"
+                    type="number"
+                    label="Amount"
+                    value={withdrawalAmount}
+                    formatter="currency"
+                    step="0.01"
+                    min="1"
+                    message-when-value-missing={ERROR_MSG_REQUIRED}
+                    message-when-range-underflow={withdrawalAmountMinError}
+                    onblur={handleNumberInputChange}
+                    required>
+                </lightning-input>
+            </div>
+        </template>
+        <p class="slds-text-color_weak">All amounts requested are assumed to be gross for Roth 403b</p>
+        
+        <template if:true={showFederalWitholding}>
+<!-- 
+            <div class="slds-var-p-top_x-small">
+                <lightning-radio-group
+                    name="additionalAmountType"
+                    class="withdraw-form-field"
+                    data-field-name="additionalAmountType"
+                    type="radio"
+                    label="Additional Withholding Amount Type"
+                    options={witholdingPaymentTypeOptions}
+                    value={additionalAmountType}
+                    onchange={handleFieldChange}>
+                </lightning-radio-group> 
+            </div> -->
+
+            <lightning-combobox
+                name="additionalAmountType"
+                class="withdraw-form-field"
+                data-field-name="additionalAmountType"
+                label="Voluntary Federal Tax Withholding Amount Type"
+                value={additionalAmountType}
+                options={witholdingPaymentTypeOptions}
+                onchange={handleFieldChange}
+                required>
+            </lightning-combobox> 
+
+            <template if:true={showWitholingFields}>
+                <template if:true={showFederalWitholdingAmount}>
+                    <lightning-input 
+                        name="additionalDollarAmount"
+                        class="withdraw-form-field"
+                        data-field-name="additionalDollarAmount"
+                        type="number"
+                        label="Additional Withholding Dollar Amount (Included into your distribution amount)"
+                        value={additionalDollarAmount}
+                        formatter="currency"
+                        step="0.01"
+                        min="0.01"
+                        max = {additionalDollarAmountMax}
+                        message-when-value-missing={ERROR_MSG_REQUIRED}
+                        message-when-range-underflow="Additional withholding amount must be greater than $0."
+                        message-when-range-overflow="Additional withholding amount should not be greater than or equal to Balance + Accrued Interest."
+
+                        onblur={handleNumberInputChange}
+                        required>
+                    </lightning-input>
+                </template>
+                <template if:true={showFederalWitholdingPercent}>
+                    <lightning-input 
+                        name="additionalPercentAmount"
+                        class="withdraw-form-field"
+                        data-field-name="additionalPercentAmount"
+                        type="number"
+                        label="Additional Withholding Percent Amount (Included into your distribution amount)"
+                        value={additionalPercentAmount}
+                        formatter="percent-fixed"
+                        step="0.1"
+                        min="0.1"
+                        max="100"
+                        message-when-value-missing={ERROR_MSG_REQUIRED}
+                        message-when-range-underflow="Additional withholding percent must be greater than 0%."
+                        message-when-range-overflow="Additional withholding percent cannot be greater than 100%."
+                        onblur={handleNumberInputChange}
+                        required>
+                    </lightning-input>
+                </template>  
+            </template>
+        </template>
+
+
+        <div class="slds-var-p-top_x-small">
+            <p class="slds-text-body_regular slds-truncate">
+                <a href={transferRulesUrl} target="_blank">Transfer and Rollover Rules</a>
+            </p>
+        </div>
+        <ul  class="slds-text-body_small slds-text-color_weak slds-var-p-around_x-small"  >
+            <li class=" slds-var-p-around_xxx-small">
+                I have read the Explanation of In-Plan Roth Rollovers and represent that I understand the same. I agree to be bound by all terms of the TDRA that govern my rollover request, as in effect at the time my rollover is processed.
+            </li>
+            <li class=" slds-var-p-around_xxx-small">
+                I understand that if I am eligible for a distribution under the TDRA, I have the right to receive the Special Tax Notice Regarding TDRA Distributions attached to this Application at least 30 days before the date that a distribution is made from the TDRA. By signing this Application, I elect to waive my right to 30 days prior notice regarding my direct rollover rights.
+            </li>
+            
+            <li class=" slds-var-p-around_xxx-small">
+                I understand that an in-plan Roth rollover is a taxable event and is irrevocable and cannot be reversed once made.
+            </li >
+
+            <li class=" slds-var-p-around_xxx-small">
+                I understand that the personal information provided on this Application will be used by Pension Fund to process my elections and to provide member services to me under the TDRA.
+            </li >
+
+            <li class=" slds-var-p-around_xxx-small">
+                I certify that the information provided on this Application is accurate. I agree that I will timely notify Pension Fund of any changes to the information provided on this Application.
+            </li>
+        </ul>
+        <template if:true={showSpinner}>
+            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+        </template>
+        <div class="slds-var-p-around_x-small">
+            <lightning-input type="checkbox" class="withdraw-form-field" label="E-Signature Agreement" name="eSig" required> </lightning-input>
+        </div>
+        <div class="popup slds-float_right slds-var-p-right_x-large" >
+            <div class="slds-var-p-around_x-small">
+                <lightning-button
+                variant="brand"
+                name="submitPopup"
+                label="submit"
+                onclick={handleShowPopup}> </lightning-button>
+            </div>
+            <div class="popuptext" data-id="myPopup" >
+                <p class="slds-var-p-around_x-small" >The transfer you are about to initiate is a taxable event. Are you sure you would like to proceed?</p>
+
+                <div class="slds-grid slds-gutters slds-grid_align-center">
+                    <div class="slds-col">
+                
+                        <lightning-button
+                        variant="brand"
+                        name="submit"
+                        label="Yes" 
+                        onclick={handleSubmit}> </lightning-button>                  
+                      </div>
+                    <div class="slds-col">
+                        <lightning-button
+                        variant="brand"
+                        name="cancel"
+                        label="No"
+                        onclick={handleShowPopup}> </lightning-button>
+                    </div>
+                  </div>
+            </div>
+        </div>
+</template>

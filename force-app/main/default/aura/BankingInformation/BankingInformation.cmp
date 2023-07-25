@@ -1,0 +1,100 @@
+<aura:component controller="BankService" implements="lightning:availableForFlowScreens" access="global">
+	<aura:attribute name="targetObject" type="SObject"/>
+	<aura:attribute name="targetField" type="String"/>
+	<aura:attribute name="isSelectedAccountIntl" type="Boolean" />
+	<aura:attribute name="contactId" type="String"/>
+	<aura:attribute name="enrollmentForm" type="String" access="global"/>
+	<aura:attribute name="selectedBankAccountId" type="String"/>
+	<aura:attribute name="IRA_ACC_TYPE" type="String" access="Private" default="Traditional IRA"/>
+	<aura:attribute name="ROTH_ACC_TYPE" type="String" access="Private" default="Roth IRA"/>
+	<aura:attribute name="currentContact" type="Contact"/>
+	<aura:attribute name="bankAccounts" type="bnk_Bank__c[]" />
+	<aura:attribute name="availableBankAccounts" type="List" default="[{ value: '', label: 'Choose from an existing account below:' }]" />
+	<aura:attribute name="newBankAccount" type="bnk_Bank__c" default="{'sObjectType':'bnk_Bank__c'}" />
+    <aura:attribute name="newBankAccountCreated" type="bnk_Bank__c" default="{'sObjectType':'bnk_Bank__c'}" />
+	<aura:attribute name="checkingOrSavingsOptions" type="List"/>
+	<aura:attribute name="bankCountryOptions" type="List"/>
+	<aura:attribute name="bankStateOptions" type="List" default="[]"/>
+    <aura:attribute name="flowAutoNext" type="Boolean" default="false"/>
+    <aura:attribute name="isProfile" type="Boolean" default="false" />
+    <aura:attribute name="caseId" type="String" />
+    <aura:attribute name="bankAccountNumber" type="String" default=""/>
+	<aura:attribute name="isValid" type="boolean" default="false"/> <!--JS SE-2924-->
+
+	<aura:method name="bankingInformationValidation" action="{!c.handleBankingInformationValidation}"/>
+	<lightning:notificationsLibrary aura:id="bankingInformationNotifications" />
+	<c:PicklistService aura:id="picklistService"/>
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+	<div aura:id="selection" class="slds-grid slds-gutters slds-p-top_x-small">
+		<div class="slds-col slds-size_4-of-5">
+			<!--JS SFMS-7 Remove Add new Account-->
+            <span style="display: inline-block">
+				<lightning:select value="{!v.selectedBankAccountId}" aura:id="selectBankNumber" name="bankAccountNumber" onchange="{!c.setBankOnObject}">
+					<aura:iteration items="{!v.availableBankAccounts}" var="bankAccount">
+							<option text="{!bankAccount.label}" value="{!bankAccount.value}" selected="{!bankAccount.selected}" />
+					</aura:iteration> 
+				</lightning:select>
+			</span>
+			<span style="display: inline-block">
+				&nbsp;&nbsp;&nbsp;<lightning:helptext content="To add an account, go to My Profile" class="customIcon"/> <!--JS SFMS-7 add help text-->
+			</span>
+			<!--JS SFMS-7 Remove Add new Account-->
+		</div>
+	</div>
+	
+	<div class="new-account-modal">
+		<section aura:id="modal" role="dialog" tabindex="-1" aria-modal="true" class="slds-modal slds-fade-in-close">
+			<div class="slds-modal__container">
+				<!-- SE-2907 JS Add spinner -->
+				<div class="slds-hide" aura:id="spinner">
+					
+						<lightning:spinner alternativeText="Loading" size="medium" />
+					
+					
+				</div>
+				<!-- SE-2907 JS Add spinner -->
+				<header class="slds-modal__header">
+					<lightning:button iconName="utility:close" variant="base" class="slds-button slds-modal__close slds-button-icon slds-button_icon-border-inverse " title="Close" onclick="{!c.closeModal}" />
+					<h2 id="modal-heading-01" class="slds-text-hea	ding_medium slds-hyphenate">New Bank Account</h2>
+				</header>
+				<div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+					<div class="slds-grid">
+						<div class="slds-col slds-size--1-of-2">
+							<p class="slds-text-body_small slds-text-color_weak">First Name</p>
+							<lightning:formattedText value="{!v.currentContact.FirstName}"/>
+						</div>
+						<div class="slds-col slds-size--1-of-2">
+							<p class="slds-text-body_small slds-text-color_weak">Last Name</p>
+							<lightning:formattedText value="{!v.currentContact.LastName}"/>
+						</div>
+					</div>
+
+					<lightning:input aura:id="bankAccountField" type="text" name="AccountName" label="* Bank Name" value="{!v.newBankAccount.bnk_Bank_Name__c}"/>
+					<lightning:select aura:id="" name="BankCountry" label="* Bank Country" value="{!v.newBankAccount.Bank_Account_Country__c}" onchange="{!c.retrieveStatesIfAny}">
+						<aura:iteration items="{!v.bankCountryOptions}" var="bankCountry">
+							<option value="{!bankCountry.value}">{!bankCountry.label}</option>
+						</aura:iteration>
+					</lightning:select>
+					<lightning:select aura:id="" name="CheckingOrSavings" label="* Checking or Savings?" value="{!v.newBankAccount.Checking_or_Savings__c}">
+						<aura:iteration items="{!v.checkingOrSavingsOptions}" var="checkingOrSavingsOption">
+							<option value="{!checkingOrSavingsOption.value}">{!checkingOrSavingsOption.label}</option>
+						</aura:iteration>
+					</lightning:select>
+					<lightning:input aura:id="bankAccountField" type="text" name="AccountNumber" label="* Account Number" value="{!v.newBankAccount.bnk_Account_Number__c}" onblur="{!c.onchangeAccountNumber}" /> <!-- JS SE-2924-->
+					<aura:if isTrue="{!v.newBankAccount.Bank_Account_Country__c == 'US'}">
+						<lightning:input aura:id="bankAccountField" minlength="9" maxlength="9" type="text" name="RoutingNumber" label="* Routing Number" value="{!v.newBankAccount.bnk_Routing_Number__c}"/>
+						<aura:set attribute="else">
+							<lightning:input aura:id="bankAccountField" type="text" name="SWIFTCode" label="* SWIFT Code" value="{!v.newBankAccount.SWIFT_Code__c}"/>
+						</aura:set>
+					</aura:if>
+
+					<div class="slds-p-top_small">
+						<lightning:button class="slds-button slds-button_neutral slds-float_right" label="Save" onclick="{!c.saveNewBankAccount}"/>
+					</div>
+				</div>
+			</div>
+		</section>
+		<div aura:id="modal" class="slds-backdrop slds-backdrop_close"></div>
+	</div>
+</aura:component>

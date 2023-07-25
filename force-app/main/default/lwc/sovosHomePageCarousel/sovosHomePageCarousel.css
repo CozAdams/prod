@@ -1,0 +1,91 @@
+.tile {
+    cursor:pointer;
+    text-align: center;
+    padding: 15px;
+}
+
+.box {
+    position: relative;
+}
+
+.ribbon {
+    width: 45px;
+    height: 60px;
+    overflow: hidden;
+    position: absolute;
+}
+
+.ribbonText {
+    font-size: 14px !important;
+}
+
+.ribbon::before, .ribbon::after {
+    position: absolute;
+    z-index: -1;
+    content: '';
+    display: block;
+    border: 5px solid rgb(191, 94, 16);
+}
+
+.ribbon span {
+    position: absolute;
+    display: block;
+    width: 225px;
+    padding: 15px 0;
+    background-color: rgb(191, 94, 16);
+    box-shadow: 0 20px 10px rgba(0,0,0,.1);
+    color: #fff;
+    font: 700 18px/1 'Lato', sans-serif;
+    text-shadow: 0 1px 1px rgba(0,0,0,.2);
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.ribbon-top-left {
+    top: -17px;
+    left: -23px;
+}
+
+.ribbon-top-left::before, .ribbon-top-left::after {
+    border-top-color: transparent;
+    border-left-color: transparent;
+}
+
+.ribbon-top-left::before {
+    top: 15px;
+    right: 0;
+}
+
+.ribbon-top-left::after {
+    bottom: 20px;
+    left: -2px;
+}
+
+.ribbon-top-left span {
+    right: -90px;
+    top: 10px;
+    transform: rotate(-10deg);
+}
+
+.slds-box>a, .tile {
+    height: 80px; 
+    width: 245px; 
+    background-color: rgb(0, 48, 102); 
+    border-radius: 20px;
+    font-weight: bold;
+    color: white !important;
+    font-size: 16px !important;
+}
+
+.no-account-found {
+    text-align: center;
+    font-weight: bold;
+    font-size: xx-large;
+}
+
+.new-account-button {
+    --sds-c-button-brand-color-background: #bd5f10;
+    --slds-c-button-radius-border: 100px;
+    --sds-c-button-brand-color-background-hover: #ad530c;
+    --sds-c-button-brand-color-border: white;
+}

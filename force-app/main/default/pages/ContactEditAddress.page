@@ -1,0 +1,20 @@
+<apex:page standardController="Contact" showHeader="false" showChat="false">
+    <apex:sectionHeader title="Edit Mailing Address" subtitle="{!Contact.Name}"></apex:sectionHeader>
+    
+    <apex:pageMessages ></apex:pageMessages>
+    <apex:form >
+        <apex:pageBlock title="Contact Edit" id="pageBlock" mode="edit">
+            <apex:pageBlockButtons >
+                <apex:commandButton action="{!save}" value="Save"></apex:commandButton>
+                <apex:commandButton action="{!cancel}" value="Cancel"></apex:commandButton>
+            </apex:pageBlockButtons>
+            <apex:pageBlockSection columns="1" title="Mailing Address">              
+                <apex:inputField value="{!Contact.MailingStreet}"></apex:inputField>
+                <apex:inputField value="{!Contact.MailingCity}"></apex:inputField>
+                <apex:inputField value="{!Contact.MailingState}"></apex:inputField>
+                <apex:inputField value="{!Contact.MailingPostalCode}"></apex:inputField>
+                <apex:inputField value="{!Contact.MailingCountry}"></apex:inputField>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

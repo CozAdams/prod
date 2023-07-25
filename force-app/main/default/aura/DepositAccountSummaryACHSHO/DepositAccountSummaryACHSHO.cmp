@@ -1,0 +1,156 @@
+<aura:component implements="force:lightningQuickActionWithoutHeader,force:hasRecordId" controller="AccountSummaryService">
+    <!-- Init values -->
+    <aura:attribute name="accountSummary" type="Account_Summary__c" />
+    <aura:attribute name="case" type="Case" default="{'sObjectType':'Case'}" />
+    <aura:attribute name="currentUser" type="User" />
+    <aura:attribute name="caseQueueId" type="String" />
+    <aura:attribute name="caseRecordTypeId" type="String" />
+    <aura:attribute name="isLoading" type="Boolean" default="true" />
+    <aura:attribute name="isSaving" type="Boolean" />
+    <aura:attribute name="isRedirect" type="Boolean" />
+    <aura:attribute name="showRecurring" type="Boolean"/> <!-- JS SE-2742 -->
+    
+    <!-- compliance language -->
+    <aura:attribute name="eSignature" type="String"/>
+    <aura:attribute name="descriptionHeader" type="String"/>
+    <aura:attribute name="contributionOptionAgreement" type="String"/>
+
+    <!-- Constants -->
+    <aura:attribute name="PENSION_ACC_TYPE" type="String" access="Private" default="US Pension Plan"/>
+    <aura:attribute name="TDRA_ACC_TYPE" type="String" access="Private" default="Tax-Deferred 403(b) Retirement Account"/>
+    <aura:attribute name="TDRA_PR_ACC_TYPE" type="String" access="Private" default="Tax-Deferred 403(b) Retirement Account Puerto Rico"/>
+    <aura:attribute name="BAA_ACC_TYPE" type="String" access="Private" default="Benefit Accumulation Account"/>
+    <aura:attribute name="IRA_ACC_TYPE" type="String" access="Private" default="Traditional IRA"/>
+    <aura:attribute name="ROTH_ACC_TYPE" type="String" access="Private" default="Roth IRA"/>
+    <aura:attribute name="X457_ACC_TYPE" type="String" access="Private" default="457(b) Deferred Compensation Plan"/>
+    <aura:attribute name="LEGACY_ACC_TYPE" type="String" access="Private" default="Legacy IRA"/>
+    <aura:attribute name="MAX_CONTRIBUTION_AMOUNTS" type="List" access="Private" />
+
+    <!-- Form variables-->
+    <aura:attribute name="taxYearOptions" type="String[]" />
+    <aura:attribute name="totalContributedSoFar" type="Decimal" />
+
+    <aura:attribute name="depositOptions" type="List"/>
+    <aura:attribute name="selectedDepositOption" type="String" />
+    <aura:attribute name="contributionOptions" type="List"/>
+    <aura:attribute name="recurringContributionDayOptions" type="List"/>
+    <aura:attribute name="minStartDate" type="Date" />
+
+    <lightning:notificationsLibrary aura:id="depositNotificationLibrary"/>
+    <c:PicklistService aura:id="picklistService"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <aura:if isTrue="{!v.isLoading}">
+        <lightning:spinner alternativeText="Loading" size="medium" />
+        <aura:set attribute="else">
+            <!-- Saving spinner -->
+            <aura:if isTrue="{!v.isSaving}">
+                <lightning:spinner alternativeText="Loading" size="medium" />
+            </aura:if>
+            <!-- Start Form -->
+            <aura:if isTrue="{!v.isRedirect}">
+                <!-- New LWC is used by BAA only until other account types are moved over -->
+                <c:onlineTransactionDepositACHSHO
+                    aura:id="formLWC"
+                    accountSummary="{!v.accountSummary}" 
+                    showRecurring = "{!v.showRecurring}"
+                    case="{!v.case}"
+                    onloadformevent="{!c.hideLoadingSpinner}"
+                    onissavingchangeevent="{!c.toggleSavingSpinner}"
+                    onclose="{!c.closeFormWindow}" />
+                <aura:set attribute="else">
+                    <lightning:formattedRichText class="slds-text-body_small slds-text-color_weak" value="{!v.descriptionHeader}"/>
+                    <!-- Deposit Options -->
+                    <aura:if isTrue="{!v.accountSummary.Account_Type__c == v.PENSION_ACC_TYPE}">
+                        <div class="slds-p-top_x-small">
+                            <lightning:radioGroup aura:id="depositFormField" name="depositOptionsRadioGroup" label="* Deposit Options" options="{!v.depositOptions}"
+                                value="{! v.selectedDepositOption }" type="radio"/>
+                        </div>
+                    </aura:if>
+                    <!-- Amount -->
+                    <aura:if isTrue="{!or(v.selectedDepositOption == 'otherAmount', v.accountSummary.Account_Type__c != v.PENSION_ACC_TYPE)}">
+                        <div class="slds-p-top_x-small">
+                            <lightning:input aura:id="depositFormField" type="number" name="OtherDepositAmount" label="* Amount" value="{!v.case.Deposit_Amount__c}" formatter="currency" step=".01"/>
+                        </div>
+                    </aura:if>
+                    <!-- IRS Link -->
+                    <aura:if isTrue="{!or(v.accountSummary.Account_Type__c == v.IRA_ACC_TYPE, v.accountSummary.Account_Type__c == v.ROTH_ACC_TYPE)}">
+                        <p><lightning:formattedUrl value="https://www.irs.gov/retirement-plans/plan-participant-employee/retirement-topics-ira-contribution-limits" tooltip="Click here to view contribution limit info at IRS.gov" label="IRS Limits" target="_blank"/></p>
+                    </aura:if>
+                    <!-- Contribution Options -->
+                    <div class="slds-p-top_small">
+                        <lightning:radioGroup 
+                            aura:id="depositFormField" 
+                            name="recurringOrSingleRadioGroup" 
+                            label="* Contribution Options" 
+                            options="{!v.contributionOptions}"
+                            value="{!v.case.Contribution_Frequency__c}" 
+                            onchange="{!c.handleFrequencyChange}"
+                            type="radio"/>
+                    </div>
+                    <!-- Recurring Frequency -->
+                    <aura:if isTrue="{!v.case.Contribution_Frequency__c == 'Recurring'}">
+                        <div class="slds-p-top_x-small">
+                            <lightning:radioGroup 
+                                aura:id="depositFormField" 
+                                name="recurringContributionDay" 
+                                label="Recurring Contribution Options"
+                                options="{!v.recurringContributionDayOptions}" 
+                                value="{!v.case.Contribution_Date__c}" 
+                                onchange="{!c.handleRecurringDayChange}"
+                                type="radio"
+                                required="true" />
+                        </div>
+                        <br />
+                        <div class="slds-text-body_small slds-text-color_weak">
+                            <b>Please note</b>: 5 business days are required in order to process your request. If you are initiating a recurring contribution that would begin within 5 business days of the 1st or 15th of the month, your contribution would begin the following month of the requested start date.
+                        </div>
+                        <!-- Start Date -->
+                        <div class="slds-p-top_x-small">
+                            <lightning:input 
+                                type="Date" 
+                                aura:id="depositFormField"
+                                name="contributionStartDate" 
+                                label="Contribution Start Date" 
+                                min="{!v.minStartDate}"
+                                value="{!v.case.Contribution_Start_Date__c}" 
+                                required="true" />
+                        </div>
+                        <!-- End Date -->
+                        <aura:if isTrue="{!v.accountSummary.Account_Type__c != v.PENSION_ACC_TYPE}">
+                            <div class="slds-p-top_x-small">
+                                <lightning:input 
+                                    type="Date" 
+                                    name="optionalEndDate" 
+                                    label="Contribution End Date" 
+                                    value="{!v.case.Contribution_End_Date__c}"/>
+                            </div>
+                        </aura:if>
+                    </aura:if>
+                    <!-- Tax Year -->
+                    <aura:if isTrue="{!or(and(v.accountSummary.Account_Type__c == v.IRA_ACC_TYPE, v.case.Contribution_Frequency__c != 'Recurring'), and(v.accountSummary.Account_Type__c == v.ROTH_ACC_TYPE, v.case.Contribution_Frequency__c != 'Recurring'))}">
+                        <div class="slds-p-top_x-small">
+                            <div class= "slds-text-body_small slds-text-color_weak">{!$Label.c.TaxYearDescription}<br/></div>
+                            <lightning:select aura:id="depositFormField" label="* Tax Year" value="{!v.case.Contribution_Year__c}">
+                                <aura:iteration items="{!v.taxYearOptions}" var="taxYear">
+                                    <option value="{!taxYear}">{!taxYear}</option>
+                                </aura:iteration>
+                            </lightning:select>
+                        </div>
+                        <aura:if isTrue="{!v.case.Contribution_Year__c == '2018'}">
+                            <p class="slds-p-top_x-small"> {!$Label.c.OT_Deposit_Contribution_Agreement_1}&nbsp;{!v.case.Contribution_Year__c}.&nbsp; {!$Label.c.OT_Deposit_Contribution_Agreement_2} </p>
+                        </aura:if>
+                    </aura:if>
+                </aura:set>
+            </aura:if>
+            <!-- Bank Account -->
+            <c:BankingInformation aura:id="bankingInformationComp" targetObject="{!v.case}" targetField="Bank_Account__c"/>
+            <!-- Esign -->
+            <c:AccountSummaryESignature aura:id="eSignatureComp" case="{!v.case}" eSignature="{!v.eSignature}"/>
+            <!-- Submit button -->
+            <div class="slds-p-top_small">
+                <lightning:button label="Submit" onclick="{!c.save}"/>
+            </div>
+        </aura:set>
+    </aura:if>
+</aura:component>

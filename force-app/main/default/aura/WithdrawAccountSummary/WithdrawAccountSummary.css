@@ -1,0 +1,7 @@
+.THIS input::-webkit-outer-spin-button {
+    display:none;
+}
+
+.THIS input::-webkit-inner-spin-button {
+    display:none;
+}

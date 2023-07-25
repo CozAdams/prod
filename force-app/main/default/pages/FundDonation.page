@@ -1,0 +1,287 @@
+<apex:page docType="html-5.0" standardController="dn8n__Donation_Page__c" extensions="FundDonationController"
+           title="{!dn8n__Donation_Page__c.dn8n__Page_Title__c}" showHeader="false" sidebar="false" cache="false"
+           standardStylesheets="false">
+    <meta name="keywords" content="{!dn8n__Donation_Page__c.dn8n__Meta_Keywords__c}"/>
+    <meta name="description" content="{!dn8n__Donation_Page__c.dn8n__Meta_Description__c}"/>
+
+    <apex:includeScript value="{!URLFOR($Resource.DonationResources, '/js/jquery-3.3.1.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.DonationResources, '/js/typeahead.bundle.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.DonationResources, '/js/donationCustom.js')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.DonationResources, '/styles/donation.css')}"/>
+    <script type="text/javascript">
+        $(function() {
+            initTypeahead({!productWrapperJSON});
+        });
+    </script>
+
+    <apex:composition template="{!$Site.Template}">
+        <apex:define name="body">
+            <div class="pc_page_content_top"></div>
+            <div class="pc_page_content custom_donation" id="pc_donations_page">
+                <div class="pc_page_content_inner">
+                    <apex:outputPanel rendered="{!NOT(disableForm)}">
+                        <apex:outputPanel id="donationPageHtmlContent" styleclass="clearfix">
+                            <apex:outputText value="{!dn8n__Donation_Page__c.dn8n__HTML_Header__r.ctnt__HTML_Content__c}" escape="false"/>
+                        </apex:outputPanel>
+                        <apex:outputPanel id="donorInformation">
+                            <apex:form id="mainForm" styleclass="pc_billing_info_form">
+                                <apex:actionRegion >
+                                    <h2><apex:outputText value="Donation Type"/></h2>
+                                    <apex:outputPanel layout="block" id="recurringCheckbox">
+                                        <div class="pc_flex_form_line_container">
+                                            <div class="pc_flex_form_field_item">
+                                                <div id="pc_recurring_donation_options horizontal">
+                                                    <apex:inputCheckbox value="{!isRecurring}">
+                                                        <apex:actionSupport event="onchange" reRender="donationBlocks, fundList, recurringCheckbox" action="{!recurringFundValidation}" status="selectedFundStatus"/>
+                                                    </apex:inputCheckbox>&nbsp;Make this a recurring donation:
+                                                    <apex:outputPanel layout="none">&nbsp;
+                                                        <apex:selectList value="{!selectedRecurringPeriod}" size="1">
+                                                            <apex:selectOptions value="{!recurringPeriodOptions}"/>
+                                                        </apex:selectList>
+                                                    </apex:outputPanel>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </apex:outputPanel>
+                                    <h2><apex:outputText value="I Want to Support:"/></h2>
+                                    <apex:actionStatus id="selectedFundStatus">
+                                        <apex:facet name="start">
+                                            <div class="spinner-background">&nbsp;</div>
+                                            <div class="spinner-text">
+                                                <img src="/img/loading.gif"/>
+                                                <span>Please Wait...</span>
+                                            </div>
+                                        </apex:facet>
+                                    </apex:actionStatus>
+                                    <apex:outputPanel id="fundList" layout="block" styleClass="slds-m-l">
+                                        <apex:outputPanel layout="none" rendered="{!NOT(isRecurring)}">
+                                            <apex:repeat value="{!sortedProductWrapperList}" var="productWrapper">
+                                                <apex:outputPanel layout="block" rendered="{!productWrapper.isDisplayOnDonationPage}">
+                                                    <div class="pc_flex_form_field_item">
+                                                        <apex:inputCheckbox value="{!productWrapper.isSelected}">
+                                                            <apex:actionSupport event="onclick" action="{!toggleFund}" reRender="donationBlocks, fundList" status="selectedFundStatus">
+                                                                <apex:param value="{!productWrapper.product.Id}" assignTo="{!selectedProductId}" name="selectedProductId"/>
+                                                            </apex:actionSupport>
+                                                        </apex:inputCheckbox>
+                                                        <apex:outputText value="{!'&nbsp;' + productWrapper.product.Name}" escape="false"/>
+                                                    </div>
+                                                </apex:outputPanel>
+                                            </apex:repeat>
+                                        </apex:outputPanel>
+                                        <apex:outputPanel layout="block" styleClass="radios" rendered="{!isRecurring}">
+                                            <apex:selectRadio value="{!selectedProductId}">
+                                                <apex:selectOptions value="{!productWrapperOptions}"/>
+                                                <apex:actionSupport event="onchange" action="{!selectFund}" reRender="donationBlocks, fundList"/>
+                                            </apex:selectRadio>
+                                        </apex:outputPanel>
+                                    </apex:outputPanel>
+
+                                    <div id="bloodhound">
+                                        <input class="typeahead" type="text" placeholder="Search for named funds..."/>
+                                    </div>
+                                    <apex:actionFunction name="selectItem" action="{!selectFund}" reRender="donationBlocks, fundList">
+                                        <apex:param name="selectedItem" value="" assignTo="{!selectedProductId}"/>
+                                    </apex:actionFunction>
+
+                                    <apex:outputPanel id="donationBlocks" layout="block">
+                                        <apex:pageMessages />
+
+                                        <apex:repeat value="{!selectedProductWrappersByProductId}" var="pwKey">
+                                            <apex:repeat value="{!selectedProductWrappersByProductId[pwKey]}" var="productWrapper">
+                                                <apex:outputPanel layout="block" styleClass="donation-box">
+                                                    <apex:outputText value="{!productWrapper.product.Name}" styleClass="donation-box-name"/>
+                                                    <apex:commandLink value="X" styleClass="pull-right" action="{!deselectFund}" reRender="donationBlocks, fundList" status="selectedFundStatus">
+                                                        <apex:param value="{!productWrapper.product.Id}" assignTo="{!selectedProductId}" name="deselectedProduct"/>
+                                                    </apex:commandLink><br/>
+                                                    <h5>Donation Amount</h5>
+
+                                                    <apex:outputPanel layout="none" id="contributionOptions">
+                                                        <div id="pc_contribution_options">
+                                                            <apex:outputPanel id="donationOptionsHorizontal" styleClass="donationOptionsHorizontal">
+                                                                <apex:selectRadio id="donationOptionsPicklistHoriz" value="{!productWrapper.selectedDonationOption}" styleClass="pc_donation_option_list_horiz" onChange="selectDonation(this, '{!$Component.donationInputFieldHoriz}')">
+                                                                    <apex:selectOptions value="{!suggestedDonationOptions}"/>
+                                                                </apex:selectRadio>
+                                                                <apex:input type="text" id="donationInputFieldHoriz" styleClass="pc_donation_amount_horiz" onFocus="selectDonation(this, '{!$Component.donationOptionsPicklistHoriz}')"
+                                                                            value="{!productWrapper.donationAmount}" rendered="{!enableOtherDonation}"/>
+                                                            </apex:outputPanel>
+                                                        </div>
+                                                    </apex:outputPanel>
+                                                </apex:outputPanel>
+                                            </apex:repeat>
+                                        </apex:repeat>
+                                    </apex:outputPanel>
+                                </apex:actionRegion>
+
+                                <div class="section-break">
+                                    <hr/>
+                                </div>
+
+                                <div id="pc_contact_info">
+                                    <h2><apex:outputText value="Additional Information"/></h2>
+                                    <div class="pc_flex_form">
+                                        <div class="pc_flex_form_line_container line_stacked">
+                                            <div class="pc_flex_form_label_item">Phone Number</div>
+                                            <div class="pc_flex_form_field_item">
+                                                <apex:input type="text" id="phoneNumber" styleclass="pc_medium_input_field" value="{!phoneNumber}"/>
+                                            </div>
+                                        </div>
+                                        <div class="pc_flex_form_line_container line_stacked">
+                                            <div class="pc_flex_form_label_item">Optional Message with your Donation</div>
+                                            <div class="pc_flex_form_field_item">
+                                                <apex:input type="text" id="optionalDonationMessage" styleclass="pc_medium_input_field" value="{!optionalDonationMessage}"/>
+                                            </div>
+                                        </div>
+                                        <div class="pc_flex_form_line_container line_stacked">
+                                            <div class="pc_flex_form_label_item">Please Select:</div>
+                                            <div class="pc_flex_form_field_item">
+                                                <apex:selectList value="{!inHonorMemoryValue}" multiselect="false" size="1">
+                                                    <apex:selectOptions value="{!HonorMemoryPicklistValues}"/>
+                                                </apex:selectList>
+                                            </div>
+                                        </div>
+                                        <div class="pc_flex_form_line_container line_stacked">
+                                            <div class="pc_flex_form_label_item">Name and Address</div>
+                                            <div class="pc_flex_form_field_item">
+                                                <apex:input type="text" id="honoreeNameAndAddress" styleclass="pc_medium_input_field" value="{!honoreeNameAndAddress}"/>
+                                            </div>
+                                        </div>
+                                        <div class="pc_flex_form_line_container horizontal">
+                                            <div>
+                                                <apex:inputCheckbox value="{!interestedInLearningMoreAboutEstateLegacyGift}"/>
+                                            </div>
+                                            <div>&nbsp;I am interested in learning more about an estate/legacy gift</div>
+                                        </div>
+                                        <div class="pc_flex_form_line_container horizontal">
+                                            <div>
+                                                <apex:inputCheckbox value="{!employerMatchingDonation}"/>
+                                            </div>
+                                            <div>&nbsp;My employer is matching my donation</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="section-break">
+                                        <hr/>
+                                    </div>
+
+                                    <apex:outputPanel layout="none" rendered="{!NOT(ISNULL(dn8n__Donation_Page__c.dn8n__Address_Form_Heading__c))}">
+                                        <h2><apex:outputText value="{!dn8n__Donation_Page__c.dn8n__Address_Form_Heading__c}"/></h2>
+                                    </apex:outputPanel>
+                                    <apex:outputPanel layout="none" rendered="{!AND(ISNULL(dn8n__Donation_Page__c.dn8n__Address_Form_Heading__c))}">
+                                        <h2><apex:outputText value="Billing Address"/></h2>
+                                    </apex:outputPanel>
+
+                                    <div class="pc_flex_form">
+                                        <apex:outputpanel layout="none" rendered="{!NOT(dn8n__Donation_Page__c.dn8n__Salutation_Field__c == 'Hidden')}">
+                                            <div class="pc_flex_form_line_container line_stacked">
+                                                <div class="pc_flex_form_label_item">
+                                                    <span class="{!IF(dn8n__Donation_Page__c.dn8n__Salutation_Field__c == 'Required','requiredFieldMarker','optionalFieldMarker')}">* </span>
+                                                    <apex:outputText value="{!$Label.pymt__label_salutation}"/>
+                                                </div>
+                                                <div class="pc_flex_form_field_item">
+                                                    <apex:selectList id="salutation" value="{!salutation}" multiselect="false" size="1">
+                                                        <apex:selectOptions value="{!salutationOptions}"/>
+                                                    </apex:selectList>
+                                                </div>
+                                            </div>
+                                        </apex:outputPanel>
+
+                                        <div class="pc_flex_form_line_container line_stacked">
+                                            <div class="pc_flex_form_label_item">* {!$Label.pymt__label_firstname}</div>
+                                            <div class="pc_flex_form_field_item">
+                                                <apex:input type="text" required="true" id="firstName" styleclass="pc_medium_input_field" value="{!firstName}"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="pc_flex_form_line_container line_stacked">
+                                            <div class="pc_flex_form_label_item">* {!$Label.pymt__label_lastname}</div>
+                                            <div class="pc_flex_form_field_item">
+                                                <apex:input type="text" required="true" id="lastName" styleclass="pc_medium_input_field" value="{!lastName}"/>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="pc_flex_form_line_container line_stacked">
+                                            <div class="pc_flex_form_label_item">* {!$Label.pymt__label_email}</div>
+                                            <div class="pc_flex_form_field_item">
+                                                <apex:input type="email" required="true" id="emailaddress" styleclass="pc_medium_input_field" value="{!emailAddress}"/>
+                                            </div>
+                                        </div>
+
+                                        <apex:outputPanel layout="none" rendered="{!NOT(dn8n__Donation_Page__c.dn8n__Company_Field__c == 'Hidden')}">
+                                            <div class="pc_flex_form_line_container line_stacked">
+                                                <div class="pc_flex_form_label_item">
+                                                    <span class="{!IF(dn8n__Donation_Page__c.dn8n__Company_Field__c == 'Required','requiredFieldMarker','optionalFieldMarker')}">*</span>
+                                                    {!$Label.pymt__label_companyname}</div>
+                                                <div class="pc_flex_form_field_item">
+                                                    <apex:input type="text" id="billingcompany" styleclass="pc_medium_input_field" value="{!companyName}"
+                                                                required="{!IF(dn8n__Donation_Page__c.dn8n__Company_Field__c == 'Required','true','false')}"/>
+                                                </div>
+                                            </div>
+                                        </apex:outputPanel>
+
+                                        <div class="pc_flex_form_line_container line_stacked">
+                                            <div class="pc_flex_form_label_item">* {!$Label.pymt__label_streetaddress}</div>
+                                            <div class="pc_flex_form_field_item">
+                                                <apex:input type="text" required="true" id="address" styleclass="pc_long_input_field" value="{!address}"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="pc_flex_form_line_container line_stacked">
+                                            <div class="pc_flex_form_label_item">* {!$Label.pymt__label_city}</div>
+                                            <div class="pc_flex_form_field_item">
+                                                <apex:input type="text" required="true" id="city" styleclass="pc_medium_input_field" value="{!city}"/>
+                                            </div>
+                                        </div>
+
+                                        <apex:actionRegion id="billingStateCountryRegion">
+                                            <div class="pc_flex_form_line_container line_stacked">
+                                                <div class="pc_flex_form_label_item">*&nbsp;<apex:outputText value="{!$Label.pymt__label_country}"/></div>
+                                                <div class="pc_flex_form_field_item">
+                                                    <apex:selectList id="billingcountry" size="1" multiselect="false" value="{!billingcountry}">
+                                                        <apex:actionSupport event="onchange" rerender="billingStatePicklistPanel"/>
+                                                        <apex:selectOptions value="{!billingCountryOptions}"/>
+                                                    </apex:selectList>
+                                                </div>
+                                            </div>
+
+                                            <apex:outputPanel layout="none" id="billingStatePicklistPanel">
+                                                <apex:outputPanel layout="block" styleClass="pc_flex_form_line_container line_stacked">
+                                                    <div class="pc_flex_form_label_item">
+                                                        <span class="{!If(hasBillingStateOptions,'requiredFieldMarker','optionalFieldMarker')}">* </span>
+                                                        <apex:outputText value="{!$Label.pymt__label_stateprovince}"/></div>
+                                                    <div class="pc_flex_form_field_item">
+                                                        <apex:selectList id="billingState" multiselect="false" size="1" value="{!billingstate}" rendered="{!hasBillingStateOptions}">
+                                                            <apex:selectOption itemLabel="-- State/Province --" itemValue=""/>
+                                                            <apex:selectOptions value="{!billingStateOptions}"/>
+                                                        </apex:selectList>
+                                                        <apex:input type="text" id="mailingstatetext" value="{!billingState}" rendered="{!NOT(hasBillingStateOptions)}"/>
+                                                    </div>
+                                                </apex:outputPanel>
+                                            </apex:outputPanel>
+                                        </apex:actionRegion>
+                                        <div class="pc_flex_form_line_container line_stacked">
+                                            <div class="pc_flex_form_label_item">* {!$Label.pymt__label_postalcode}</div>
+                                            <div class="pc_flex_form_field_item">
+                                                <apex:input type="text" required="true" id="billingpostalcode" styleclass="pc_medium_input_field" value="{!billingpostalcode}"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <apex:outputPanel id="buttons">
+                                    <div class="pc_button_container width60">
+                                        <apex:outputPanel layout="none">
+                                            <apex:commandButton id="ccButton" styleClass="donate-button" value="Donate!" action="{!processDonation}"/>
+                                        </apex:outputPanel>
+                                    </div>
+                                </apex:outputPanel>
+                            </apex:form>
+                        </apex:outputPanel>
+                        <apex:outputPanel id="donationPageHtmlFooter" styleClass="clearfix">
+                            <apex:outputText value="{!dn8n__Donation_Page__c.dn8n__HTML_Footer__r.ctnt__HTML_Content__c}" escape="false"/>
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+                </div>  <!-- end pc_page_content_inner div -->
+            </div>  <!-- end pc_page_content div -->
+        </apex:define>
+    </apex:composition>
+</apex:page>

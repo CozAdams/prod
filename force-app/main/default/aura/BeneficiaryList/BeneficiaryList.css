@@ -1,0 +1,9 @@
+.THIS.scrollerSize {
+     height: 30px;
+     width:100%;
+ }
+
+ .THIS .headerTextFix{
+    line-height: 2.5;
+    margin-left:9px;
+ }

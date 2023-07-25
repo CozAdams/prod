@@ -1,0 +1,140 @@
+<aura:component implements="lightning:availableForFlowScreens" access="global">
+    <!-- Attributes -->
+    <aura:attribute name="isSingle" type="Boolean" default="false" />
+    <aura:attribute name="isRecurring" type="Boolean" default="false" />
+    <aura:attribute name="contributionTypeOptions" type="List" />
+    <aura:attribute name="recurringDebitOptions" type="List" />
+
+    <aura:attribute name="hasErrorContributionType" type="Boolean" default="false" />
+    <aura:attribute name="recurringAmountMin" type="Decimal" default="0" />
+    <aura:attribute name="singleAmountMin" type="Decimal" default="25" />
+    <aura:attribute name="effectiveDateSingleMin" type="Date" />
+    <aura:attribute name="effectiveDateRecurringMin" type="Date" />
+
+    <aura:attribute name="singleAmount" type="Decimal" access="global" />
+    <aura:attribute name="recurringAmount" type="Decimal" access="global" />
+    <aura:attribute name="effectiveDate" type="Date" access="global" />
+    <aura:attribute name="effectiveDateSingle" type="Date" access="global" />
+    <aura:attribute name="effectiveDateRecurring" type="Date" access="global" />
+    <aura:attribute name="recurringDebitDay" type="String" access="global" />
+    <aura:attribute name="contributionType" type="String" access="global" />
+
+    <!-- Events and Handlers -->
+    <aura:handler name="init" value="{! this }" action="{! c.init }"/>
+    
+    <!-- Markup -->
+    <div class="section-div">
+        <div class="slds-text-heading_medium main-header">
+            Contribution Type
+            <aura:if isTrue="{! v.hasErrorContributionType }">
+                <div class="slds-form-element__help error-msg">
+                    A one-time or recurring debit must be authorized to continue
+                </div>
+            </aura:if>
+        </div>
+        <!-- One-Time -->
+        <div class="section-div">
+            <div class="slds-text-heading_small">
+                One-Time Debit
+            </div>
+
+            <lightning:input type="checkbox" 
+                label="Authorize One-Time Debit (ACH) from bank account" 
+                name="isSingle" 
+                checked="{! v.isSingle }" 
+                onchange="{! c.handleContributionTypeChange }" />
+            
+            <aura:if isTrue="{! v.isSingle }">
+                <lightning:input type="number" 
+                    name="singleAmount" 
+                    aura:id="formValidate"
+                    label="I authorize the one-time deposit to be made to my BAA in the amount of $"
+                    value="{! v.singleAmount }" 
+                    formatter="currency" 
+                    step="0.01" 
+                    class="form-validate"
+                    min="{! v.singleAmountMin }"
+                    messageWhenRangeUnderflow="{! 'Amount must be at least $' + v.singleAmountMin }"
+                    messageWhenValueMissing="A one-time amount is required when One-Time Debit is selected"
+                    required="true" />
+
+                <br />
+                <abbr class="slds-required">*</abbr>
+                <label>One-Time Effective on</label>
+                <lightning:input type="date" 
+                    name="effectiveDateSingle" 
+                    value="{! v.effectiveDateSingle }" 
+                    aura:id="formValidate" 
+                    variant="label-hidden"
+                    class="form-validate"
+                    min="{! v.effectiveDateSingleMin }" 
+                    messageWhenRangeUnderflow="Date must be after today's date"
+                    messageWhenValueMissing="Date is required"
+                    required="true" />
+                <p><b>Please note:</b> 5 business days are required in order to process your request.</p>
+                <br />
+            </aura:if>   
+        </div>
+        
+        <!-- Recurring -->
+        <div class="section-div">
+            <div class="slds-text-heading_small">
+                Recurring Debit
+            </div>
+
+            <lightning:input type="checkbox" 
+                label="Authorize Recurring Debit" 
+                name="isRecurring" 
+                checked="{! v.isRecurring }" 
+                onchange="{! c.handleContributionTypeChange }" />
+            
+            <aura:if isTrue="{! v.isRecurring }">
+                <lightning:input type="number" 
+                    name="recurringAmount" 
+                    aura:id="formValidate"
+                    label="I authorize recurring deposits to be made to my BAA in the amount of $"
+                    value="{! v.recurringAmount }" 
+                    formatter="currency" 
+                    step="0.01" 
+                    class="form-validate"
+                    min="{! v.recurringAmountMin }"
+                    messageWhenRangeUnderflow="{! 'Amount must be at least $' + v.recurringAmountMin }"
+                    messageWhenValueMissing="A recurring amount is required when Recurring Debit is selected"
+                    required="true" />
+                
+                <br />
+                <lightning:radioGroup name="recurringDebitDay"
+                    aura:id="formValidate"
+                    label="Please select when you would like the money to be debited from your account below"
+                    options="{! v.recurringDebitOptions }"
+                    value="{! v.recurringDebitDay }"
+                    type="radio" 
+                    class="form-validate"
+                    messageWhenValueMissing="Debit day of the month is required when Recurring Debit is selected"
+                    required="true" />
+
+                <br />
+                <abbr class="slds-required">*</abbr>
+                <label>Recurring Effective on</label>
+                <lightning:input type="date" 
+                    name="effectiveDateRecurring" 
+                    value="{! v.effectiveDateRecurring }" 
+                    aura:id="effectiveDateRecurring" 
+                    variant="label-hidden"
+                    class="form-validate"
+                    min="{! v.effectiveDateRecurringMin }" 
+                    messageWhenRangeUnderflow="Date cannot be before the start of next month"
+                    messageWhenValueMissing="Date is required"
+                    required="true" />
+                <p><b>Please note:</b> 5 business days are required in order to process your request. If you are initiating a recurring contribution that would begin within 5 business days of the 1st or 15th of the month, your contribution would begin the following month of the requested start date.</p>
+                <br />
+            </aura:if>
+        </div>
+    </div>
+
+    <!-- Navigation Buttons -->
+    <div class="section-div button-div">
+        <lightning:button label="Previous" onclick="{! c.navigateBack }"/>
+        <lightning:button variant="brand" label="Next" onclick="{! c.navigateForward }" />
+    </div>
+</aura:component>

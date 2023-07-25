@@ -1,0 +1,6 @@
+<aura:documentation>
+	<aura:description>Documentation</aura:description>
+	<aura:example name="ExampleName" ref="exampleComponentName" label="Label">
+		Deposit ACH  -- ACHDepositQuickaction Wrapper Biller DIRECT  --- goes to biller direct 
+	</aura:example>
+</aura:documentation>

@@ -1,0 +1,26 @@
+<aura:component implements="lightning:availableForFlowScreens" controller="TwilioAPILightningController" access="public">
+    <aura:attribute name="phoneNumber" type="String" description="The phone number that will be used to call the user"/>
+    <aura:attribute name="countryCode" type="String" description="The phone numbers country code which will be used in the API call"/>
+    <aura:attribute name="email" type="String" description="The email that will be used to register a Twilio User"/>
+    <aura:attribute name="verificationCode" type="String" description="The 2 FA code that will be used to verify if user is legit"/>
+    <aura:attribute name="twilioId" type="String" default="" description="The Twilio user Id, empty if the user is not created "/>
+    <aura:attribute name="errorMessage" type="String" default="" description="Display error message if API fail"/>
+    <lightning:formattedText class="slds-text-color_error slds-text-title_bold" value="{!v.errorMessage}"/>
+    <aura:if isTrue="{#not(empty(v.twilioId))}">
+        <p>
+            <lightning:input aura:id="field" type="String" label="Please enter the most recent security code that was sent to you" value="{!v.verificationCode}" required="true"/>
+        </p>
+        <aura:set attribute="else">
+           <lightning:input aura:id="field" type="String" label="Please enter the most recent verification code that was sent to you" value="{!v.verificationCode}" required="true"/>
+        </aura:set>
+    </aura:if>
+    <lightning:button class="slds-size_full slds-m-top_medium" variant="brand" label="Verify" onclick="{!c.verify}"/>
+    <aura:if isTrue="{#not(empty(v.twilioId))}">
+        <p>
+            <lightning:button class="slds-size_full slds-m-top_small slds-m-left_none" label="Resend Security Code" onclick="{!c.resend}"/>
+        </p>
+        <aura:set attribute="else">
+           <lightning:button class="slds-size_full slds-m-top_small slds-m-left_none" label="Resend Verification Code" onclick="{!c.resend}"/>
+        </aura:set>
+    </aura:if>
+</aura:component>

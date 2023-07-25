@@ -1,0 +1,285 @@
+<aura:component controller="RetirementCalculatorCont" implements="flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes" access="global">
+	<ltng:require scripts="{!$Resource.ChartJS27}"/>
+
+    <!--Profile-->
+    <aura:attribute name="testMin" type="Decimal" />
+    <aura:attribute name="testMax" type="Decimal" />
+	<aura:attribute name="birthdate" type="String"/>
+	<aura:attribute name="date65" type="String"/>
+	<aura:attribute name="eligDate" type="String"/>
+    <!--Calculations-->
+	<aura:attribute name="retireDate" type="Date"/>
+    <aura:attribute name="retirementAge" type="Integer"/>
+    <aura:attribute name="salary" type="Integer"/>
+    <aura:attribute name="salaryMin" type="String"/>
+    <aura:attribute name="salaryMax" type="String"/>
+    <aura:attribute name="yearlyPercentageSalaryIncrease" type="Decimal" default="3"/>
+    <!--Current Portfolio-->
+    <aura:attribute name="pensionCredits" type="Decimal"/>
+    <aura:attribute name="specialApportionmentCredits" type="Decimal"/>
+    <aura:attribute name="lateRetirementCredits" type="Decimal"/>
+    <aura:attribute name="currentPensionCredits" type="Decimal"/>
+    <!--Estimate Assumptions-->
+    <aura:attribute name="pensionCredsPerMonth" type="Decimal"/>
+	<aura:attribute name="monthsUntilRetirement" type="Integer"/>
+    <aura:attribute name="monthsOfEarlyLateRetirement" type="Integer"/>
+    <aura:attribute name="memberPIN" type="String"/>
+    <!--Future Estimated Portfolio-->
+    <aura:attribute name="addtlCredsThruRetirement" type="Decimal"/>
+    <aura:attribute name="addtlLateRetirementCreds" type="Decimal"/>
+    <aura:attribute name="totalCredsAtProjRetirement" type="Decimal"/>
+    <!--Graph-->
+    <aura:attribute name="monthlyProjPension" type="Decimal"/>
+    <aura:attribute name="monthlyProjPension65" type="Integer"/>
+    <aura:attribute name="monthlyProjPension70" type="Integer"/>
+
+    <aura:attribute name="avatarURL" type="String"/>
+    <aura:attribute name="contact" type="Contact"/>
+    <aura:attribute name="lateRetirementCreditStartDate" type="String" default="07/01/2012"/>
+    <aura:attribute name="saveRetirementCalculation" type="Save_Retirement_Calculations__c" default="{'sObjectType':'Save_Retirement_Calculations__c'}"/>
+    <aura:attribute name="calcList" type="Save_Retirement_Calculations__c[]"/>
+    <aura:attribute name="calculatorSetting" type="Retirement_Calculator_Setting__mdt"/>
+    <aura:attribute name="chart" type="Object"/>
+
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+	<article class="slds-card">
+		<div class="slds-card__header slds-grid">
+			<header class="slds-media slds-media_center slds-has-flexi-truncate">
+				<div class="slds-media__figure">
+					<span class="slds-icon_container slds-icon-standard-contact" title="description of icon when needed">
+						<lightning:avatar src="{!v.avatarURL}" fallbackIconName="standard:avatar" alternativeText="Avatar" class="slds-icon slds-icon_small"/>
+					</span>
+				</div>
+				<div class="slds-media__body">
+					<h2>
+						<span class="slds-text-heading_small">{!v.contact.Name}</span>
+					</h2>
+				</div>
+			</header>
+		</div>
+		<div class="slds-card__body slds-card__body_inner">
+			<div class="slds-grid slds-wrap">
+				<aura:if isTrue="{! and(and(v.contact.DB_Membership_Status__c != 'Payout', v.contact.DB_Membership_Status__c != ''), v.contact.DB_Membership_Status__c != 'Ministerial Relief') }">
+                    <div class="slds-p-vertical_x-small slds-m-horizontal_medium">
+                        <div class="slds-text-title_caps">
+                            Birth Date
+                        </div>
+                        {!v.birthdate}
+                    </div>
+					<div class="slds-p-vertical_x-small slds-m-horizontal_medium">
+						<div class="slds-text-title_caps">
+							65th Birthday
+						</div>
+						<lightning:formattedDateTime value="{!v.date65}" timeZone="GMT"/>
+					</div>
+					<div class="slds-p-vertical_x-small slds-m-horizontal_medium">
+						<div class="slds-text-title_caps">
+							Eligible Retirement Date
+						</div>
+						<lightning:formattedDateTime value="{!v.eligDate}" timeZone="GMT"/>
+					</div>
+                    <div class="slds-p-vertical_x-small slds-m-horizontal_medium">
+                        <div class="slds-text-title_caps">
+                            Member PIN
+                        </div>
+                        <lightning:formattedText value="{!v.memberPIN}"/>
+                    </div>
+                    <aura:set attribute="else">
+                        <div class="slds-col slds-text-heading_medium slds-m-around_medium">
+                            <span style="font-size: 20px;">{!$Label.c.Retirement_Message}</span>
+                        </div>
+                         <div class="slds-col slds-text-align_center slds-text-heading_medium slds-m-around_medium">
+                                Retirement Date: 
+                                <lightning:formattedDateTime value="{!v.contact.Retirement_Date__c}"/>
+                        </div>
+                        <div class="slds-col slds-text-align--right slds-text-heading_medium slds-m-around_medium">
+                            Monthly Pension: <span class="slds-m-left_medium" style="color:green"><lightning:formattedNumber style="currency" currencyCode="USD" value="{!v.monthlyProjPension}"/></span>
+                        </div>
+                    </aura:set>
+                </aura:if>
+			</div>
+		</div>
+		<footer class="slds-card__footer"></footer>
+	</article>
+    <aura:if isTrue="{! and(and(v.contact.DB_Membership_Status__c != 'Payout', v.contact.DB_Membership_Status__c != ''), v.contact.DB_Membership_Status__c != 'Ministerial Relief') }">
+        <lightning:card title="Select Saved Calculation" aura:id="calcListCard" class="slds-hide">
+            <div class="slds-grid slds-p-around--medium slds-wrap">
+                <aura:if isTrue="{!v.calcList.length > 0}">
+                    <aura:iteration items="{!v.calcList}" var="calc">
+                        <div class="slds-tile slds-box slds-m-top--none slds-m-bottom--small slds-m-left--small">
+                            <h3 class="slds-tile__title slds-float--left">
+                                <a href="javascript:void(0);" onclick="{!c.loadCalculation}" data-id="{!calc.Id}">{!calc.Name}</a>
+                            </h3>
+                            <div class="slds-text-align--right">
+                                <lightning:buttonIcon alternativeText="Delete" iconName="utility:close" onclick="{!c.deleteCalculation}" value="{!calc.Id}"/>
+                            </div>
+                            <div class="slds-tile__detail">
+                                <dl class="slds-wrap">
+                                    <dt class="slds-text-color_weak slds-item--label">Created Date</dt>
+                                    <dd class="slds-item--detail"><lightning:formattedDateTime value="{!calc.CreatedDate}"/></dd>
+                                    <dt class="slds-text-color_weak slds-item--label">Annual Salary</dt>
+                                    <dd class="slds-item--detail"><lightning:formattedNumber style="currency" currencyCode="USD" value="{!calc.Annual_Salary__c}"/></dd>
+                                    <dt class="slds-text-color_weak slds-item--label">Annual Percentage Increase</dt>
+                                    <dd class="slds-item--detail"><lightning:formattedNumber minimumFractionDigits="2" maximumFractionDigits="2" style="percent" value="{!calc.Salary_Percentage_Increase__c / 100}"/></dd>
+                                    <dt class="slds-text-color_weak slds-item--label">Desired Retirement Date</dt>
+                                    <dd class="slds-item--detail"><lightning:formattedDateTime value="{!calc.Desired_Retirement_Date__c}" timeZone="GMT"/></dd>
+                                    <dt class="slds-text-color_weak slds-item--label">Monthly Pension Credits</dt>
+                                    <dd class="slds-item--detail"><lightning:formattedNumber style="currency" currencyCode="USD" value="{!calc.Monthly_Pension_Credits__c}"/></dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </aura:iteration>
+                    <aura:set attribute="else">
+                        <div class="slds-col slds-notify--alert slds-theme--default">
+                            There are no saved calculations for this Contact.
+                        </div>
+                    </aura:set>
+                </aura:if>
+            </div>
+            <div class="slds-align-bottom slds-text-align--right slds-col slds-p-around--medium slds-max-small-size--1-of-1">
+                <lightning:button class="slds-button slds-button_neutral" label="Cancel" onclick="{!c.closeCalcListCard}"/>
+            </div>
+        </lightning:card>
+        <lightning:card title="Calculations">
+            <aura:set attribute="actions">
+                <lightning:buttonGroup class="slds-show_medium">
+                    <lightning:button aura:id="actionButton" label="Print" onclick="{!c.handleActions}" value="print" iconName="utility:attach"/>
+                    <lightning:button aura:id="actionButton" label="Reset Calculation" onclick="{!c.handleActions}" value="reset" iconName="utility:refresh"/>
+                    <lightning:button aura:id="actionButton" label="Load Existing Calculation" onclick="{!c.handleActions}" value="load" iconName="utility:upload"/>
+                    <lightning:button aura:id="actionButton" label="Save Calculation" onclick="{!c.handleActions}" value="save" iconName="utility:download"/>
+                </lightning:buttonGroup>
+                <div aura:id="actionButton">
+                    <lightning:buttonMenu class="slds-hide_medium" onselect="{!c.handleActions}">
+                        <lightning:menuItem label="Reset Calculation" value="reset" iconName="utility:refresh"/>
+                        <lightning:menuItem label="Load Existing Calculation" value="load" iconName="utility:upload"/>
+                        <lightning:menuItem label="Save Calculation" value="save" iconName="utility:download"/>
+                    </lightning:buttonMenu>
+                </div>
+            </aura:set>
+            <div class="slds-m-horizontal_medium">
+                <div class="slds-p-horizontal_medium slds-grid slds-wrap">
+                    <lightning:input class="slds-p-right_small" type="date" label="Desired Retirement Date" name="desiredDate" value="{!v.retireDate}" onblur="{!c.calcRetirementAge}"/>
+                    <lightning:slider class="slds-col slds-max-small-size--1-of-1" label="{!'Retirement Age: ' + v.retirementAge}" name="retirementAge" min="60" max="80" value="{!v.retirementAge}" onchange="{!c.calcRetirementDate}"/>
+                </div>
+                <div class="slds-p-horizontal_medium slds-grid slds-wrap">
+                    <lightning:input class="slds-p-right_small" type="number" formatter="currency" step="0.01" label="Salary" name="salaryInput" value="{!v.salary}" onblur="{!c.calculateSalary}"/>
+                    <!-- min and max for salary range should use dynamic values from calculator setting, but temporarily setting to hardcoded value due to rendering bug --> 
+                	<lightning:slider class="slds-col slds-max-small-size__1-of-1 slider_label-hidden" value="{!v.salary}" onchange="{!c.calculateSalary}" step="0.01" min="{!v.calculatorSetting.Salary_Lower_Bounds__c}" max="{!v.calculatorSetting.Salary_Upper_Bounds__c}" />
+                </div>
+                <div class="slds-p-horizontal_medium slds-grid slds-wrap">
+                    <lightning:input class="slds-p-right_small" type="number" step="0.01" formatter="percent-fixed" label="Annual Percentage Increase" name="salaryPercentageInput" value="{!v.yearlyPercentageSalaryIncrease}" onblur="{!c.calculateSalaryIncrease}"/>
+                    <lightning:slider class="slds-col slds-max-small-size--1-of-1 slider_label-hidden" label=" " name="salaryPercentage" min="{!v.calculatorSetting.Salary_Percentage_Lower_Bound__c}" max="{!v.calculatorSetting.Salary_Percentage_Upper_Bound__c}" value="{!v.yearlyPercentageSalaryIncrease}" onchange="{!c.calculateSalaryIncrease}" step="0.01"/>
+                </div>
+            </div>
+        </lightning:card>
+        <lightning:card title="Results" class="results-card">
+            <div class="slds-m-horizontal_medium slds-grid slds-wrap">
+                <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-m-bottom--small slds-align-middle print-results">
+                    <p style="font-weight: bold;">Current Pension Credits</p>
+                    <div class="slds-box slds-m-right--large slds-m-bottom--large">
+                        <ul>
+                            <li class="slds-grid slds-grid_pull-padded-medium slds-p-vertical_xx-small">
+                                <div class="slds-size_3-of-5 slds-p-horizontal_small slds-text-align_right slds-wrap">
+                                    Pension Credits:
+                                </div>
+                                <div class="slds-size_2-of-5 slds-p-horizontal_small">
+                                    <lightning:formattedNumber value="{!v.pensionCredits}" minimumFractionDigits="2" maximumFractionDigits="2"/>
+                                </div>
+                            </li>
+                            <li class="slds-grid slds-grid_pull-padded-medium slds-p-vertical_xx-small">
+                                <div class="slds-size_3-of-5 slds-p-horizontal_small slds-text-align_right slds-wrap">
+                                    Special Apportionment Credits:
+                                </div>
+                                <div class="slds-size_2-of-5 slds-p-horizontal_small">
+                                    <lightning:formattedNumber value="{!v.specialApportionmentCredits}" minimumFractionDigits="2" maximumFractionDigits="2"/>
+                                </div>
+                            </li>
+                            <li class="slds-grid slds-grid_pull-padded-medium slds-p-vertical_xx-small">
+                                <div class="slds-size_3-of-5 slds-p-horizontal_small slds-text-align_right slds-wrap">
+                                    Late Retirement Credits:
+                                </div>
+                                <div class="slds-size_2-of-5 slds-p-horizontal_small">
+                                    <lightning:formattedNumber value="{!v.lateRetirementCredits}" minimumFractionDigits="2" maximumFractionDigits="2"/>
+                                </div>
+                            </li>
+                            <li class="slds-grid slds-grid_pull-padded-medium slds-p-vertical_xx-small">
+                                <div class="slds-size_3-of-5 slds-p-horizontal_small slds-text-align_right slds-wrap">
+                                    Total Credits:
+                                </div>
+                                <div class="slds-size_2-of-5 slds-p-horizontal_small">
+                                    <lightning:formattedNumber value="{!v.currentPensionCredits}" minimumFractionDigits="2" maximumFractionDigits="2"/>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <p style="font-weight: bold;">Estimate Assumptions</p>
+                    <div class="slds-box slds-m-right--large slds-m-bottom--large">
+                        <ul>
+                            <li class="slds-grid slds-grid_pull-padded-medium slds-p-vertical_xx-small">
+                                <div class="slds-size_3-of-5 slds-p-horizontal_small slds-text-align_right slds-wrap">
+                                    Average Pension Credits/month based on Annual Salary:
+                                </div>
+                                <div class="slds-size_2-of-5 slds-p-horizontal_small">
+                                    <lightning:formattedNumber value="{!v.pensionCredsPerMonth}" maximumFractionDigits="2" minimumFractionDigits="2"/>
+                                </div>
+                            </li>
+                            <li class="slds-grid slds-grid_pull-padded-medium slds-p-vertical_xx-small">
+                                <div class="slds-size_3-of-5 slds-p-horizontal_small slds-text-align_right slds-wrap">
+                                    Months until retirement:
+                                </div>
+                                <div class="slds-size_2-of-5 slds-p-horizontal_small">
+                                    {!v.monthsUntilRetirement}
+                                </div>
+                            </li>
+                            <li class="slds-grid slds-grid_pull-padded-medium slds-p-vertical_xx-small">
+                                <div class="slds-size_3-of-5 slds-p-horizontal_small slds-text-align_right slds-wrap">
+                                    Months of Early/Late retirement:
+                                </div>
+                                <div class="slds-size_2-of-5 slds-p-horizontal_small">
+                                    {!v.monthsOfEarlyLateRetirement}
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <p style="font-weight: bold;">Pension Credits at Retirement</p>
+                    <div class="slds-box slds-m-right--large slds-m-bottom--large">
+                        <ul>
+                            <li class="slds-grid slds-grid_pull-padded-medium slds-p-vertical_xx-small">
+                                <div class="slds-size_3-of-5 slds-p-horizontal_small slds-text-align_right slds-wrap">
+                                    Additional Credits Through Retirement:
+                                </div>
+                                <div class="slds-size_2-of-5 slds-p-horizontal_small">
+                                    <lightning:formattedNumber value="{!v.addtlCredsThruRetirement}" maximumFractionDigits="2" minimumFractionDigits="2"/>
+                                </div>
+                            </li>
+                            <li class="slds-grid slds-grid_pull-padded-medium slds-p-vertical_xx-small">
+                                <div class="slds-size_3-of-5 slds-p-horizontal_small slds-text-align_right slds-wrap">
+                                    Additional Late Retirement Credits:
+                                </div>
+                                <div class="slds-size_2-of-5 slds-p-horizontal_small">
+                                    <lightning:formattedNumber value="{!v.addtlLateRetirementCreds}" maximumFractionDigits="2" minimumFractionDigits="2"/>
+                                </div>
+                            </li>
+                            <li class="slds-grid slds-grid_pull-padded-medium slds-p-vertical_xx-small">
+                                <div class="slds-size_3-of-5 slds-p-horizontal_small slds-text-align_right slds-wrap">
+                                    Total Pension Credits at Projected Retirement:
+                                </div>
+                                <div class="slds-size_2-of-5 slds-p-horizontal_small">
+                                    <lightning:formattedNumber value="{!v.totalCredsAtProjRetirement}" maximumFractionDigits="2" minimumFractionDigits="2"/>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2  print-canvas">
+                    <canvas aura:id="chart" height="500"></canvas>
+                </div>
+                <div class="slds-col slds-text-align--right slds-text-heading_medium slds-m-around_medium estimated-monthly-pension">
+                    Estimated Monthly Pension: <span class="slds-m-left_medium" style="color:green"><lightning:formattedNumber style="currency" currencyCode="USD" value="{!v.monthlyProjPension}"/></span>
+                </div>
+            </div>
+            <p class="slds-p-horizontal--large slds-text-align--right">- This projected monthly pension assumes no Special Apportionment credits.</p>
+        </lightning:card>
+    </aura:if>
+</aura:component>

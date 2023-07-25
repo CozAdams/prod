@@ -1,0 +1,12 @@
+<design:component>
+    <design:attribute name="contactId" label="Community contactId"/>
+    <design:attribute name="caseId" label="Case Id"/>
+    <design:attribute name="selectedBankAccountId" label="The Id of the bank account that was selected"/>
+    <design:attribute name="enrollmentForm" label="Enrollment_Form__c"  />
+    <design:attribute name="flowAutoNext" label="Should flow click Next for user automatically?" />
+    <design:attribute name="newBankAccount" label="Bank Account created by component (output)" />
+    <design:attribute name="newBankAccountCreated" label="Bank Account Created" />
+    <design:attribute name="isProfile" label="Updating from Profile?" />
+    <design:attribute name="bankAccountNumber" label="Bank Account Number" />
+
+</design:component>

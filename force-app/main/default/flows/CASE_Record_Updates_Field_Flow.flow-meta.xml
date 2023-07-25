@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>54.0</apiVersion>
+    <decisions>
+        <description>Case Enrollment Visible on Employer Portal</description>
+        <name>Case_Enrollment_Visible_on_Employer_Portal</name>
+        <label>Case Enrollment Visible on Employer Portal</label>
+        <locationX>182</locationX>
+        <locationY>671</locationY>
+        <defaultConnectorLabel>Case Not Visible in employer portal</defaultConnectorLabel>
+        <rules>
+            <name>Case_Enrollment_is_Visible_on_Employer_Prtal</name>
+            <conditionLogic>(1 AND 2 AND 3) AND ( 4 or 5 or 6 or 7 or 8 or 9 or 10)</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.RecordType.Name</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>New Enrollment Case</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Submitted_Date__c</leftValueReference>
+                <operator>GreaterThanOrEqualTo</operator>
+                <rightValue>
+                    <dateValue>2020-10-01</dateValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Case_Org_PIN__c</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <elementReference>$Record.Account.PIN__c</elementReference>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Account_Type__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>US Pension Plan</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Account_Type__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>PR Pension</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Account_Type__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Canadian Pension</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Account_Type__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Tax-Deferred 403(b) Retirement Account</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Account_Type__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Tax-Deferred 403(b) Retirement Account Puerto Rico</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Account_Type__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>457(b) Deferred Compensation Plan</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Account_Type__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Pension Plan</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Update_Case_Org_PIN</targetReference>
+            </connector>
+            <label>Case Enrollment is Visible on Employer Prtal</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Is Via Changed</description>
+        <name>Is_VIA_changed</name>
+        <label>Is VIA changed</label>
+        <locationX>182</locationX>
+        <locationY>335</locationY>
+        <defaultConnector>
+            <targetReference>Case_Enrollment_Visible_on_Employer_Portal</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>VIA has not changed</defaultConnectorLabel>
+        <rules>
+            <name>Yes_Via_has_changed</name>
+            <conditionLogic>1</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.VIA__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Check - Member</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>update_payee</targetReference>
+            </connector>
+            <label>Yes Via has changed</label>
+        </rules>
+    </decisions>
+    <description>CASE Record Updates Field Flow
+VIA
+case visibility</description>
+    <formulas>
+        <name>CaseOrgValue</name>
+        <dataType>String</dataType>
+        <expression>IF( 
+{!$Record.Account.npe01__SYSTEMIsIndividual__c} = true , {!$Record.Contact.PIN__c}, {!$Record.Account.PIN__c}
+)</expression>
+    </formulas>
+    <interviewLabel>CASE Record Updates Field Flow {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>CASE Record Updates Field Flow v11</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordUpdates>
+        <description>update case org pin for visibility</description>
+        <name>Update_Case_Org_PIN</name>
+        <label>Update Case Org PIN</label>
+        <locationX>50</locationX>
+        <locationY>791</locationY>
+        <inputAssignments>
+            <field>Case_Org_PIN__c</field>
+            <value>
+                <elementReference>CaseOrgValue</elementReference>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <recordUpdates>
+        <name>update_payee</name>
+        <label>update payee</label>
+        <locationX>50</locationX>
+        <locationY>455</locationY>
+        <connector>
+            <targetReference>Case_Enrollment_Visible_on_Employer_Portal</targetReference>
+        </connector>
+        <inputAssignments>
+            <field>Payee_Address__c</field>
+            <value>
+                <elementReference>Contact_Current_Address</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Payee__c</field>
+            <value>
+                <elementReference>Contact_Name_from_CASE</elementReference>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>56</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Is_VIA_changed</targetReference>
+        </connector>
+        <object>Case</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <textTemplates>
+        <description>Contact Current Address</description>
+        <name>Contact_Current_Address</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>{!$Record.Contact.Current_Street_1__c} {!$Record.Contact.Current_Street_2__c}
+{!$Record.Contact.Current_City__c}, {!$Record.Contact.Current_State__c}. {!$Record.Contact.Current_ZIP__c}
+{!$Record.Contact.Current_Country__c}</text>
+    </textTemplates>
+    <variables>
+        <description>Case Org Pin Value based on is individual of account</description>
+        <name>CaseOrgPinValuebasedonisindividualofaccount</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+        <value>
+            <stringValue>IF( [Case].Account.npe01__SYSTEMIsIndividual__c  = TRUE , [Case].Contact.PIN__c ,[Case].Account.PIN__c )</stringValue>
+        </value>
+    </variables>
+    <variables>
+        <description>Contact_Name from CASE</description>
+        <name>Contact_Name_from_CASE</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+        <value>
+            <stringValue>{!$Record.Contact.FirstName} {!$Record.Contact.LastName} </stringValue>
+        </value>
+    </variables>
+</Flow>

@@ -1,0 +1,94 @@
+<template>
+    <!-- Header -->
+    <lightning-formatted-rich-text
+        class="slds-text-body_small slds-text-color_weak" 
+        value={header}>
+    </lightning-formatted-rich-text>
+    <!-- Amount -->
+    <div class="slds-p-top_x-small">
+        <lightning-input 
+            name="amount"
+            class="form-field"
+            data-field-name="amount"
+            type="number"
+            label="Amount"
+            value={amount}
+            formatter="currency"
+            step="0.01"
+            min={amountMin}
+            message-when-value-missing={ERROR_MSG_REQUIRED}
+            message-when-range-underflow={ERROR_AMOUNT_MIN}
+            onblur={handleAmountChange}
+            required>
+        </lightning-input>
+    </div>
+    <!-- Contribution Options -->
+    <div class="slds-p-top_x-small">
+        <lightning-radio-group
+            name="frequency"
+            class="form-field"
+            data-field-name="frequency"
+            type="radio"
+            label="Contribution Options"
+            options={frequencyOptions}
+            value={frequency}
+            message-when-value-missing={ERROR_MSG_REQUIRED}
+            onchange={handleFrequencyChange}
+            required>
+        </lightning-radio-group>
+    </div>
+    <!-- Recurring Section -->
+    <template if:true={showRecurring}>
+        <!-- Recurring Day -->
+        <div class="slds-p-top_x-small">
+            <lightning-radio-group
+                name="recurringDay"
+                class="form-field"
+                data-field-name="recurringDay"
+                type="radio"
+                label="Recurring Contribution Options"
+                options={recurringDayOptions}
+                value={recurringDay}
+                message-when-value-missing={ERROR_MSG_REQUIRED}
+                onchange={handleRecurringDayChange}
+                required>
+            </lightning-radio-group>
+        </div>
+        <br />
+        <div class="slds-text-body_small slds-text-color_weak">
+            <b>Please note</b>: 5 business days are required in order to process your request. If you are initiating a recurring contribution that would begin within 5 business days of the 1st or 15th of the month, your contribution would begin the following month of the requested start date.
+        </div>
+        <!-- Recurring Start Date -->
+        <div class="slds-p-top_x-small">
+            <lightning-input 
+                class="slds-p-top_x-small form-field start-date"
+                data-field-name="startDate"
+                name="startDate"
+                type="date"
+                label="Contribution Start Date"
+                min={startDateMin}
+                value={startDate}
+                message-when-value-missing={ERROR_MSG_REQUIRED}
+                onchange={handleDateChange}
+                required>
+            </lightning-input>
+        </div>
+        <!-- Recurring End Date -->
+        <div class="slds-p-top_x-small">
+            <lightning-input 
+                class="slds-p-top_x-small form-field end-date"
+                data-field-name="endDate"
+                name="endDate"
+                type="date"
+                label="Contribution End Date"
+                min={endDateMin}
+                max={endDateMax}
+                message-when-value-missing={ERROR_MSG_REQUIRED}
+                message-when-range-underflow="Please use one-time contribution option, recurring option should be used for a period greater than 2 month period."
+                message-when-range-overflow="Exceeds maximum time allowed for a recurring contribution."
+                value={endDate}
+                onchange={handleDateChange}>
+            </lightning-input>
+        </div>
+    </template>
+</template>

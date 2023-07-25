@@ -1,0 +1,310 @@
+<apex:page id="PulsChkVFpageList" controller="PulsChkClsList" sidebar="false" showHeader="false">
+<html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <head>
+        <meta http-equiv="x-ua-compatible" content="ie=edge" />
+        <apex:includescript value="{!$Resource.slds080}" />
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+        <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+
+        <style Type="text/css">
+            .siteforceContentArea {
+                width: 120% !important;
+            }
+
+            .displayNone {
+                display: none !important;
+            }
+
+            .required {
+                color: red;
+            }
+
+            thead {
+                background-color: #005fb2 !important;
+                color: white !important;
+                padding: 10px !important;
+            }
+
+                thead tr th {
+                    color: white !important;
+                    padding: 10px !important;
+                }
+
+            tbody tr:hover td {
+                /*background-color: #58595B;*/
+                background-color: white;
+                /*color:white;*/
+            }
+
+            .tablePanel {
+                margin-left: 20px;
+                margin-right: 20px;
+                margin-bottom: 30px;
+                min-height: 75px;
+                box-shadow: 0 -2px 2px 0 rgba(0, 0, 0, 0.16);
+                /*border:1px solid black;*/
+            }
+
+            .tableTitle {
+                font-weight: bolder;
+            }
+
+            #org\.ajax4jsf\.oncomplete {
+                display: none;
+            }
+            /* 508 related*/
+            :focus {
+                border: 2px solid #00ABC0;
+            }
+
+            a:focus {
+                border: 2px solid #00ABC0 !important;
+            }
+
+            .slds-table thead th {
+                background-color: #005fb2 !important;
+                color: white !important;
+                padding: 10px !important;
+            }
+
+            thead tr th {
+                /*color:white !important;*/
+                padding: 10px !important;
+            }
+
+            tbody tr:hover td {
+                /*background-color: #58595B;*/
+                background-color: white;
+                /*color:white;*/
+            }
+        </style>
+        <script type="text/javascript">
+           $(document).ready(function(){
+                initDataTable();
+            });
+          function initDataTable(){
+                console.log('Initializing datatable');
+                $("#datatable").dataTable().fnDestroy();
+
+                $('#datatable').DataTable({
+                    "paging":   true,
+                    "order": [[ 0, "asc" ]]
+                });
+            }
+        </script>
+    </head>
+    
+    <body>
+        <apex:slds />
+
+        <apex:form id="formID">
+            <apex:outputPanel id="containerPanel">
+                
+                       <!--Modals-->
+                <apex:actionstatus id="actionStatusID">
+                    <apex:facet name="start">
+                        <div class="slds-spinner_container">
+                            <div role="status" class="slds-spinner slds-spinner--medium slds-spinner--inverse">
+                                <span class="slds-assistive-text">Loading</span>
+                                <div class="slds-spinner__dot-a"></div>
+                                <div class="slds-spinner__dot-b"></div>
+                            </div>
+                        </div>
+                        <style>
+                            .slds-spinner_container {
+                                height: 100% !important;
+                                width: 100% !important;
+                                background-color: grey !important;
+                                opacity: 0.8 !important;
+                                position: fixed !important;
+                                z-index: 999;
+                            }
+                        </style>
+                    </apex:facet>
+                </apex:actionstatus>
+                <!--End of Modals-->
+                
+                <div Style="font-size: 25px; font-weight: bold; padding: 20px 20px 20px 20px; "> Pulse Check </div>
+                <div Style="font-size: 15px; font-weight: bold; padding: 20px 20px 0px 20px; "> List of undeleted transactions that may result in duplicated transactions </div>
+                <div id="PulsChkListView" Style="padding: 20px;">
+                    <apex:outputPanel id="PulsChkListView1">
+                        <table role="grid" class="slds-table slds-table_fixed-layout slds-table_bordered slds-table_resizable-cols slds-no-row-hover slds-scrollable_none" id="datatable">
+                        <thead>
+                          
+                            <tr class="slds-text-title_caps">
+                                <th scope="col">
+                                    <div class="slds-truncate" title="ID"> ID </div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Name"> Name </div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="CreatedDate">CreatedDate</div>
+                                </th> 
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Account Summary">Account Summary</div>
+                                </th> 
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Amount">Amount</div>
+                                </th> 
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Apply Date">Apply Date</div>
+                                </th> 
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Contact Id">Contact Id</div>
+                                </th> 
+                                <th scope="col">
+                                    <div class="slds-truncate" title="IsDeleted">IsDeleted</div>
+                                </th> 
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Period Begin Date">Period Begin Date</div>
+                                </th>                                 
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Period End Date">Period End Date</div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+             
+                            <apex:repeat value="{!Transactions}" var="Tran">
+                                <tr>
+                                    <td data-label="ID">
+                                        <div class="slds-truncate" title="{!Tran.id}">{!Tran.ID}</div>
+                                    </td>
+                                    <td data-label="NAME">
+                                        <div class="slds-truncate" title="{!Tran.name}">{!Tran.name}</div>
+                                    </td>                                    
+                                    <td data-label="Created Date">
+                                        <div class="slds-truncate" title="{!Tran.CreatedDate}">{!Tran.CreatedDate}</div>
+                                    </td>
+                                    <td data-label="Account Summary">
+                                        <div class="slds-truncate" title="{!Tran.Account_Summary__c}">{!Tran.Account_Summary__c}</div>
+                                    </td>
+                                    <td data-label="Amount">
+                                        <div class="slds-truncate" title="{!Tran.Amount__c}">{!Tran.Amount__c}</div>
+                                    </td>
+                                    <td data-label="Apply Date">
+                                        <div class="slds-truncate" title="{!Tran.Apply_Date__c}">{!Tran.Apply_Date__c}</div>
+                                    </td>                                    
+                                    <td data-label="Contact Id">
+                                        <div class="slds-truncate" title="{!Tran.ContactId__c}">{!Tran.ContactId__c}</div>
+                                    </td>
+                                    <td data-label="IsDeleted">
+                                        <div class="slds-truncate" title="{!Tran.IsDeleted}">{!Tran.IsDeleted}</div>
+                                    </td>
+                                    <td data-label="Period_Begin_Date__c">
+                                        <div class="slds-truncate" title="{!Tran.Period_Begin_Date__c}">{!Tran.Period_Begin_Date__c}</div>
+                                    </td> 
+                                    <td data-label="Period_End_Date__c">
+                                        <div class="slds-truncate" title="{!Tran.Period_End_Date__c}">{!Tran.Period_End_Date__c}</div>
+
+                                    </td>  
+                                </tr>
+                            </apex:repeat>                            
+                            </tbody>                  
+                        </table>
+                    </apex:outputPanel>
+                </div>
+
+                <div Style="font-size: 15px; font-weight: bold; padding: 20px 20px 0px 20px; "> Duplicated Account Summary  </div>
+                <div id="PulsChkListView" Style="padding: 20px;">
+                    <apex:outputPanel id="PulsChkListView2">
+                        <table role="grid" class="slds-table slds-table_fixed-layout slds-table_bordered slds-table_resizable-cols slds-no-row-hover slds-scrollable_none" id="datatable">
+                        <thead>
+                            <tr class="slds-text-title_caps">
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Account Number"> Account Number </div>
+                                </th>                               
+                                
+                                <th scope="col">
+                                    <div class="slds-truncate" title="ID"> Count(ID) </div> 
+                                </th>
+
+                            </tr>
+                        </thead>
+                        <tbody>            
+                            <apex:repeat value="{!AcctSummry}" var="Accts">
+                                <tr>
+                                                                        <td data-label="Account Number">
+                                        <div class="slds-truncate" title="{!Accts['acct']}">{!Accts['acct']}</div>
+                                    </td>
+                                            <td data-label="ID">
+                                        <div class="slds-truncate" title="{!Accts['cnt']}">{!Accts['cnt']}</div>
+                                    </td>                            
+ 
+
+                                    
+                                </tr>
+                            </apex:repeat>
+                            
+                            </tbody>                  
+                        </table>
+
+
+
+                        
+                    </apex:outputPanel>
+                </div>               
+                
+                
+                <div Style="font-size: 15px; font-weight: bold; padding: 20px 20px 0px 20px; "> AuditTrail - last 5 days - limit 100 </div>
+                <div id="PulsChkListView" Style="padding: 20px;">
+                    <apex:outputPanel id="PulsChkListView3">
+                        <table role="grid" class="slds-table slds-table_fixed-layout slds-table_bordered slds-table_resizable-cols slds-no-row-hover slds-scrollable_none" id="datatable">
+                        <thead>
+                        
+                            <tr class="slds-text-title_caps">
+
+                                <th scope="col">
+                                    <div class="slds-truncate" title="CreatedBy"> CreatedBy </div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Action"> Action </div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="CreatedDate">CreatedDate</div>
+                                </th> 
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Display">Display</div>
+                                </th> 
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Section">Section</div>
+                                </th> 
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+             
+                            <apex:repeat value="{!AuditTrail}" var="Audit">
+                                <tr>
+                                    <td data-label="CreatedBy">
+                                        <div class="slds-truncate" title="{!Audit.CreatedBy.Name}">{!Audit.CreatedBy.Name}</div>
+                                    </td>
+                                    <td data-label="Action">
+                                        <div class="slds-truncate" title="{!Audit.Action}">{!Audit.Action}</div>
+                                    </td>                                    
+                                    <td data-label="Created Date">
+                                        <div class="slds-truncate" title="{!Audit.CreatedDate}">{!Audit.CreatedDate}</div>
+                                    </td>
+                                    <td data-label="Display">
+                                        <div class="slds-truncate" title="{!Audit.Display}">{!Audit.Display}</div>
+                                    </td>
+                                    <td data-label="Section">
+                                        <div class="slds-truncate" title="{!Audit.Section}">{!Audit.Section}</div>
+                                    </td>
+           
+                                                                       
+                                </tr>
+                            </apex:repeat>
+                            
+                            </tbody>                  
+                        </table>
+                        
+                  </apex:outputPanel>
+                </div>
+                
+            </apex:outputPanel>
+        </apex:form>
+    </body>    
+    </html>
+</apex:page>

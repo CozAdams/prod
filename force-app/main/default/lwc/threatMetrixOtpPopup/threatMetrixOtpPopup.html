@@ -1,0 +1,41 @@
+<template>
+    <template if:true={showSelectionPage}>
+        <p><b>A One-time password is required to continue the transaction</b></p>
+        <p class="slds-text-body_small slds-text-color_weak">*Message and data rates may apply</p>
+        <lightning-radio-group 
+            name="otpDeliveryRadioGroup"
+            label="Please choose an option to receive your One-time Password."
+            options={otpDeliveryRadioGroupOptions}
+            value={otpDeliveryRadioGroup}
+            onchange={handleChange}
+            type="radio">
+        </lightning-radio-group>
+        <template if:true={showContactInfo}>
+            <b>{chosenContactInfoText}</b>
+            <p>{dataRetrieveErrorMessage}</p>
+        </template>
+        <br/>
+        <p class="slds-text-body_regular slds-text-color_weak">If you need to update your phone number for receiving the security code, please contact us by phone at 866.495.7322 or 317.634.4504</p>
+    </template>
+    <template if:false={showSelectionPage}>
+        <p>
+            <b>Please enter the most recent One-time Password </b>
+        </p>
+        <br/>
+        <p>The One-time Password was sent to {chosenContactInfoText} </p>
+            <lightning-input type="text" name="oneTimePassword" label="One-time Password" value={oneTimePassword} pattern="[0-9]{6}" onchange={changeInput}></lightning-input>        
+        <p>{passwordInputHelpMessage}</p>
+    </template>
+     <div style="padding-top: 50px;">
+        <button class="slds-button slds-button_neutral" onclick={logout} title="Cancel">Cancel</button>
+        <template if:false={backDisabled}>
+            <button class="slds-button slds-button_brand" onclick={handleBack}  title="Back"  disabled={backDisabled} >Back</button>
+        </template>
+        <button class="slds-button slds-button_brand" onclick={handleNext}  title="Next"  disabled={nextDisabled} >Next</button>
+    </div>
+    <template if:true={showSpinner}>
+        <div class="slds-is-relative">
+            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+        </div>
+    </template>
+</template>

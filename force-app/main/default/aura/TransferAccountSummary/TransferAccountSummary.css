@@ -1,0 +1,17 @@
+.THIS input::-webkit-outer-spin-button {
+    display:none;
+}
+
+.THIS input::-webkit-inner-spin-button {
+    display:none;
+}
+
+.THIS .account-error-container {
+    margin-top: 15px;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+.THIS .error-icon {
+    margin-right: 10px;
+}

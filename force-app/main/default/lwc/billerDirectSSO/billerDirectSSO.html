@@ -1,0 +1,13 @@
+<template>
+    <!-- <form action="https://53demo.billerdirectexpress.com/PayIQ/Api/SSO/SAML/Redirect" method="POST" target="_blank"> -->
+    <form action="https://53.billerdirectexpress.com/PayIQ/Api/SSO/SAML/Redirect" method="POST" target="_blank">
+        <br/>
+        <input name="SAMLResponse" value={bodyValue} type="hidden"/>
+        <!-- Remove next 2 line to revert to PRe SSO workflow-->
+        <lightning-button variant="base" label="Schedule Reacurring Payments" title="Schedule Reacurring Payments" onclick={handleClick} class="slds-m-left_x-small"></lightning-button>
+        <p class="slds-text-heading_small slds-align_absolute-center slds-p-horizontal_small">You will be securely handed off from Pension Fund's site to Fifth Third to process your Recurring ACH Payment</p>
+        <br/>
+        <input  class="slds-button slds-button_neutral" value="Next" type="button" onclick={handleClick}>
+    </form>
+    <div>{testbodyValue}</div>
+</template>

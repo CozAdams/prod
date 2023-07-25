@@ -1,0 +1,11 @@
+<design:component >
+    <design:attribute name="contributionType" label="Contribution Type" />
+    <design:attribute name="singleAmount" label="Single Amount" />
+    <design:attribute name="recurringAmount" label="Recurring Amount" />
+    <design:attribute name="effectiveDate" label="Effective Date" />
+    <design:attribute name="effectiveDateSingle" label="One-Time Effective Date" />
+    <design:attribute name="effectiveDateRecurring" label="Recurring Effective Date" />
+    <design:attribute name="recurringDebitDay" label="Recurring Debit Day" />
+    <design:attribute name="isSingle" label="Single Checked" />
+    <design:attribute name="isRecurring" label="Recurring Checked" />
+</design:component>

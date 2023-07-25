@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApexPage xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>34.0</apiVersion>
+    <availableInTouch>true</availableInTouch>
+    <confirmationTokenRequired>false</confirmationTokenRequired>
+    <description>display the contact folder structure of the user.contact record</description>
+    <label>SpringCM EOSContact Via User v2</label>
+    <packageVersions>
+        <majorNumber>5</majorNumber>
+        <minorNumber>63</minorNumber>
+        <namespace>SpringCMEos</namespace>
+    </packageVersions>
+</ApexPage>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workflow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <outboundMessages>
+        <fullName>Jitterbit_Send_Product</fullName>
+        <apiVersion>48.0</apiVersion>
+        <description>workflow Web Service Update Product
+action Jitterbit Send Product</description>
+        <endpointUrl>https://pfcc-serenity.azurewebsites.net/api/serenity/sendProduct</endpointUrl>
+        <fields>End_Date__c</fields>
+        <fields>Id</fields>
+        <fields>Org_BillingContactEmail__c</fields>
+        <fields>Org_BillingContactTitle__c</fields>
+        <fields>Org_City__c</fields>
+        <fields>Org_Country__c</fields>
+        <fields>Org_NoMailFlag__c</fields>
+        <fields>Org_State__c</fields>
+        <fields>Org_StoneCampbellAffiliation__c</fields>
+        <fields>Org_Street__c</fields>
+        <fields>Org_SubAffiliation__c</fields>
+        <fields>Org_UndeliverableFlag__c</fields>
+        <fields>Org_Zip__c</fields>
+        <fields>Organization_Name__c</fields>
+        <fields>PA_Effective_Date__c</fields>
+        <fields>PIN__c</fields>
+        <fields>Program_Offered__c</fields>
+        <includeSessionId>false</includeSessionId>
+        <integrationUser>sbc_api@pensionfund.org</integrationUser>
+        <name>Jitterbit Send Product</name>
+        <protected>false</protected>
+        <useDeadLetterQueue>false</useDeadLetterQueue>
+    </outboundMessages>
+    <rules>
+        <fullName>Web Service Update Product</fullName>
+        <actions>
+            <name>Jitterbit_Send_Product</name>
+            <type>OutboundMessage</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>Account.Participation_Plan_Agreement_Active__c</field>
+            <operation>equals</operation>
+            <value>Yes,Not Required</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Account.npe01__SYSTEMIsIndividual__c</field>
+            <operation>equals</operation>
+            <value>False</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Account.LastModifiedById</field>
+            <operation>notEqual</operation>
+            <value>SBC-SF APIUser,PFCC_JobRun</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Product_Offered__c.LastModifiedById</field>
+            <operation>notEqual</operation>
+            <value>Ted Weaver</value>
+        </criteriaItems>
+        <description>Web Service Update Product</description>
+        <triggerType>onAllChanges</triggerType>
+    </rules>
+</Workflow>

@@ -1,0 +1,116 @@
+<template>
+    <br />
+    <!-- General Message -->
+    {MSG_GENERAL}
+    <div class="top-padding">
+        <lightning-checkbox-group 
+            name="contributionTypes"
+            label={MSG_CHECK_ONE}
+            class="form-validate"
+            options={contributionTypeOptions}
+            value={contributionTypes}
+            onchange={toggleContributionType}
+            required>
+        </lightning-checkbox-group>
+    </div>
+
+    <!-- Employer Dues -->
+    <template if:true={showEmployerSection}>
+        <div class="section-header">Percentage Employer Dues:</div>
+        <div class="section-header-note">{MSG_CHECK_ONE}</div>
+        <hr>
+
+        {MSG_EMPLOYER}
+        <div class="top-padding">
+            <lightning-input 
+                data-id="employerPercent"
+                name="employerPercent"
+                class="form-validate"
+                type="number"
+                label={LABEL_PERCENT}
+                value={employerPercent}
+                min=.01
+                max={TOTAL_PERCENT_MAX}
+                step=".01"
+                message-when-range-underflow={ERROR_PERCENT_RANGE_MIN}
+                message-when-range-overflow={ERROR_PERCENT_RANGE_MAX}
+                onblur={handleInputChange}
+                required>
+            </lightning-input>
+        </div>
+    </template>
+
+    <!-- Member Dues -->
+    <template if:true={showMemberSection}>
+        <div class="section-header">Percentage Member Dues:</div>
+        <div class="top-padding">
+            {MSG_MEMBER}
+        </div>
+        <div class="top-padding">
+            {LABEL_CHECK_SALARY_RED}
+        </div>
+        <div class="top-padding">
+            {MSG_MEMBER_PERCENT}
+        </div>
+
+        <div class="top-padding">
+            <lightning-input 
+                data-id="memberPercent"
+                name="memberPercent"
+                class="form-validate"
+                type="number"
+                label={LABEL_PERCENT}
+                value={memberPercent}
+                min=.01
+                max={TOTAL_PERCENT_MAX}
+                step=".01"
+                message-when-range-underflow={ERROR_PERCENT_RANGE_MIN}
+                message-when-range-overflow={ERROR_PERCENT_RANGE_MAX}
+                onblur={handleInputChange}
+                required>
+            </lightning-input>
+        </div>
+    </template>
+
+    <!-- Start Date -->
+    <div class="top-padding">
+        <lightning-input
+            data-id="startDate"
+            name="startDate"
+            class="form-validate"
+            type="date" 
+            label={LABEL_DATE}
+            value={startDate}
+            min={DATE_MIN}
+            message-when-range-underflow={ERROR_DATE_RANGE}
+            message-when-value-missing={ERROR_DATE_REQUIRED}
+            onchange={handleInputChange}
+            required>
+        </lightning-input>
+    </div>
+
+    <!-- Tax Treatment -->
+    <template if:true={showMemberSection}>
+        <div class="section-header">Tax Treatment of Member Dues</div>
+        <hr>
+
+        <lightning-radio-group 
+            data-id="taxTreatment"
+            name="taxTreatment"
+            class="form-validate"
+            label={LABEL_TAX_TREATMENT}
+            options={TAX_OPTIONS}
+            type="radio"
+            value={taxTreatment}
+            message-when-value-missing={ERROR_REQUIRED_GENERAL}
+            onchange={handleInputChange}
+            required>
+        </lightning-radio-group>
+    </template>
+    
+    <!-- Buttons -->
+    <div class="button-group">
+        <lightning-button data-name="btnBack" label="Previous" onclick={navigate}></lightning-button>
+        <lightning-button data-name="btnNext" label="Next" variant="brand" onclick={navigate}></lightning-button>
+    </div>
+</template>

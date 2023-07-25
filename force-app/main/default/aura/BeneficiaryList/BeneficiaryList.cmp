@@ -1,0 +1,134 @@
+<aura:component description="BeneficiaryList" controller="BeneficiaryService"
+                implements="lightning:availableForFlowScreens,force:hasRecordId" >
+    <aura:attribute name="accountSummaryId" type="String"/>
+    <aura:attribute name="accountNumber" type="String" />
+    <aura:attribute name="accountMemberId" type="Id" description="The Id of the account record for the account summary" />
+    <aura:attribute name="accountType" type="String" description="The Type of the account record for the account summary" />
+    <aura:attribute name="beneficiaries" type="BeneficiaryListWrapper[]" access="private" description="List of beneficiaries from the account summary"/>
+    <aura:attribute name="showSaveCancelBtn" type="boolean" default="false" description="flag for rendered save and cancel buttons in aura:if "/>
+    <aura:attribute name="selectedBeneficiary" type="BeneficiaryListWrapper" description="The selected beneficiary wrapper object for editing"/>
+    <aura:attribute name="typeOptions" type="Object"/>
+    <aura:attribute name="hasPercentageError" type="Boolean" default="false"/>
+    <aura:attribute name="percentageErrors" type="String[]"/>
+    <aura:attribute name="showSaveError" type="Boolean" default="false"/>
+    <aura:attribute name="saveErrorDetails" type="String"/>
+    <aura:attribute name="canPause" type="Boolean" />
+    <aura:attribute name="canBack" type="Boolean" />
+    <aura:attribute name="canNext" type="Boolean" />
+    <aura:attribute name="canFinish" type="Boolean" />
+    <aura:attribute name="isSaving" type="Boolean" default="false"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:handler name="beneficiaryChanged" event="c:BeneficiaryChanged" action="{!c.handleBeneficiaryChanged}"/>
+
+    <!-- Modal components-->
+    <c:BeneficiaryModal aura:id="addModal" accountSummaryId="{!v.accountSummaryId}" accountMemberId="{!v.accountMemberId}" />
+    <c:BeneficiaryModal aura:id="editModal" beneficiary="{!v.selectedBeneficiary}" />
+
+    <aura:if isTrue="{!v.isSaving}">
+        <lightning:spinner alternativeText="Loading" size="medium" />
+    </aura:if>
+
+    <div class="slds-grid slds-grid--vertical-align-center slds-p-bottom_medium">
+        <div class="slds-align_absolute-center">
+            <h2>Account Number: {!v.accountNumber}</h2>
+        </div>
+        <div class="slds-float_right">
+            <lightning:button label="Add" title="Add" onclick="{!c.handleAddBeneficiary}"/>
+        </div>
+    </div>
+
+    <aura:if isTrue="{!v.hasPercentageError }">
+        <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error" role="alert">
+            <span class="slds-assistive-text">error</span>
+            <h2>
+                <aura:iteration items="{!v.percentageErrors}" var="err">{!err}<br/></aura:iteration>
+            </h2>
+        </div>
+    </aura:if>
+
+    <aura:if isTrue="{!v.showSaveError}">
+        <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error" role="alert">
+            <span class="slds-assistive-text">error</span>
+            <h2>
+                {!$Label.c.Beneficiary_List_Save_Error}
+                <br/>{!v.saveErrorDetails}
+            </h2>
+
+        </div>
+    </aura:if>
+
+    <aura:if isTrue="{!v.beneficiaries.length > 0}">
+        <div class="slds-table slds-table_bordered  slds-border_right slds-border_left slds-table_cell-buffer slds-table_fixed-layout slds-table--header-fixed_container" style="height:442px;">
+            <div class="slds-scrollable_y" style="height:100%;">
+                <table class="slds-table slds-table_bordered slds-table--header-fixed">
+                    <thead>
+                    <tr class="slds-text-heading_label">
+                        <th scope="col"><div class="slds-truncate slds-cell-fixed headerTextFix" title="Edit"></div></th>
+                        <th scope="col"><div class="slds-truncate slds-cell-fixed headerTextFix" title="Name">Name</div></th>
+                        <th scope="col"><div class="slds-truncate slds-cell-fixed headerTextFix" title="Percentage">Percentage</div></th>
+                        <th scope="col"><div class="slds-truncate slds-cell-fixed headerTextFix" title="Type">Type</div></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <aura:iteration items="{!v.beneficiaries}" var="rec">
+                        <tr>
+                            <td  data-label="Edit">
+                                <lightning:button label="{!$Label.c.Edit}" title="Edit" value="{!rec.id}" onclick="{!c.handleEditBeneficiary}"/>
+                            </td>
+                            <td  data-label="Name">
+                                <span class="slds-truncate" title="Name">{!rec.contact.FirstName+' '+rec.contact.LastName}</span>
+                            </td>
+                            <td data-label="Percentage">
+                                <lightning:input value="{!rec.beneficiary.Beneficiary_Percentage__c}" formatter="percent-fixed"
+                                                 onblur="{!c.onPercentageChange}" step="0.01" type="number" />
+                            </td>
+                            <td data-label="Type" class="slds-align-top">
+                                <lightning:select aura:id="typeInput" name="typeSelect" value="{!rec.beneficiary.Beneficiary_Type__c}"  onchange="{!c.onPercentageChange}" >
+                                    <aura:iteration items="{!v.typeOptions}" var="item">
+                                        <option value="{!item.key}" text="{!item.value}" selected="{!rec.beneficiary.Beneficiary_Type__c==item.key}"/>
+                                    </aura:iteration>
+                                </lightning:select>
+                            </td>
+                        </tr>
+                    </aura:iteration>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <aura:set attribute="else">
+            <div >
+                No beneficiaries created. Please click the Add button to create a new beneficiary.
+            </div>
+        </aura:set>
+    </aura:if>
+
+
+
+
+
+    <div style="height: 180px;">
+            <div aura:id="actionButtonBar" class="slds-clearfix slds-p-top_medium ">
+                <!-- If Previous is available, display to the left -->
+                <div class="slds-float_left">
+                    <aura:if isTrue="{!v.canBack}">
+                        <lightning:button aura:id="BACK" label="Previous" variant="neutral" onclick="{!c.onNavButtonPressed}" />
+                    </aura:if>
+                </div>
+                <div class="slds-float_right">
+                    <!-- If Pause, Next, or Finish are available, display to the right -->
+                    <aura:if isTrue="{!v.canPause}">
+                        <lightning:button aura:id="PAUSE" label="Save &amp; Pause" variant="neutral" onclick="{!c.onNavButtonPressed}"  disabled="{!v.hasPercentageError}"/>
+                    </aura:if>
+                    <aura:if isTrue="{!v.canNext}">
+                        <lightning:button aura:id="NEXT" label="Save &amp; Next" variant="brand" onclick="{!c.onNavButtonPressed}"  disabled="{!v.hasPercentageError}"/>
+                    </aura:if>
+                    <aura:if isTrue="{!v.canFinish}">
+                        <lightning:button aura:id="FINISH" label="Save &amp; Finish" variant="brand" onclick="{!c.onNavButtonPressed}"  disabled="{!v.hasPercentageError}"/>
+                    </aura:if>
+                </div>
+            </div>
+    </div>
+
+</aura:component>

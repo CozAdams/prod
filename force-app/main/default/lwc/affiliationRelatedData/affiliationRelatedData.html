@@ -1,0 +1,33 @@
+<template>
+    <!-- Contact -->
+    <div class="slds-m-around_medium">
+        <div class="slds-text-heading_medium">Contact Information</div>
+        <div class="slds-m-around_small">
+            <lightning-record-form
+                record-id={contactId}
+                object-api-name="Contact"
+                fields={CONTACT_FIELDS}
+                columns="2"
+                mode="readonly" >
+            </lightning-record-form>
+        </div>
+    </div>
+    <br />
+    <!-- Account Summary Table -->
+    <div class="slds-m-around_medium">
+        <div class="slds-text-heading_medium">Account Summaries</div>
+        <div class="slds-m-around_small">
+            <template if:true={showTable}>
+                <lightning-datatable
+                    hide-checkbox-column=""
+                    key-field="Name"
+                    data={accountSummaries}
+                    columns={accountSummaryColumns}>
+                </lightning-datatable>
+            </template>
+            <template if:true={showTableMessage}>
+                There are no related Account Summaries for this Affiliation record.
+            </template>
+        </div>
+    </div>
+</template>
